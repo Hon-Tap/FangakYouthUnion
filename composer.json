@@ -1,0 +1,17 @@
+{
+    "name": "ht/fangak-youth-union",
+    "autoload": {
+        "psr-4": {
+            "Ht\\FangakYouthUnion\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "HT",
+            "email": "hontmathiang@gmail.com"
+        }
+    ],
+    "require": {
+        "google/apiclient": "2.15"
+    }
+}
