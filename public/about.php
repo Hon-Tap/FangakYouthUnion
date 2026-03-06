@@ -12,16 +12,16 @@ $current_leaders = [
     ["name"=>"Mawich Duoth Gatluak","role"=>"Chairman","img"=>"images/mawich.jpg","desc"=>"Leads FYU’s strategic vision.","bio"=>"Mawich is a passionate leader with experience in community organizing and youth empowerment. He drives FYU’s strategic direction and partnerships."],
     ["name"=>"Tap Kuol Khor","role"=>"Secretary","img"=>"images/tap.jpg","desc"=>"Oversees communication.","bio"=>"Tap ensures smooth communication across teams, coordinates events, and documents FYU’s work."],
     ["name"=>"Mayiel Bol Deng","role"=>"Speaker","img"=>"images/farming.jpg","desc"=>"Facilitates dialogues.","bio"=>"Mayiel is an active youth advocate who facilitates dialogues and public engagements."],
-    ["name"=>"Nyaluak John","role"=>"Project Coordinator","img"=>"images/FYU-LOGO.jpg","desc"=>"Coordinates field programs.","bio"=>"Nyaluak leads initiatives in youth empowerment and coordinates field-level program delivery."],
+    ["name"=>"Nyaluit Jany","role"=>"Project Coordinator","img"=>"images/FYU-LOGO.jpg","desc"=>"Coordinates field programs.","bio"=>"Nyaluak leads initiatives in youth empowerment and coordinates field-level program delivery."],
     ["name"=>"Lam Par Malual","role"=>"Treasurer","img"=>"images/FYU-LOGO.jpg","desc"=>"Manages finances.","bio"=>"Lam ensures fiscal responsibility and transparent reporting across FYU projects."],
     ["name"=>"Gatjiok Puok","role"=>"Deputy Chairman","img"=>"images/FYU-LOGO.jpg","desc"=>"Oversees program design.","bio"=>"Gatjiok manages monitoring & evaluation for FYU programs and ensures impact-focused design."]
 ];
 
 // --- DATA: PREVIOUS LEADERS ---
 $previous_leaders = [
-    ["name"=>"Deng Riek koryom","role"=>"Former Chairman (2012-2014)","img"=>"images/FYU-LOGO.jpg","desc"=>"Guided the union through post-conflict recovery.","bio"=>"Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."],
-    ["name"=>"Puok Bol Par","role"=>"Former Chariman (2014-2022)","img"=>"images/FYU-LOGO.jpg","desc"=>"Established the union's administrative framework.","bio"=>"As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."],
-    ["name"=>"Nin Deng Wang","role"=>"Former Chairman (2022-2025)","img"=>"images/FYU-LOGO.jpg","desc"=>"Managed foundational grants and budgets.","bio"=>"Oversaw the union's finances during its critical growth phase, implementing a system of accountability."]
+    ["name"=>"Deng Riek koryom","role"=>"Former Chairman (2011-2013)","img"=>"images/FYU-LOGO.jpg","desc"=>"Guided the union through post-conflict recovery.","bio"=>"Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."],
+    ["name"=>"Puok Bol Par","role"=>"Former Chariman (2013-2022)","img"=>"images/FYU-LOGO.jpg","desc"=>"Established the union's administrative framework.","bio"=>"As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."],
+    ["name"=>"Nin Deng Wang","role"=>"Former Chairman (2022-2025)","img"=>"images/NinDeng.jpg","desc"=>"Managed foundational grants and budgets.","bio"=>"Oversaw the union's finances during its critical growth phase, implementing a system of accountability."]
 ];
 ?>
 

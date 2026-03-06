@@ -14,7 +14,8 @@ $start_date = $_POST['start_date'] ?: null;
 $end_date = $_POST['end_date'] ?: null;
 $status = $_POST['status'] ?? 'Upcoming';
 
-$uploadDir = __DIR__ . '/../../../uploads/events/';
+$uploadDir = __DIR__ . '/../../../public/uploads/events/'; 
+
 if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
 // handle image upload

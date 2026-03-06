@@ -105,7 +105,7 @@ function getMonth($dateString) { return date('M', strtotime($dateString)); }
         <div class="hero-gradient absolute inset-0"></div>
     </div>
 
-    <div class="absolute top-6 right-6 z-30" data-aos="fade-left" data-aos-delay="800">
+    <div class="absolute top-16 right-6 z-30" data-aos="fade-left" data-aos-delay="800">
         <a href="<?= $baseUrl ?>admin/login.php" class="glass-btn text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-fyu-dark transition flex items-center gap-2">
             <i class="fa-solid fa-user-shield"></i> Admin Login
         </a>
@@ -394,7 +394,7 @@ function getMonth($dateString) { return date('M', strtotime($dateString)); }
     </div>
 </div>
 
-<a href="<?= $baseUrl ?>joinus.php" class="fixed bottom-6 right-6 z-40 bg-fyu-primary text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-fyu-dark transition md:w-auto md:px-6 md:rounded-full">
+<a href="<?= $baseUrl ?>register.php" class="fixed bottom-6 right-6 z-40 bg-fyu-primary text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-fyu-dark transition md:w-auto md:px-6 md:rounded-full">
     <i class="fa-solid fa-handshake md:mr-2"></i>
     <span class="hidden md:inline font-semibold">Join Us</span>
 </a>
