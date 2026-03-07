@@ -1,5 +1,7 @@
 FROM composer:2 AS vendor
+
 WORKDIR /app
+
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
@@ -20,9 +22,11 @@ COPY --from=vendor /app/vendor /app/vendor
 
 RUN printf '%s\n' \
 '<?php' \
+'error_reporting(E_ALL);' \
+'ini_set("display_errors", "1");' \
 '$path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);' \
 '$file = __DIR__ . "/public" . $path;' \
-'if ($path !== "/" && file_exists($file) && !is_dir($file)) {' \
+'if ($path !== "/" && is_file($file)) {' \
 '    return false;' \
 '}' \
 'require __DIR__ . "/public/index.php";' \
