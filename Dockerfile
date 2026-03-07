@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
+    gettext-base \
     && docker-php-ext-install pdo pdo_mysql zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -30,7 +31,5 @@ COPY railway/start.sh /start.sh
 
 RUN chmod +x /start.sh \
     && chown -R www-data:www-data /app
-
-EXPOSE 8080
 
 CMD ["/start.sh"]
