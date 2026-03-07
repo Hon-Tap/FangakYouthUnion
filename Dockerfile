@@ -4,11 +4,11 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql
+    && docker-php-ext-install pdo pdo_mysql zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN a2dismod mpm_event || true
-RUN a2dismod mpm_worker || true
-RUN a2enmod mpm_prefork rewrite
+RUN a2enmod rewrite
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
@@ -18,5 +18,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 COPY . /var/www/html
 
 WORKDIR /var/www/html
+
+RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
