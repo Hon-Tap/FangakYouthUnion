@@ -134,7 +134,7 @@ function safeHtmlPreview($value) {
 
     <div class="absolute top-16 right-6 z-30" data-aos="fade-left" data-aos-delay="800">
         <a href="<?= $baseUrl ?>admin/login.php" class="glass-btn text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-fyu-dark transition flex items-center gap-2">
-            <i class="fa-solid fa-user-shield"></i> Admin Login4
+            <i class="fa-solid fa-user-shield"></i> Admin
         </a>
     </div>
 
