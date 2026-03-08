@@ -1,53 +1,59 @@
 <?php
-$pageTitle = "Events - Fangak Youth Union";
-include_once __DIR__ . '/../app/views/layouts/header.php';
 
-// Ensure DB connection
-if (!isset($pdo)) {
-    include_once __DIR__ . "/../app/config/db.php";
-}
+$pageTitle = "Events - Fangak Youth Union";
+
+require_once __DIR__ . "/../app/config/db.php";
+
+// Default safe values
+$upcomingEvents = [];
+$pastEvents = [];
 
 // 1. FETCH & SORT DATA
-try {
-    // Fetch all events
-    $stmt = $pdo->query("SELECT * FROM events ORDER BY event_date ASC");
-    $allEvents = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if ($pdo) {
+    try {
+        // Fetch all events
+        $stmt = $pdo->query("SELECT * FROM events ORDER BY event_date ASC");
+        $allEvents = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Separate into Upcoming and Past
-    $upcomingEvents = [];
-    $pastEvents = [];
-    $today = date('Y-m-d');
+        // Separate into Upcoming and Past
+        $today = date('Y-m-d');
 
-    foreach ($allEvents as $event) {
-        // Check if event date is today or in future
-        if ($event['event_date'] >= $today) {
-            $upcomingEvents[] = $event;
-        } else {
-            $pastEvents[] = $event;
+        foreach ($allEvents as $event) {
+            if (($event['event_date'] ?? '') >= $today) {
+                $upcomingEvents[] = $event;
+            } else {
+                $pastEvents[] = $event;
+            }
         }
+
+        // Sort past events so newest past events appear first
+        usort($pastEvents, function ($a, $b) {
+            return strtotime($b['event_date']) - strtotime($a['event_date']);
+        });
+
+    } catch (Throwable $e) {
+        error_log("Events Query Error: " . $e->getMessage());
+        $upcomingEvents = [];
+        $pastEvents = [];
     }
-
-    // Sort past events to show most recent history first
-    usort($pastEvents, function($a, $b) {
-        return strtotime($b['event_date']) - strtotime($a['event_date']);
-    });
-
-} catch (PDOException $e) {
-    error_log("Events Query Error: " . $e->getMessage());
-    $upcomingEvents = [];
-    $pastEvents = [];
+} else {
+    error_log("Events page: PDO connection unavailable.");
 }
 
 // 2. HELPER FUNCTIONS
 function getEventDay($dateStr) {
     return date('d', strtotime($dateStr));
 }
+
 function getEventMonth($dateStr) {
     return date('M', strtotime($dateStr));
 }
+
 function getEventFullDate($dateStr) {
     return date('l, F j, Y', strtotime($dateStr));
 }
+
+include_once __DIR__ . '/../app/views/layouts/header.php';
 ?>
 
 <script src="https://cdn.tailwindcss.com"></script>

@@ -134,7 +134,7 @@ function safeHtmlPreview($value) {
 
     <div class="absolute top-16 right-6 z-30" data-aos="fade-left" data-aos-delay="800">
         <a href="<?= $baseUrl ?>admin/login.php" class="glass-btn text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-fyu-dark transition flex items-center gap-2">
-            <i class="fa-solid fa-user-shield"></i> Admin Login
+            <i class="fa-solid fa-user-shield"></i> Admin Login4
         </a>
     </div>
 
@@ -154,7 +154,7 @@ function safeHtmlPreview($value) {
         </p>
 
         <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="600">
-            <a href="<?= $baseUrl ?>joinus.php" class="px-8 py-3 bg-fyu-primary hover:bg-fyu-light text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-green-500/50 transform hover:-translate-y-1">
+            <a href="<?= $baseUrl ?>register.php" class="px-8 py-3 bg-fyu-primary hover:bg-fyu-light text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-green-500/50 transform hover:-translate-y-1">
                 Start Your Impact
             </a>
             <a href="#announcements" class="px-8 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-fyu-dark transition-all duration-300">

@@ -1,45 +1,53 @@
 <?php
+
 // blog.php – Fixed Image Paths & Modern UI
 declare(strict_types=1);
 
 // 1. CONFIGURATION & DATABASE
-include_once __DIR__ . "/../app/config/db.php"; 
+require_once __DIR__ . "/../app/config/db.php";
 
 // ===================================================================
-// IMAGE HELPER FUNCTION (The Fix)
+// IMAGE HELPER FUNCTION
 // ===================================================================
-function getImagePath($imageName) {
-    // 1. Define the base folder where images are stored
+function getImagePath($imageName): string {
     $folder = 'uploads/news/';
-    
-    // 2. Check if image name exists in DB and is not empty
+
     if (!empty($imageName)) {
-        // Return the path: uploads/news/Games.jpg
-        return $folder . htmlspecialchars($imageName);
+        return $folder . htmlspecialchars((string)$imageName);
     }
-    
-    // 3. Fallback: If no image in DB, show a default placeholder
-    // Make sure you have a default.jpg in uploads/news/ or change this path
-    return 'uploads/news/default.jpg'; 
+
+    return 'uploads/news/default.jpg';
 }
 
+// ===================================================================
 // 2. API HANDLER (AJAX REQUESTS)
+// ===================================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
     header("Content-Type: application/json");
+
+    if (!$pdo) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Database is currently unavailable.'
+        ]);
+        exit;
+    }
+
     $response = ['status' => 'error', 'message' => 'Invalid action'];
 
     try {
         switch ($_POST['action']) {
-            // --- SUBSCRIBE HANDLER ---
             case 'subscribe':
                 $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+
                 if (!$email) {
                     $response['message'] = "Please enter a valid email address.";
                     break;
                 }
-                
+
                 $chk = $pdo->prepare("SELECT id FROM subscribers WHERE email = ?");
                 $chk->execute([$email]);
+
                 if ($chk->fetch()) {
                     $response['message'] = "You are already subscribed!";
                     break;
@@ -47,42 +55,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
 
                 $stmt = $pdo->prepare("INSERT INTO subscribers (email) VALUES (?)");
                 if ($stmt->execute([$email])) {
-                    $response = ['status' => 'success', 'message' => 'Welcome to our community!'];
-                    // Optional Notification
-                    $pdo->prepare("INSERT INTO admin_notifications (type, message, link) VALUES ('subscription', ?, '/admin/subscribers')")->execute(["New subscriber: $email"]);
+                    $response = [
+                        'status' => 'success',
+                        'message' => 'Welcome to our community!'
+                    ];
+
+                    try {
+                        $pdo->prepare("INSERT INTO admin_notifications (type, message, link) VALUES ('subscription', ?, '/admin/subscribers')")
+                            ->execute(["New subscriber: $email"]);
+                    } catch (Throwable $e) {
+                        error_log("Blog subscription notification error: " . $e->getMessage());
+                    }
+                } else {
+                    $response['message'] = "Unable to save your subscription right now.";
                 }
                 break;
 
-            // --- COMMENT HANDLER ---
             case 'add_comment':
                 $postId = (int)($_POST['post_id'] ?? 0);
                 $name   = trim(strip_tags($_POST['user_name'] ?? ''));
                 $email  = trim(strip_tags($_POST['user_email'] ?? ''));
                 $body   = trim(strip_tags($_POST['comment_body'] ?? ''));
 
-                if ($postId <= 0 || empty($name) || empty($body)) {
+                if ($postId <= 0 || $name === '' || $body === '') {
                     $response['message'] = "Name and comment are required.";
                     break;
                 }
 
-                $sql = "INSERT INTO blog_comments (post_id, user_name, user_email, comment_body, created_at) VALUES (:pid, :name, :email, :body, NOW())";
+                $sql = "INSERT INTO blog_comments (post_id, user_name, user_email, comment_body, created_at)
+                        VALUES (:pid, :name, :email, :body, NOW())";
                 $stmt = $pdo->prepare($sql);
-                
-                if ($stmt->execute(['pid' => $postId, 'name' => $name, 'email' => $email, 'body' => $body])) {
-                    // Notify Admin
+
+                if ($stmt->execute([
+                    'pid'   => $postId,
+                    'name'  => $name,
+                    'email' => $email,
+                    'body'  => $body
+                ])) {
                     try {
                         $notifMsg = "New comment from $name on Post #$postId";
                         $notifLink = "/admin/comments.php?post_id=$postId";
-                        $pdo->prepare("INSERT INTO admin_notifications (type, message, link, created_at) VALUES ('comment', :msg, :link, NOW())")->execute(['msg' => $notifMsg, 'link' => $notifLink]);
-                    } catch (Exception $e) {}
+
+                        $pdo->prepare("INSERT INTO admin_notifications (type, message, link, created_at)
+                                       VALUES ('comment', :msg, :link, NOW())")
+                            ->execute([
+                                'msg'  => $notifMsg,
+                                'link' => $notifLink
+                            ]);
+                    } catch (Throwable $e) {
+                        error_log("Blog comment notification error: " . $e->getMessage());
+                    }
 
                     $response = [
                         'status' => 'success',
                         'message' => 'Comment posted successfully!',
                         'comment' => [
-                            'user_name' => htmlspecialchars($name),
+                            'user_name'    => htmlspecialchars($name),
                             'comment_body' => nl2br(htmlspecialchars($body)),
-                            'created_at' => 'Just Now'
+                            'created_at'   => 'Just Now'
                         ]
                     ];
                 } else {
@@ -90,49 +120,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
                 }
                 break;
         }
-    } catch (Exception $e) {
-        $response['message'] = "Server error: " . $e->getMessage();
+    } catch (Throwable $e) {
+        error_log("Blog AJAX error: " . $e->getMessage());
+        $response['message'] = "Server error. Please try again later.";
     }
+
     echo json_encode($response);
     exit;
 }
 
+// ===================================================================
 // 3. PAGE LOGIC (DATA FETCHING)
+// ===================================================================
 $postId = (int)($_GET['post'] ?? 0);
 $viewMode = ($postId > 0) ? 'single' : 'index';
+
 $currentPost = null;
 $featuredPost = null;
 $listPosts = [];
 $comments = [];
+$pageTitle = "Blog & Stories - Fangak Youth Union";
 
-try {
-    if ($viewMode === 'single') {
-        // Fetch Single Post
-        $stmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id = ?");
-        $stmt->execute([$postId]);
-        $currentPost = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($pdo) {
+    try {
+        if ($viewMode === 'single') {
+            $stmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id = ?");
+            $stmt->execute([$postId]);
+            $currentPost = $stmt->fetch();
 
-        if ($currentPost) {
-            $cStmt = $pdo->prepare("SELECT * FROM blog_comments WHERE post_id = ? ORDER BY created_at DESC");
-            $cStmt->execute([$postId]);
-            $comments = $cStmt->fetchAll(PDO::FETCH_ASSOC);
-            $pageTitle = htmlspecialchars($currentPost['title']) . " - FYU Blog";
+            if ($currentPost) {
+                $cStmt = $pdo->prepare("SELECT * FROM blog_comments WHERE post_id = ? ORDER BY created_at DESC");
+                $cStmt->execute([$postId]);
+                $comments = $cStmt->fetchAll();
+                $pageTitle = htmlspecialchars($currentPost['title']) . " - FYU Blog";
+            } else {
+                header("Location: blog.php");
+                exit;
+            }
         } else {
-            header("Location: blog.php"); exit;
+            $stmt = $pdo->query("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 10");
+            $allPosts = $stmt->fetchAll();
+
+            if (!empty($allPosts)) {
+                $featuredPost = $allPosts[0];
+                $listPosts = array_slice($allPosts, 1);
+            }
         }
-    } else {
-        // Fetch Index
-        $stmt = $pdo->query("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 10");
-        $allPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        if (!empty($allPosts)) {
-            $featuredPost = $allPosts[0]; // First post is featured
-            $listPosts = array_slice($allPosts, 1); // Rest are listed
-        }
-        $pageTitle = "Blog & Stories - Fangak Youth Union";
+    } catch (Throwable $e) {
+        error_log("Blog query error: " . $e->getMessage());
+        $currentPost = null;
+        $featuredPost = null;
+        $listPosts = [];
+        $comments = [];
     }
-} catch (PDOException $e) {
-    $listPosts = []; 
+} else {
+    error_log("Blog page: PDO connection unavailable.");
 }
 
 include_once __DIR__ . "/../app/views/layouts/header.php";

@@ -1,49 +1,60 @@
 <?php
+
 session_start();
 
 // -------------------------------
 // Load DB (PDO)
 // -------------------------------
-require_once __DIR__ . '/../../app/config/db.php'; // must define $pdo
+require_once __DIR__ . '/../../app/config/db.php';
 
 // -------------------------------
 // Initialize
 // -------------------------------
 $error = "";
+$pageTitle = "Admin Login";
 
 // -------------------------------
 // Handle login form
 // -------------------------------
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
     $email = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
     if ($email === "" || $password === "") {
         $error = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Please enter a valid email.";
+        $error = "Please enter a valid email address.";
+    } elseif (!$pdo) {
+        $error = "Database connection unavailable. Please try again later.";
+        error_log("Admin login: PDO connection unavailable.");
     } else {
         try {
-            $stmt = $pdo->prepare("SELECT id, name, email, password FROM admins WHERE email = :email LIMIT 1");
+            $stmt = $pdo->prepare("
+                SELECT id, name, email, password
+                FROM admins
+                WHERE email = :email
+                LIMIT 1
+            ");
             $stmt->execute(['email' => $email]);
             $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($admin && password_verify($password, $admin['password'])) {
                 $_SESSION['admin_id'] = $admin['id'];
+                $_SESSION['admin_name'] = $admin['name'] ?? '';
+                $_SESSION['admin_email'] = $admin['email'] ?? '';
+
                 header("Location: dashboard.php");
                 exit();
             } else {
                 $error = "Invalid email or password.";
             }
-        } catch (PDOException $e) {
+        } catch (Throwable $e) {
+            error_log("Admin login error: " . $e->getMessage());
             $error = "Server error. Please try again later.";
-            // optionally log $e->getMessage() somewhere safe
         }
     }
 }
 
-$pageTitle = "Admin Login";
 ?>
 
 <!DOCTYPE html>

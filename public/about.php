@@ -260,7 +260,7 @@ $previous_leaders = [
         <p>We are a coalition of young leaders dedicated to education, peacebuilding, and cultural revival in South Sudan.</p>
         <div>
             <a href="#leadership" class="btn btn-primary">Meet the Team</a>
-            <a href="<?= $baseUrl ?>joinus.php" class="btn btn-outline">Join the Union</a>
+            <a href="<?= $baseUrl ?>register.php" class="btn btn-outline">Join the Union</a>
         </div>
     </div>
 </section>

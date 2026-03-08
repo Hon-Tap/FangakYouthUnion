@@ -1,28 +1,27 @@
 <?php
+
 $pageTitle = "Announcements - Fangak Youth Union";
-include_once __DIR__ . '/../app/views/layouts/header.php';
 
-// Ensure DB connection exists (if not already included in header)
-if (!isset($pdo)) {
-    include_once __DIR__ . "/../app/config/db.php";
-}
+require_once __DIR__ . '/../app/config/db.php';
 
-// 1. FETCH DATA
-try {
-    $stmt = $pdo->prepare("
-        SELECT * FROM announcements 
-        WHERE is_published = 1 
-        ORDER BY created_at DESC
-    ");
-    $stmt->execute();
-    $announcements = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Log error cleanly
-    error_log("Announcement Query Error: " . $e->getMessage());
+if (!$pdo) {
+    error_log("Announcements page: DB connection unavailable");
     $announcements = [];
+} else {
+    try {
+        $stmt = $pdo->prepare("
+            SELECT * FROM announcements
+            WHERE is_published = 1
+            ORDER BY created_at DESC
+        ");
+        $stmt->execute();
+        $announcements = $stmt->fetchAll();
+    } catch (Throwable $e) {
+        error_log("Announcement Query Error: " . $e->getMessage());
+        $announcements = [];
+    }
 }
 
-// 2. HELPER FUNCTIONS
 function formatAnnouncementDate($dateStr) {
     return date('F j, Y', strtotime($dateStr));
 }
@@ -30,6 +29,8 @@ function formatAnnouncementDate($dateStr) {
 function formatTime($dateStr) {
     return date('g:i A', strtotime($dateStr));
 }
+
+include_once __DIR__ . '/../app/views/layouts/header.php';
 ?>
 
 <!-- TAILWIND & ANIMATIONS CONFIG (If not already in header) -->
