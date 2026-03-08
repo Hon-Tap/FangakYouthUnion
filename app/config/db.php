@@ -6,17 +6,18 @@ $DB_NAME = $_ENV['MYSQLDATABASE'] ?? getenv('MYSQLDATABASE') ?? '';
 $DB_USER = $_ENV['MYSQLUSER'] ?? getenv('MYSQLUSER') ?? '';
 $DB_PASS = $_ENV['MYSQLPASSWORD'] ?? getenv('MYSQLPASSWORD') ?? '';
 
+$conn = null;
+
 try {
-    $pdo = new PDO(
-        "mysql:host={$DB_HOST};port={$DB_PORT};dbname={$DB_NAME};charset=utf8mb4",
-        $DB_USER,
-        $DB_PASS,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]
-    );
-} catch (PDOException $e) {
+    $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME, (int)$DB_PORT);
+
+    if ($conn->connect_error) {
+        error_log("Database connection failed: " . $conn->connect_error);
+        $conn = null;
+    } else {
+        $conn->set_charset("utf8mb4");
+    }
+} catch (Throwable $e) {
     error_log("Database connection failed: " . $e->getMessage());
-    $pdo = null;
+    $conn = null;
 }
