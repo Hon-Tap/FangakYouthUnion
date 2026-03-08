@@ -9,6 +9,12 @@ $DB_PASS = $_ENV['MYSQLPASSWORD'] ?? getenv('MYSQLPASSWORD') ?? '';
 $pdo = null;
 $conn = null;
 
+error_log("DB debug: host=" . ($DB_HOST ?: 'missing'));
+error_log("DB debug: port=" . ($DB_PORT ?: 'missing'));
+error_log("DB debug: db=" . ($DB_NAME ?: 'missing'));
+error_log("DB debug: user=" . ($DB_USER ?: 'missing'));
+error_log("DB debug: pass=" . ($DB_PASS !== '' ? '[set]' : 'missing'));
+
 if ($DB_HOST && $DB_PORT && $DB_NAME && $DB_USER) {
     try {
         $pdo = new PDO(
@@ -23,6 +29,7 @@ if ($DB_HOST && $DB_PORT && $DB_NAME && $DB_USER) {
         );
 
         $conn = $pdo;
+        error_log("DB debug: connection success");
     } catch (Throwable $e) {
         error_log("Database connection failed: " . $e->getMessage());
         $pdo = null;

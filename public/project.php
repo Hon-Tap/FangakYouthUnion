@@ -1,13 +1,14 @@
 <?php
-// projects.php - Professional, Scalable, Mobile-First
+
+// project.php - Professional, Scalable, Mobile-First
+
 $pageTitle = "Projects - Fangak Youth Union";
 
-// Adjust paths based on your directory structure
-include_once __DIR__ . "/../app/views/layouts/header.php";
+// Load DB first
 require_once __DIR__ . "/../app/config/db.php";
 
 // ===================================================================
-// 1. HELPER FUNCTIONS (The Fix for Images & Logic)
+// 1. HELPER FUNCTIONS
 // ===================================================================
 
 /**
@@ -15,16 +16,15 @@ require_once __DIR__ . "/../app/config/db.php";
  * Handles both "filename.jpg" and "uploads/projects/filename.jpg"
  */
 function get_project_img($dbValue) {
-    // Default placeholder if empty
-    if (empty($dbValue)) return 'images/default-project.jpg'; 
+    if (empty($dbValue)) {
+        return 'images/default-project.jpg';
+    }
 
-    // 1. Check if the DB value is already a full path
     if (strpos($dbValue, 'uploads/projects/') !== false) {
         return $dbValue;
     }
 
-    // 2. If it's just a filename, prepend the folder
-    return 'uploads/projects/' . $dbValue;
+    return 'uploads/projects/' . ltrim($dbValue, '/');
 }
 
 /**
@@ -37,13 +37,13 @@ function calculate_progress($start_date, $end_date) {
     $end   = strtotime($end_date);
     $now   = time();
 
-    if ($now < $start) return 0;   // Hasn't started
-    if ($now > $end) return 100;   // Finished
+    if ($now < $start) return 0;
+    if ($now > $end) return 100;
 
     $total_duration = $end - $start;
     $elapsed = $now - $start;
 
-    if ($total_duration <= 0) return 100; // Avoid division by zero
+    if ($total_duration <= 0) return 100;
 
     return round(($elapsed / $total_duration) * 100);
 }
@@ -52,16 +52,25 @@ function calculate_progress($start_date, $end_date) {
 // 2. DATA FETCHING
 // ===================================================================
 $projects = [];
-try {
-    // Check if table exists to prevent crashes
-    $check = $pdo->query("SHOW TABLES LIKE 'projects'");
-    if ($check->rowCount() > 0) {
-        $stmt = $pdo->query("SELECT * FROM projects ORDER BY created_at DESC");
-        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($pdo) {
+    try {
+        $check = $pdo->query("SHOW TABLES LIKE 'projects'");
+        if ($check && $check->rowCount() > 0) {
+            $stmt = $pdo->query("SELECT * FROM projects ORDER BY created_at DESC");
+            $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    } catch (Throwable $e) {
+        error_log("Projects page DB error: " . $e->getMessage());
+        $projects = [];
     }
-} catch (PDOException $e) {
-    error_log("DB Error: " . $e->getMessage());
+} else {
+    error_log("Projects page: PDO connection unavailable.");
 }
+
+// Load header after page setup + data
+include_once __DIR__ . "/../app/views/layouts/header.php";
+
 ?>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
