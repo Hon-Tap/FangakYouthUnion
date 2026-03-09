@@ -419,7 +419,7 @@ function safeHtmlPreview($value) {
         <div class="p-8">
             <h3 id="modalTitle" class="text-2xl font-bold text-fyu-primary mb-3"></h3>
             <p id="modalDesc" class="text-gray-600 mb-6 leading-relaxed"></p>
-            <a href="<?= $baseUrl ?>joinus.php" class="inline-block px-6 py-2 bg-fyu-primary text-white rounded-lg hover:bg-fyu-dark transition">
+            <a href="<?= $baseUrl ?>register.php" class="inline-block px-6 py-2 bg-fyu-primary text-white rounded-lg hover:bg-fyu-dark transition">
                 Get Involved
             </a>
         </div>
