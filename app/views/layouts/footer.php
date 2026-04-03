@@ -1,271 +1,128 @@
 <?php
-// footer.php - Modern, Professional Footer Component
-// This file assumes $baseUrl is defined in the calling scope, or uses a fallback.
+// footer.php - Pro Version (Tailwind CSS Integrated)
 $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
 ?>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<footer class="bg-[#0a1f15] text-gray-300 border-t-4 border-fyu-primary relative overflow-hidden">
+    
+    <div class="absolute top-0 right-0 w-64 h-64 bg-fyu-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-fyu-primary/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
 
-<style>
-    /* --- FOOTER DESIGN SYSTEM --- */
-    :root {
-        /* Reusing Deep Green and Gold from Project/About pages */
-        --primary-dark: #0f5132;        /* Deep Official Green */
-        --primary-light: #146c43;
-        --accent-gold: #d4a017;         /* Gold/Bronze */
-        --footer-bg: #1a1a1a;           /* Darker, professional base */
-        --footer-text-light: #e0e0e0;
-        --footer-text-muted: #999;
-        --footer-border: #333;
-        --radius-sm: 8px;
-        --font-sans: 'Inter', sans-serif;
-    }
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8 relative z-10 fyu-footer-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 mb-12">
+            
+            <div class="lg:col-span-4">
+                <a href="<?= $baseUrl ?>index.php" class="flex items-center gap-3 mb-6 group inline-flex">
+                    <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" alt="FYU Logo" class="w-14 h-14 rounded-full border-2 border-fyu-gold shadow-lg group-hover:scale-105 transition-transform duration-300">
+                    <span class="font-serif font-bold text-2xl text-white tracking-wide group-hover:text-fyu-gold transition-colors">Fangak Youth Union</span>
+                </a>
+                <p class="text-sm leading-relaxed text-gray-400 mb-6">
+                    <strong class="text-white font-medium">Empowering youth</strong>, fostering innovation, and building a stronger, resilient community across Fangak County through targeted development projects and collective leadership.
+                </p>
+                <a href="<?= $baseUrl ?>about.php" class="inline-flex items-center text-sm font-medium text-fyu-gold hover:text-white transition-colors group">
+                    Discover our mission 
+                    <i class="fa-solid fa-arrow-right ml-2 text-xs transform group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
 
-    .fyu-footer {
-        background-color: var(--footer-bg);
-        color: var(--footer-text-light);
-        padding: 80px 24px 20px;
-        font-family: var(--font-sans);
-        line-height: 1.6;
-        border-top: 4px solid var(--primary-dark); /* Subtle green border accent */
-    }
+            <div class="lg:col-span-3 lg:col-start-6">
+                <h3 class="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-fyu-gold"></span> Quick Links
+                </h3>
+                <ul class="space-y-3">
+                    <?php 
+                    $footerLinks = [
+                        ['url' => 'index.php', 'icon' => 'fa-house', 'label' => 'Home'],
+                        ['url' => 'about.php', 'icon' => 'fa-users', 'label' => 'About Us'],
+                        ['url' => 'project.php', 'icon' => 'fa-lightbulb', 'label' => 'Our Projects'],
+                        ['url' => 'blog.php', 'icon' => 'fa-newspaper', 'label' => 'News & Blog'],
+                        ['url' => 'contact.php', 'icon' => 'fa-handshake', 'label' => 'Get Involved']
+                    ];
+                    foreach($footerLinks as $link): ?>
+                        <li>
+                            <a href="<?= $baseUrl . $link['url'] ?>" class="group flex items-center text-gray-400 hover:text-fyu-gold transition-all duration-300">
+                                <i class="fa-solid <?= $link['icon'] ?> w-5 text-fyu-primary group-hover:text-fyu-gold transition-colors"></i>
+                                <span class="transform group-hover:translate-x-1 transition-transform"><?= $link['label'] ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
 
-    .fyu-footer-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1.5fr; /* About wider than others */
-        max-width: 1280px;
-        margin: 0 auto;
-        gap: 40px;
-        padding-bottom: 40px;
-    }
+            <div class="lg:col-span-4">
+                <h3 class="text-white font-semibold text-lg mb-6 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-fyu-gold"></span> Contact Us
+                </h3>
+                
+                <div class="space-y-4 text-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 text-fyu-gold">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div class="pt-1.5">
+                            <p class="text-white font-medium">Headquarters</p>
+                            <p class="text-gray-400">Juba, South Sudan<br>(Field Ops in Fangak)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 text-fyu-gold">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div class="pt-1.5">
+                            <a href="mailto:info@fangakyouth.org" class="hover:text-fyu-gold transition-colors">info@fangakyouth.org</a>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 text-fyu-gold">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div class="pt-1.5">
+                            <a href="tel:+211912345678" class="hover:text-fyu-gold transition-colors">+211 912345678</a>
+                        </div>
+                    </div>
+                </div>
 
-    /* --- LOGO & ABOUT --- */
-    .footer-brand {
-        margin-bottom: 20px;
-    }
+                <div class="flex gap-3 mt-8">
+                    <?php 
+                    $socials = ['fa-facebook-f', 'fa-x-twitter', 'fa-linkedin-in', 'fa-instagram'];
+                    foreach($socials as $icon): ?>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-fyu-primary/20 text-white flex items-center justify-center hover:bg-fyu-gold hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(212,160,23,0.4)] transition-all duration-300">
+                            <i class="fa-brands <?= $icon ?>"></i>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
-    .footer-logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        color: var(--footer-text-light);
-        font-weight: 700;
-        font-size: 1.5rem;
-        transition: color 0.3s;
-    }
-
-    .footer-logo img {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid var(--accent-gold);
-    }
-
-    .footer-brand p {
-        color: var(--footer-text-muted);
-        margin-top: 15px;
-        font-size: 0.95rem;
-    }
-
-    /* --- HEADINGS & LINKS --- */
-    .fyu-footer h3 {
-        font-size: 1.15rem;
-        color: var(--accent-gold); /* Gold accent for headings */
-        margin-bottom: 20px;
-        font-weight: 600;
-        border-left: 3px solid var(--primary-dark);
-        padding-left: 10px;
-    }
-
-    .fyu-footer ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .fyu-footer ul li {
-        margin-bottom: 12px;
-    }
-
-    .fyu-footer ul li a {
-        color: var(--footer-text-light);
-        text-decoration: none;
-        font-size: 0.95rem;
-        transition: color 0.3s, padding-left 0.3s;
-        display: inline-block;
-    }
-
-    .fyu-footer ul li a:hover {
-        color: var(--accent-gold);
-        padding-left: 5px;
-    }
-
-    /* --- CONTACT INFO --- */
-    .contact-item {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 15px;
-        gap: 12px;
-        font-size: 0.95rem;
-        color: var(--footer-text-light);
-    }
-
-    .contact-item i {
-        color: var(--primary-light);
-        font-size: 1.2rem;
-        padding-top: 3px;
-    }
-
-    .contact-item a {
-        color: var(--footer-text-light);
-    }
-    .contact-item a:hover {
-        color: var(--accent-gold);
-    }
-
-    /* --- SOCIAL ICONS (The "Pro" Look) --- */
-    .footer-social-links {
-        display: flex;
-        gap: 15px;
-        margin-top: 25px;
-    }
-
-    .footer-social-links a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: var(--radius-sm);
-        background: var(--primary-dark); /* Solid primary color background */
-        color: var(--footer-text-light);
-        font-size: 1.1rem;
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth interaction */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    .footer-social-links a:hover {
-        background: var(--accent-gold); /* Gold hover effect */
-        color: var(--footer-bg); /* Dark text on gold */
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 8px 16px rgba(212, 160, 23, 0.4);
-    }
-
-    /* --- COPYRIGHT BAR --- */
-    .footer-bottom {
-        padding-top: 20px;
-        border-top: 1px solid var(--footer-border);
-        text-align: center;
-        font-size: 0.8rem;
-        color: var(--footer-text-muted);
-        margin-top: 40px;
-    }
-
-    /* --- RESPONSIVENESS --- */
-    @media (max-width: 1024px) {
-        .fyu-footer-grid {
-            grid-template-columns: 1fr 1fr; /* 2 columns tablet */
-        }
-        .footer-brand { grid-column: 1 / -1; } /* About spans full width */
-    }
-
-    @media (max-width: 600px) {
-        .fyu-footer-grid {
-            grid-template-columns: 1fr; /* 1 column mobile */
-            text-align: center;
-        }
-        .fyu-footer h3 {
-             border-left: none; 
-             padding-left: 0;
-             border-bottom: 2px solid var(--primary-dark);
-             padding-bottom: 5px;
-             display: inline-block;
-        }
-        .footer-logo { justify-content: center; }
-        .footer-brand p { text-align: center; }
-        .contact-item { justify-content: center; align-items: center; }
-        .footer-social-links { justify-content: center; }
-    }
-</style>
-
-<footer class="fyu-footer">
-    <div class="fyu-footer-grid">
-
-        <div class="footer-brand">
-            <a href="<?= $baseUrl ?>index.php" class="footer-logo">
-                <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" alt="FYU Logo">
-                <span>Fangak Youth Union</span>
-            </a>
-            <p>
-                <b>Empowering youth</b>, fostering innovation, and building a stronger, resilient community across Fangak County through targeted development projects.
-            </p>
         </div>
 
-        <div class="footer-links">
-            <h3>Quick Navigation</h3>
-            <ul>
-                <li><a href="<?= $baseUrl ?>index.php"><i class="fa-solid fa-house-chimney" style="margin-right:5px;"></i> Home</a></li>
-                <li><a href="<?= $baseUrl ?>about.php"><i class="fa-solid fa-people-group" style="margin-right:5px;"></i> About Us</a></li>
-                <li><a href="<?= $baseUrl ?>project.php"><i class="fa-solid fa-lightbulb" style="margin-right:5px;"></i> Our Projects</a></li>
-                <li><a href="<?= $baseUrl ?>blog.php"><i class="fa-solid fa-pen-to-square" style="margin-right:5px;"></i> News & Blog</a></li>
-                <li><a href="<?= $baseUrl ?>contact.php"><i class="fa-solid fa-handshake" style="margin-right:5px;"></i> Get Involved</a></li>
-                <?php if (!empty($_SESSION['user'])): ?>
-                    <li><a href="<?= $baseUrl ?>member_dashboard.php"><i class="fa-solid fa-chart-line" style="margin-right:5px;"></i> Dashboard</a></li>
-                <?php endif; ?>
-            </ul>
-        </div>
-
-        <div class="footer-contact">
-            <h3>Reach Out</h3>
-            
-            <div class="contact-item">
-                <i class="fa-solid fa-location-dot"></i> 
-                <span>Juba, South Sudan<br> (Field Ops in Fangak)</span>
-            </div>
-            
-            <div class="contact-item">
-                <i class="fa-solid fa-envelope"></i> 
-                <a href="mailto:info@fangakyouth.org">info@fangakyouth.org</a>
-            </div>
-            
-            <div class="contact-item">
-                <i class="fa-solid fa-phone"></i> 
-                <a href="tel:+211912345678">+211 912345678</a>
-            </div>
-            
-            <div class="footer-social-links">
-                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+            <p>&copy; <?= date("Y"); ?> Fangak Youth Union. All Rights Reserved.</p>
+            <div class="flex gap-4">
+                <a href="<?= $baseUrl ?>privacy.php" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="<?= $baseUrl ?>terms.php" class="hover:text-white transition-colors">Terms of Service</a>
             </div>
         </div>
-    </div>
-
-    <div class="footer-bottom">
-        &copy; <?= date("Y"); ?> Fangak Youth Union. All Rights Reserved. | <a href="<?= $baseUrl ?>privacy.php" style="color:var(--footer-text-muted); text-decoration:underline;">Privacy Policy</a>
     </div>
 </footer>
 
 <script>
-    // Advanced Footer Fade-in on Scroll (A subtle UI/UX enhancement)
+    // Smooth scroll reveal observer
     document.addEventListener("DOMContentLoaded", () => {
-        const footer = document.querySelector('.fyu-footer');
-        // Initial state for animation
-        footer.style.opacity = 0;
-        footer.style.transform = 'translateY(50px)';
-        footer.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+        const footerContent = document.querySelector('.fyu-footer-animate');
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting){
-                    footer.style.opacity = 1;
-                    footer.style.transform = 'translateY(0)';
-                    observer.unobserve(footer); // Stop observing once visible
+                    footerContent.classList.remove('opacity-0', 'translate-y-10');
+                    footerContent.classList.add('opacity-100', 'translate-y-0');
+                    observer.unobserve(footerContent); 
                 }
             });
-        }, { threshold: 0.1 }); // Trigger when 10% of footer is visible
+        }, { threshold: 0.1 });
         
-        observer.observe(footer);
+        observer.observe(footerContent);
     });
 </script>
