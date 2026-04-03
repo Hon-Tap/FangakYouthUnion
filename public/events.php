@@ -1,8 +1,7 @@
 <?php
-
 $pageTitle = "Events - Fangak Youth Union";
 
-require_once __DIR__ . "/../app/config/db.php";
+require_once __DIR__ . '/../app/config/db.php';
 
 // Default safe values
 $upcomingEvents = [];
@@ -68,7 +67,7 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
                         primary: '#1f7a4b',
                         light: '#3aa76a',
                         accent: '#e6f4ea',
-                        gold: '#d4a017', 
+                        gold: '#d4a017'
                     }
                 },
                 fontFamily: {
@@ -106,7 +105,9 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
     <nav class="flex mb-10 text-sm text-gray-500" data-aos="fade-right">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-                <a href="index.php" class="hover:text-fyu-primary transition"><i class="fa-solid fa-home mr-2"></i> Home</a>
+                <a href="index.php" class="hover:text-fyu-primary transition flex items-center">
+                    <i class="fa-solid fa-home mr-2"></i> Home
+                </a>
             </li>
             <li>
                 <div class="flex items-center">
@@ -126,24 +127,23 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
         </div>
 
         <?php if (empty($upcomingEvents)): ?>
-            <div class="bg-white rounded-xl shadow-sm border border-dashed border-gray-300 p-10 text-center" data-aos="fade-up">
+            <div class="bg-white rounded-2xl shadow-sm border border-dashed border-gray-300 p-12 text-center" data-aos="fade-up">
                 <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
                     <i class="fa-regular fa-calendar-xmark text-2xl"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-700">No upcoming events</h3>
-                <p class="text-gray-500 text-sm mt-1">Check back soon for new announcements.</p>
+                <p class="text-gray-500 text-sm mt-1">Check back soon for new scheduled events.</p>
             </div>
         <?php else: ?>
             
-            <?php 
-                $featured = array_shift($upcomingEvents); // Remove first event to display as featured
-            ?>
+            <?php $featured = array_shift($upcomingEvents); ?>
+            
             <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-10 group" data-aos="zoom-in">
                 <div class="grid md:grid-cols-2">
                     <div class="relative h-64 md:h-auto overflow-hidden">
                         <?php if (!empty($featured['image'])): ?>
                             <img src="/uploads/events/<?= htmlspecialchars($featured['image']) ?>" 
-                                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                                  alt="Event Image">
                         <?php else: ?>
                             <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-fyu-primary to-fyu-dark flex items-center justify-center">
@@ -158,32 +158,32 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
 
                     <div class="p-8 md:p-10 flex flex-col justify-center relative">
                         <div class="absolute top-6 right-8 text-center hidden md:block">
-                            <div class="text-sm font-bold text-gray-400 uppercase tracking-widest"><?= getEventMonth($featured['event_date']) ?></div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest"><?= getEventMonth($featured['event_date']) ?></div>
                             <div class="text-3xl font-bold text-fyu-primary"><?= getEventDay($featured['event_date']) ?></div>
                         </div>
 
-                        <div class="text-fyu-primary font-medium mb-2 flex items-center">
+                        <div class="text-fyu-primary font-medium mb-2 flex items-center text-sm">
                             <i class="fa-regular fa-clock mr-2"></i> Upcoming
                         </div>
                         
-                        <h3 class="text-3xl font-serif font-bold text-gray-800 mb-4 group-hover:text-fyu-primary transition-colors">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4 group-hover:text-fyu-primary transition-colors">
                             <?= htmlspecialchars($featured['title']) ?>
                         </h3>
                         
-                        <p class="text-gray-600 mb-6 leading-relaxed line-clamp-2">
+                        <p class="text-gray-600 mb-6 text-sm leading-relaxed line-clamp-2">
                             <?= htmlspecialchars($featured['description']) ?>
                         </p>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-sm">
-                            <div class="flex items-center text-gray-600">
-                                <div class="w-8 h-8 rounded-full bg-fyu-accent flex items-center justify-center text-fyu-primary mr-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-sm text-gray-500">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-lg bg-fyu-accent flex items-center justify-center text-fyu-primary mr-3 flex-shrink-0">
                                     <i class="fa-solid fa-calendar"></i>
                                 </div>
                                 <span><?= getEventFullDate($featured['event_date']) ?></span>
                             </div>
                             <?php if ($featured['location']): ?>
-                            <div class="flex items-center text-gray-600">
-                                <div class="w-8 h-8 rounded-full bg-fyu-accent flex items-center justify-center text-fyu-primary mr-3">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-lg bg-fyu-accent flex items-center justify-center text-fyu-primary mr-3 flex-shrink-0">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </div>
                                 <span><?= htmlspecialchars($featured['location']) ?></span>
@@ -192,7 +192,7 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
                         </div>
 
                         <div>
-                            <a href="#" class="inline-flex items-center justify-center px-6 py-3 bg-fyu-primary hover:bg-fyu-dark text-white rounded-lg transition-colors duration-300 shadow-lg shadow-fyu-primary/30">
+                            <a href="#" class="inline-flex items-center justify-center px-6 py-3 bg-fyu-primary hover:bg-fyu-dark text-white text-sm font-semibold rounded-lg transition-colors duration-300 shadow-md">
                                 View Full Details <i class="fa-solid fa-arrow-right ml-2"></i>
                             </a>
                         </div>
@@ -203,13 +203,13 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
             <?php if (!empty($upcomingEvents)): ?>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <?php foreach ($upcomingEvents as $index => $ev): ?>
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full"
                              data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
                             
                             <div class="h-48 relative overflow-hidden bg-gray-200">
                                 <?php if (!empty($ev['image'])): ?>
-                                    <img src="<?= $baseUrl ?>uploads/events/<?= htmlspecialchars($ev['image']) ?>" 
-                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Event">
+                                    <img src="/uploads/events/<?= htmlspecialchars($ev['image']) ?>" 
+                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" alt="Event">
                                 <?php else: ?>
                                     <div class="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
                                         <i class="fa-regular fa-image text-3xl"></i>
@@ -223,7 +223,7 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
                             </div>
 
                             <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-fyu-primary transition-colors">
+                                <h3 class="text-lg font-bold text-gray-800 mb-2 group-hover:text-fyu-primary transition-colors">
                                     <?= htmlspecialchars($ev['title']) ?>
                                 </h3>
                                 
@@ -231,14 +231,14 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
                                     <?= htmlspecialchars($ev['description']) ?>
                                 </p>
                                 
-                                <div class="border-t border-gray-100 pt-4 mt-auto space-y-2">
+                                <div class="border-t border-gray-100 pt-4 mt-auto space-y-2 text-xs text-gray-500">
                                     <?php if ($ev['location']): ?>
-                                        <div class="flex items-center text-sm text-gray-500">
+                                        <div class="flex items-center">
                                             <i class="fa-solid fa-location-dot w-5 text-center mr-2 text-fyu-light"></i>
                                             <?= htmlspecialchars($ev['location']) ?>
                                         </div>
                                     <?php endif; ?>
-                                    <div class="flex items-center text-sm text-gray-500">
+                                    <div class="flex items-center">
                                         <i class="fa-regular fa-clock w-5 text-center mr-2 text-fyu-light"></i>
                                         <?= getEventFullDate($ev['event_date']) ?>
                                     </div>
@@ -254,18 +254,21 @@ include_once __DIR__ . '/../app/views/layouts/header.php';
 
     <?php if (!empty($pastEvents)): ?>
         <div class="pt-10 border-t border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-400 mb-6">Past Events</h2>
+            <div class="flex items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-400">Past Events</h2>
+                <div class="flex-grow border-b border-gray-200 ml-4"></div>
+            </div>
             
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 opacity-80 hover:opacity-100 transition-opacity duration-300">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 opacity-75 hover:opacity-100 transition-opacity duration-300">
                 <?php foreach ($pastEvents as $ev): ?>
-                    <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 flex flex-col" data-aos="fade-up">
+                    <div class="bg-gray-50 rounded-xl border border-gray-200 p-5 flex flex-col" data-aos="fade-up">
                         <div class="text-xs font-bold text-gray-400 uppercase mb-1">
                             <?= getEventFullDate($ev['event_date']) ?>
                         </div>
-                        <h4 class="font-bold text-gray-700 mb-2"><?= htmlspecialchars($ev['title']) ?></h4>
+                        <h4 class="font-bold text-gray-700 text-sm mb-2"><?= htmlspecialchars($ev['title']) ?></h4>
                         <?php if ($ev['location']): ?>
-                            <div class="text-xs text-gray-500 mt-auto">
-                                <i class="fa-solid fa-map-pin mr-1"></i> <?= htmlspecialchars($ev['location']) ?>
+                            <div class="text-xs text-gray-500 mt-auto flex items-center">
+                                <i class="fa-solid fa-map-pin mr-1 text-gray-400"></i> <?= htmlspecialchars($ev['location']) ?>
                             </div>
                         <?php endif; ?>
                     </div>

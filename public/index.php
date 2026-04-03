@@ -49,11 +49,24 @@ try {
     error_log("Homepage Query Error: " . $e->getMessage());
 }
 
-// Mock Data for New Youth Engagement Section (Replace with DB logic later if needed)
+// Youth Engagement Images from assets/images folder
+
 $engagements = [
-    ['title' => 'Community Clean-up', 'category' => 'Environment', 'img' => 'dc0d01'],
-    ['title' => 'Tech Workshop', 'category' => 'Education', 'img' => 'dc1067'],
-    ['title' => 'Sports Tournament', 'category' => 'Health & Unity', 'img' => 'dc10a1']
+    [
+        'title' => 'Community Clean-up',
+        'category' => 'Environment',
+        'img' => 'cleanup.jpg'
+    ],
+    [
+        'title' => 'Tech Workshop',
+        'category' => 'Education',
+        'img' => 'coding.jpg'
+    ],
+    [
+        'title' => 'Sports Tournament',
+        'category' => 'Health & Unity',
+        'img' => 'project1.jpg'
+    ]
 ];
 
 // Helper Functions
@@ -213,10 +226,10 @@ function safeHtmlPreview($value) {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <?php foreach ($engagements as $index => $eng): ?>
                 <div class="group relative h-80 rounded-2xl overflow-hidden cursor-pointer shadow-soft" data-aos="fade-up" data-aos-delay="<?= $index * 150 ?>">
-                    <img src="<?= $baseUrl ?>images/image_<?= safeText($eng['img']) ?>.jpg" 
-                         alt="<?= safeText($eng['title']) ?>" 
-                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                         onerror="this.src='https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <img src="<?= $baseUrl ?>assets/images/<?= safeText($eng['img']) ?>" 
+                    alt="<?= safeText($eng['title']) ?>" 
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onerror="this.src='https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                     
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100"></div>
                     
