@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 /*
 |--------------------------------------------------------------------------
-| Reliable Database Connection (Railway / Local)
+| Unified Database Connection (Railway + Local)
+|--------------------------------------------------------------------------
+| Uses PDO
+| Reads Railway environment variables automatically
+| Falls back to local defaults if not present
 |--------------------------------------------------------------------------
 */
 
 $pdo = null;
-$conn = null;
 
 /*
 |--------------------------------------------------------------------------
-| Safe environment variable reader
+| Safe environment reader
 |--------------------------------------------------------------------------
 */
+
 function env_value(string $key, $default = null)
 {
     $value = getenv($key);
@@ -37,39 +41,48 @@ function env_value(string $key, $default = null)
 
 /*
 |--------------------------------------------------------------------------
-| Load variables with safe fallbacks
+| Detect Railway automatically
 |--------------------------------------------------------------------------
 */
 
-$DB_HOST = env_value('MYSQLHOST', 'mysql');
+$isRailway = env_value('RAILWAY_ENVIRONMENT') !== null;
+
+/*
+|--------------------------------------------------------------------------
+| Load variables
+|--------------------------------------------------------------------------
+*/
+
+$DB_HOST = env_value('MYSQLHOST', '127.0.0.1');
 $DB_PORT = (int) env_value('MYSQLPORT', 3306);
-$DB_NAME = env_value('MYSQLDATABASE', 'railway');
+$DB_NAME = env_value('MYSQLDATABASE', 'fyu');
 $DB_USER = env_value('MYSQLUSER', 'root');
 $DB_PASS = env_value('MYSQLPASSWORD', '');
 
 /*
 |--------------------------------------------------------------------------
-| Debug visibility (safe)
+| Debug (safe for production logs)
 |--------------------------------------------------------------------------
 */
 
-error_log("DB CONFIG CHECK:");
-error_log("HOST=" . ($DB_HOST ?: 'missing'));
-error_log("PORT=" . ($DB_PORT ?: 'missing'));
-error_log("DB=" . ($DB_NAME ?: 'missing'));
-error_log("USER=" . ($DB_USER ?: 'missing'));
-error_log("PASS=" . ($DB_PASS ? '[set]' : 'missing'));
+error_log("=== DB CONFIG ===");
+error_log("ENV=" . ($isRailway ? "Railway" : "Local"));
+error_log("HOST=" . $DB_HOST);
+error_log("PORT=" . $DB_PORT);
+error_log("DB=" . $DB_NAME);
+error_log("USER=" . $DB_USER);
+error_log("PASS=" . ($DB_PASS ? "[set]" : "missing"));
 
 /*
 |--------------------------------------------------------------------------
-| Attempt connection
+| Connect
 |--------------------------------------------------------------------------
 */
 
 try {
 
     if (!$DB_HOST || !$DB_NAME || !$DB_USER) {
-        throw new Exception("Missing required DB configuration values");
+        throw new Exception("Missing required database configuration");
     }
 
     $dsn = sprintf(
@@ -91,15 +104,12 @@ try {
         ]
     );
 
-    $conn = $pdo;
-
-    error_log("DB STATUS: CONNECTION SUCCESS");
+    error_log("DB STATUS: CONNECTED");
 
 } catch (Throwable $e) {
 
-    error_log("DB STATUS: CONNECTION FAILED");
+    error_log("DB STATUS: FAILED");
     error_log($e->getMessage());
 
     $pdo = null;
-    $conn = null;
 }
