@@ -7,10 +7,10 @@ declare(strict_types=1);
 | Unified Database Connection (Railway + Local)
 |--------------------------------------------------------------------------
 | - Uses PDO
-| - Reads Railway environment variables automatically
-| - Works locally without changes
-| - Provides deterministic logging
-| - Adds DNS resolution diagnostics
+| - Supports DB_* and MYSQL* variables
+| - Works locally and on Railway
+| - Deterministic logging
+| - Fail-fast diagnostics
 |--------------------------------------------------------------------------
 */
 
@@ -43,7 +43,7 @@ function env_value(string $key, $default = null)
 
 /*
 |--------------------------------------------------------------------------
-| Detect Railway environment
+| Detect environment
 |--------------------------------------------------------------------------
 */
 
@@ -51,19 +51,44 @@ $isRailway = env_value('RAILWAY_ENVIRONMENT') !== null;
 
 /*
 |--------------------------------------------------------------------------
-| Load database configuration
+| Load configuration (priority order)
+|--------------------------------------------------------------------------
+| 1) DB_* (preferred)
+| 2) MYSQL* (fallback)
+| 3) Local defaults
 |--------------------------------------------------------------------------
 */
 
-$DB_HOST = env_value('MYSQLHOST', '127.0.0.1');
-$DB_PORT = (int) env_value('MYSQLPORT', 3306);
-$DB_NAME = env_value('MYSQLDATABASE', 'fyu');
-$DB_USER = env_value('MYSQLUSER', 'root');
-$DB_PASS = env_value('MYSQLPASSWORD', '');
+$DB_HOST =
+    env_value('DB_HOST')
+    ?? env_value('MYSQLHOST')
+    ?? '127.0.0.1';
+
+$DB_PORT =
+    (int) (
+        env_value('DB_PORT')
+        ?? env_value('MYSQLPORT')
+        ?? 3306
+    );
+
+$DB_NAME =
+    env_value('DB_DATABASE')
+    ?? env_value('MYSQLDATABASE')
+    ?? 'fyu';
+
+$DB_USER =
+    env_value('DB_USERNAME')
+    ?? env_value('MYSQLUSER')
+    ?? 'root';
+
+$DB_PASS =
+    env_value('DB_PASSWORD')
+    ?? env_value('MYSQLPASSWORD')
+    ?? '';
 
 /*
 |--------------------------------------------------------------------------
-| Debug configuration (safe)
+| Debug logging (safe)
 |--------------------------------------------------------------------------
 */
 
@@ -119,13 +144,13 @@ try {
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::ATTR_TIMEOUT => 5
+            PDO::ATTR_TIMEOUT => 5,
         ]
     );
 
     /*
     |--------------------------------------------------------------------------
-    | Verify connection with lightweight query
+    | Lightweight health check
     |--------------------------------------------------------------------------
     */
 
