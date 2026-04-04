@@ -6,9 +6,11 @@ declare(strict_types=1);
 |--------------------------------------------------------------------------
 | Unified Database Connection (Railway + Local)
 |--------------------------------------------------------------------------
-| Uses PDO
-| Reads Railway environment variables automatically
-| Falls back to local defaults if not present
+| - Uses PDO
+| - Reads Railway environment variables automatically
+| - Works locally without changes
+| - Provides deterministic logging
+| - Adds DNS resolution diagnostics
 |--------------------------------------------------------------------------
 */
 
@@ -41,7 +43,7 @@ function env_value(string $key, $default = null)
 
 /*
 |--------------------------------------------------------------------------
-| Detect Railway automatically
+| Detect Railway environment
 |--------------------------------------------------------------------------
 */
 
@@ -49,7 +51,7 @@ $isRailway = env_value('RAILWAY_ENVIRONMENT') !== null;
 
 /*
 |--------------------------------------------------------------------------
-| Load variables
+| Load database configuration
 |--------------------------------------------------------------------------
 */
 
@@ -61,21 +63,38 @@ $DB_PASS = env_value('MYSQLPASSWORD', '');
 
 /*
 |--------------------------------------------------------------------------
-| Debug (safe for production logs)
+| Debug configuration (safe)
 |--------------------------------------------------------------------------
 */
 
 error_log("=== DB CONFIG ===");
+
 error_log("ENV=" . ($isRailway ? "Railway" : "Local"));
-error_log("HOST=" . $DB_HOST);
-error_log("PORT=" . $DB_PORT);
-error_log("DB=" . $DB_NAME);
-error_log("USER=" . $DB_USER);
+error_log("HOST=" . ($DB_HOST ?: 'missing'));
+error_log("PORT=" . ($DB_PORT ?: 'missing'));
+error_log("DB=" . ($DB_NAME ?: 'missing'));
+error_log("USER=" . ($DB_USER ?: 'missing'));
 error_log("PASS=" . ($DB_PASS ? "[set]" : "missing"));
 
 /*
 |--------------------------------------------------------------------------
-| Connect
+| DNS Resolution Test
+|--------------------------------------------------------------------------
+*/
+
+$resolved = gethostbyname($DB_HOST);
+
+error_log("=== DNS TEST ===");
+error_log("HOST=" . $DB_HOST);
+error_log("RESOLVED=" . $resolved);
+
+if ($resolved === $DB_HOST) {
+    error_log("WARNING: HOST NOT RESOLVED");
+}
+
+/*
+|--------------------------------------------------------------------------
+| Attempt Database Connection
 |--------------------------------------------------------------------------
 */
 
@@ -104,12 +123,21 @@ try {
         ]
     );
 
+    /*
+    |--------------------------------------------------------------------------
+    | Verify connection with lightweight query
+    |--------------------------------------------------------------------------
+    */
+
+    $pdo->query("SELECT 1");
+
     error_log("DB STATUS: CONNECTED");
 
 } catch (Throwable $e) {
 
     error_log("DB STATUS: FAILED");
-    error_log($e->getMessage());
+    error_log("ERROR TYPE: " . get_class($e));
+    error_log("ERROR MESSAGE: " . $e->getMessage());
 
     $pdo = null;
 }
