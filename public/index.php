@@ -1,4 +1,9 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+echo "Index reached<br>";
 // 1. DATA LOGIC -------------------------------------------------------
 
 $pageTitle = "Home - Fangak Youth Union";
