@@ -1,5 +1,6 @@
 <?php
-
+echo "INDEX STARTED";
+exit;
 // 1. DATA LOGIC -------------------------------------------------------
 
 $pageTitle = "Home - Fangak Youth Union";
