@@ -13,7 +13,7 @@ echo "================================="
 echo "Configuring PHP-FPM..."
 
 sed -i \
-'s|^listen = .*|listen = 127.0.0.1:9000|' \
+'s|^listen = .*|listen = 127.0.0.1:9001|' \
 /usr/local/etc/php-fpm.d/www.conf
 
 #
