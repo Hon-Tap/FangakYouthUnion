@@ -56,21 +56,24 @@ try {
 // Youth Engagement Images from assets/images folder
 $engagements = [
     [
-        'title' => 'Community Clean-up',
-        'category' => 'Environment',
-        'img' => 'cleanup.jpg',
+        'title' => 'Fangak chair person with the team distributing fishing nets to the elderly in the community',
+        'category' => 'Suppport & Relief',
+        'img' => '<assets>
+        <images>Fishing.jpg',
         'span' => 'col-span-1 md:col-span-2 row-span-2' // For modern masonry feel
     ],
     [
-        'title' => 'Tech Workshop',
-        'category' => 'Education',
-        'img' => 'coding.jpg',
+        'title' => 'Emergency Response for the Floods',
+        'category' => 'Support & Relief',
+        'img' => '<assets>
+        <images>Emergency.jpg',
         'span' => 'col-span-1 row-span-1'
     ],
     [
-        'title' => 'Sports Tournament',
-        'category' => 'Health & Unity',
-        'img' => 'project1.jpg',
+        'title' => 'Fangak youth holding a meeting with the community to discuss emergency response to the floods',
+        'category' => 'Awareness & Advocacy',
+        'img' => '<assets>
+        <images>youthunion.jpg',
         'span' => 'col-span-1 row-span-1'
     ]
 ];

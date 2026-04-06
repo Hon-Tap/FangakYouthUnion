@@ -30,7 +30,7 @@ $current_leaders = [
     [
         "name" => "Mayiel Bol Deng",
         "role" => "Speaker",
-        "img"  => "images/mayiel.jpg",
+        "img"  => "assets/images/mayiel.jpg",
         "desc" => "Facilitates dialogues and public engagement.",
         "bio"  => "Mayiel is an active youth advocate who leads discussions, moderates forums, and promotes constructive dialogue among youth and community stakeholders."
     ],
@@ -38,7 +38,7 @@ $current_leaders = [
     [
         "name" => "Nyaluit Jany",
         "role" => "Project Coordinator & Advisor on Gender Affairs",
-        "img"  => "images/nyaluit.jpg",
+        "img"  => "assets/images/nyaluit.jpg",
         "desc" => "Coordinates field programs and promotes gender inclusion.",
         "bio"  => "Nyaluit leads youth empowerment initiatives, coordinates field-level program delivery, and serves as Advisor on Gender Affairs, ensuring gender equality and inclusive participation across FYU programs."
     ],
@@ -46,7 +46,7 @@ $current_leaders = [
     [
         "name" => "Lam Par Malual",
         "role" => "Treasurer",
-        "img"  => "images/Lam.jpg",
+        "img"  => "assets/images/Lam.jpg",
         "desc" => "Manages finances and financial accountability.",
         "bio"  => "Lam ensures fiscal responsibility, transparent budgeting, and accurate financial reporting across all FYU projects and operations."
     ],
@@ -54,7 +54,7 @@ $current_leaders = [
     [
         "name" => "Gatjiok Puok",
         "role" => "Deputy Chairman",
-        "img"  => "images/gatjok.jpg",
+        "img"  => "assets/images/gatjok.jpg",
         "desc" => "Supports leadership and oversees program implementation.",
         "bio"  => "Gatjiok assists the Chairman in leadership responsibilities, oversees program design and monitoring, and ensures activities align with FYU’s mission and impact goals."
     ],
@@ -62,7 +62,7 @@ $current_leaders = [
     [
         "name" => "Akoch Guek",
         "role" => "Advisor",
-        "img"  => "images/Akoch.jpg",
+        "img"  => "assets/images/Akoch.jpg",
         "desc" => "Provides strategic guidance and program support.",
         "bio"  => "Akoch brings extensive experience in peacebuilding and youth development, offering strategic advice and technical support to strengthen FYU’s initiatives and partnerships."
     ]
@@ -70,9 +70,9 @@ $current_leaders = [
 ];
 // --- DATA: PREVIOUS LEADERS ---
 $previous_leaders = [
-    ["name"=>"Deng Riek koryom","role"=>"Former Chairman (2011-2013)","img"=>"images/Deng.jpeg","desc"=>"Guided the union through post-conflict recovery.","bio"=>"Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."],
-    ["name"=>"Puok Bol Par","role"=>"Former Chariman (2013-2022)","img"=>"images/Puok.jpeg","desc"=>"Established the union's administrative framework.","bio"=>"As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."],
-    ["name"=>"Nin Deng Wang","role"=>"Former Chairman (2022-2025)","img"=>"images/NinDeng.jpg","desc"=>"Managed foundational grants and budgets.","bio"=>"Oversaw the union's finances during its critical growth phase, implementing a system of accountability."]
+    ["name"=>"Deng Riek koryom","role"=>"Former Chairman (2011-2013)","img"=>"assets/images/Deng.jpeg","desc"=>"Guided the union through post-conflict recovery.","bio"=>"Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."],
+    ["name"=>"Puok Bol Par","role"=>"Former Chariman (2013-2022)","img"=>"assets/images/Puok.jpeg","desc"=>"Established the union's administrative framework.","bio"=>"As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."],
+    ["name"=>"Nin Deng Wang","role"=>"Former Chairman (2022-2025)","img"=>"assets/images/NinDeng.jpg","desc"=>"Managed foundational grants and budgets.","bio"=>"Oversaw the union's finances during its critical growth phase, implementing a system of accountability."]
 ];
 ?>
 
