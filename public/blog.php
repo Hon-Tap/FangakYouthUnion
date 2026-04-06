@@ -1,6 +1,6 @@
 <?php
 
-// blog.php – Fixed Image Paths & Modern UI
+// blog.php – Advanced Editorial News Layout
 declare(strict_types=1);
 
 // 1. CONFIGURATION & DATABASE
@@ -11,11 +11,9 @@ require_once __DIR__ . "/../app/config/db.php";
 // ===================================================================
 function getImagePath($imageName): string {
     $folder = 'uploads/news/';
-
     if (!empty($imageName)) {
         return $folder . htmlspecialchars((string)$imageName);
     }
-
     return 'uploads/news/default.jpg';
 }
 
@@ -26,10 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
     header("Content-Type: application/json");
 
     if (!$pdo) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Database is currently unavailable.'
-        ]);
+        echo json_encode(['status' => 'error', 'message' => 'Database is currently unavailable.']);
         exit;
     }
 
@@ -39,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
         switch ($_POST['action']) {
             case 'subscribe':
                 $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
-
                 if (!$email) {
                     $response['message'] = "Please enter a valid email address.";
                     break;
@@ -47,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
 
                 $chk = $pdo->prepare("SELECT id FROM subscribers WHERE email = ?");
                 $chk->execute([$email]);
-
                 if ($chk->fetch()) {
                     $response['message'] = "You are already subscribed!";
                     break;
@@ -55,17 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
 
                 $stmt = $pdo->prepare("INSERT INTO subscribers (email) VALUES (?)");
                 if ($stmt->execute([$email])) {
-                    $response = [
-                        'status' => 'success',
-                        'message' => 'Welcome to our community!'
-                    ];
-
+                    $response = ['status' => 'success', 'message' => 'Welcome to our community!'];
                     try {
                         $pdo->prepare("INSERT INTO admin_notifications (type, message, link) VALUES ('subscription', ?, '/admin/subscribers')")
                             ->execute(["New subscriber: $email"]);
-                    } catch (Throwable $e) {
-                        error_log("Blog subscription notification error: " . $e->getMessage());
-                    }
+                    } catch (Throwable $e) { error_log("Blog sub err: " . $e->getMessage()); }
                 } else {
                     $response['message'] = "Unable to save your subscription right now.";
                 }
@@ -82,29 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
                     break;
                 }
 
-                $sql = "INSERT INTO blog_comments (post_id, user_name, user_email, comment_body, created_at)
-                        VALUES (:pid, :name, :email, :body, NOW())";
+                $sql = "INSERT INTO blog_comments (post_id, user_name, user_email, comment_body, created_at) VALUES (:pid, :name, :email, :body, NOW())";
                 $stmt = $pdo->prepare($sql);
 
-                if ($stmt->execute([
-                    'pid'   => $postId,
-                    'name'  => $name,
-                    'email' => $email,
-                    'body'  => $body
-                ])) {
+                if ($stmt->execute(['pid' => $postId, 'name' => $name, 'email' => $email, 'body' => $body])) {
                     try {
-                        $notifMsg = "New comment from $name on Post #$postId";
-                        $notifLink = "/admin/comments.php?post_id=$postId";
-
-                        $pdo->prepare("INSERT INTO admin_notifications (type, message, link, created_at)
-                                       VALUES ('comment', :msg, :link, NOW())")
-                            ->execute([
-                                'msg'  => $notifMsg,
-                                'link' => $notifLink
-                            ]);
-                    } catch (Throwable $e) {
-                        error_log("Blog comment notification error: " . $e->getMessage());
-                    }
+                        $pdo->prepare("INSERT INTO admin_notifications (type, message, link, created_at) VALUES ('comment', :msg, :link, NOW())")
+                            ->execute(['msg' => "New comment from $name on Post #$postId", 'link' => "/admin/comments.php?post_id=$postId"]);
+                    } catch (Throwable $e) { error_log("Blog comment err: " . $e->getMessage()); }
 
                     $response = [
                         'status' => 'success',
@@ -137,9 +109,11 @@ $viewMode = ($postId > 0) ? 'single' : 'index';
 
 $currentPost = null;
 $featuredPost = null;
+$secondaryPosts = [];
 $listPosts = [];
+$relatedPosts = [];
 $comments = [];
-$pageTitle = "Blog & Stories - Fangak Youth Union";
+$pageTitle = "News Hub - Fangak Youth Union";
 
 if ($pdo) {
     try {
@@ -149,224 +123,319 @@ if ($pdo) {
             $currentPost = $stmt->fetch();
 
             if ($currentPost) {
+                // Fetch Comments
                 $cStmt = $pdo->prepare("SELECT * FROM blog_comments WHERE post_id = ? ORDER BY created_at DESC");
                 $cStmt->execute([$postId]);
                 $comments = $cStmt->fetchAll();
-                $pageTitle = htmlspecialchars($currentPost['title']) . " - FYU Blog";
+                
+                // Fetch Related Contents (excluding current post)
+                $rStmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id != ? ORDER BY created_at DESC LIMIT 3");
+                $rStmt->execute([$postId]);
+                $relatedPosts = $rStmt->fetchAll();
+
+                $pageTitle = htmlspecialchars($currentPost['title']) . " - FYU News";
             } else {
                 header("Location: blog.php");
                 exit;
             }
         } else {
-            $stmt = $pdo->query("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 10");
+            $stmt = $pdo->query("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 15");
             $allPosts = $stmt->fetchAll();
 
             if (!empty($allPosts)) {
                 $featuredPost = $allPosts[0];
-                $listPosts = array_slice($allPosts, 1);
+                $secondaryPosts = array_slice($allPosts, 1, 2); // Next 2 for the top grid
+                $listPosts = array_slice($allPosts, 3); // The rest
             }
         }
     } catch (Throwable $e) {
         error_log("Blog query error: " . $e->getMessage());
-        $currentPost = null;
-        $featuredPost = null;
-        $listPosts = [];
-        $comments = [];
     }
-} else {
-    error_log("Blog page: PDO connection unavailable.");
 }
 
 include_once __DIR__ . "/../app/views/layouts/header.php";
 ?>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
 <style>
-    /* --- CSS (Same Modern Design) --- */
+    /* --- ADVANCED EDITORIAL CSS --- */
     :root {
-        --color-primary: #0f5132;
-        --color-accent: #d97706;
-        --color-text: #1f2937;
-        --color-muted: #6b7280;
-        --color-bg: #f9fafb;
-        --color-card: #ffffff;
-        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-        --radius-lg: 1rem;
+        --color-brand: #0f5132;
+        --color-brand-light: #ecfdf5;
+        --color-text-main: #111827;
+        --color-text-muted: #4b5563;
+        --color-border: #e5e7eb;
+        --color-bg: #ffffff;
+        --color-bg-alt: #f9fafb;
+        --font-headline: 'Merriweather', serif;
+        --font-body: 'Roboto', sans-serif;
     }
-    body { background: var(--color-bg); color: var(--color-text); font-family: 'Inter', sans-serif; line-height: 1.6; }
-    h1, h2, h3 { font-family: 'Playfair Display', serif; color: #111827; }
-    a { text-decoration: none; color: inherit; }
-    img { max-width: 100%; height: auto; display: block; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
     
-    .badge { padding: 0.25rem 0.75rem; background: #ecfdf5; color: var(--color-primary); border-radius: 999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--color-primary); color: white; padding: 0.75rem 1.5rem; border-radius: 999px; font-weight: 500; border: none; cursor: pointer; transition: all 0.2s; }
-    .btn:hover { background: #064e3b; }
-
-    /* Layouts */
-    .blog-header { text-align: center; padding: 4rem 0 3rem; }
-    .blog-header h1 { font-size: 3rem; margin-bottom: 1rem; }
+    body { background: var(--color-bg); color: var(--color-text-main); font-family: var(--font-body); line-height: 1.6; margin: 0; }
+    h1, h2, h3, h4, h5, h6 { font-family: var(--font-headline); margin: 0; color: var(--color-text-main); }
+    a { text-decoration: none; color: inherit; transition: color 0.2s; }
+    a:hover { color: var(--color-brand); }
+    img { max-width: 100%; height: auto; display: block; object-fit: cover; }
     
-    /* Featured Card */
-    .featured-card { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; background: var(--color-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 4rem; }
-    .featured-img-wrap { height: 100%; min-height: 400px; }
-    .featured-img { width: 100%; height: 100%; object-fit: cover; }
-    .featured-content { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
+    .news-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
 
-    /* Grid */
-    .content-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 3rem; margin-bottom: 4rem; }
-    .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
+    /* Breaking News Banner */
+    .breaking-banner { background: var(--color-brand); color: white; padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 1rem; font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2rem; }
+    .breaking-banner .pulse { width: 8px; height: 8px; background: #fbbf24; border-radius: 50%; box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); } }
+
+    /* Common UI Elements */
+    .category-tag { color: var(--color-brand); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: block; }
+    .news-date { color: var(--color-text-muted); font-size: 0.85rem; display: block; margin-top: 0.5rem; }
     
-    .post-card { background: var(--color-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); display: flex; flex-direction: column; height: 100%; transition: transform 0.3s; }
-    .post-card:hover { transform: translateY(-5px); }
-    .card-img { height: 220px; object-fit: cover; }
-    .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
-    .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; }
-    .read-more { color: var(--color-primary); font-weight: 600; margin-top: auto; }
+    .img-hover-wrap { overflow: hidden; position: relative; }
+    .img-hover-wrap img { transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); width: 100%; }
+    .news-card:hover .img-hover-wrap img { transform: scale(1.05); }
 
-    /* Sidebar */
-    .sidebar-widget { background: var(--color-card); padding: 1.5rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid #e5e7eb; }
-    .newsletter-input { width: 100%; padding: 0.75rem; margin-bottom: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; }
+    /* --- INDEX LAYOUT: BENTO GRID --- */
+    .top-stories-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 3rem; padding-bottom: 3rem; border-bottom: 2px solid var(--color-border); }
+    .lead-story .headline { font-size: 2.5rem; line-height: 1.2; margin: 1rem 0; font-weight: 900; }
+    .lead-story p { font-size: 1.15rem; color: var(--color-text-muted); margin-bottom: 1rem; }
+    .lead-story .img-hover-wrap { height: 450px; margin-bottom: 1.5rem; }
 
-    /* Single & Comments */
-    .article-img { width: 100%; max-height: 500px; object-fit: cover; border-radius: var(--radius-lg); margin-bottom: 3rem; }
-    .comments-section { max-width: 800px; margin: 4rem auto 0; padding-top: 3rem; border-top: 1px solid #e5e7eb; }
-    .comment-item { padding: 1.5rem; background: white; border-radius: 0.5rem; border: 1px solid #f3f4f6; margin-bottom: 1rem; }
-    .form-input, .form-textarea { width: 100%; padding: 0.875rem; border: 1px solid #d1d5db; border-radius: 0.5rem; margin-bottom: 1rem; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .secondary-stories { display: flex; flex-direction: column; gap: 2rem; }
+    .secondary-story { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    .secondary-story .img-hover-wrap { height: 200px; }
+    .secondary-story .headline { font-size: 1.25rem; line-height: 1.3; }
 
+    /* Lower Section Grid */
+    .main-content-layout { display: grid; grid-template-columns: 3fr 1fr; gap: 3rem; }
+    
+    .news-list { display: flex; flex-direction: column; gap: 2rem; }
+    .news-list-item { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-border); align-items: center; }
+    .news-list-item .img-hover-wrap { height: 180px; }
+    .news-list-item .headline { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    
+    /* Sidebar Widgets */
+    .widget-title { font-size: 1.25rem; border-left: 4px solid var(--color-brand); padding-left: 0.75rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar-box { background: var(--color-bg-alt); padding: 1.5rem; margin-bottom: 2rem; border-top: 4px solid var(--color-text-main); }
+    .newsletter-input { width: 100%; padding: 0.75rem; margin-bottom: 0.75rem; border: 1px solid var(--color-border); box-sizing: border-box; font-family: var(--font-body); }
+    .btn-editorial { display: block; width: 100%; background: var(--color-text-main); color: white; text-align: center; padding: 0.75rem; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-editorial:hover { background: var(--color-brand); }
+
+    /* --- SINGLE POST LAYOUT --- */
+    .article-header { text-align: center; max-width: 900px; margin: 3rem auto 2rem; }
+    .article-headline { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+    .article-meta { display: flex; justify-content: center; gap: 1rem; align-items: center; font-size: 0.9rem; color: var(--color-text-muted); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: 1rem 0; margin-bottom: 3rem; }
+    
+    .article-hero { width: 100%; max-height: 600px; object-fit: cover; margin-bottom: 3rem; }
+    
+    .article-body { max-width: 760px; margin: 0 auto; font-size: 1.15rem; line-height: 1.8; color: #374151; font-family: var(--font-headline); }
+    .article-body p { margin-bottom: 1.5rem; }
+    .article-body p:first-of-type::first-letter { font-size: 4rem; float: left; line-height: 0.8; padding-right: 0.5rem; color: var(--color-text-main); font-weight: 900; }
+
+    /* Related Content Grid */
+    .related-section { margin-top: 4rem; padding-top: 3rem; border-top: 2px solid var(--color-text-main); background: var(--color-bg-alt); padding: 4rem 1.5rem; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1280px; margin: 0 auto; }
+    .related-card .img-hover-wrap { height: 200px; margin-bottom: 1rem; }
+    .related-card .headline { font-size: 1.2rem; }
+
+    /* Comments Section */
+    .comments-wrapper { max-width: 760px; margin: 4rem auto; }
+    .comment-block { padding: 1.5rem 0; border-bottom: 1px solid var(--color-border); }
+    .comment-author { font-weight: 700; font-family: var(--font-body); }
+    .comment-text { font-family: var(--font-body); margin-top: 0.5rem; }
+    
+    .comment-form { background: var(--color-bg-alt); padding: 2rem; margin-top: 3rem; border-top: 4px solid var(--color-brand); }
+    .form-group { margin-bottom: 1rem; }
+    .form-control { width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); font-family: var(--font-body); box-sizing: border-box; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .top-stories-grid, .main-content-layout { grid-template-columns: 1fr; }
+        .secondary-stories { flex-direction: row; }
+    }
     @media (max-width: 768px) {
-        .featured-card, .content-grid, .form-row { grid-template-columns: 1fr; }
-        .featured-img-wrap { min-height: 250px; }
+        .secondary-stories { flex-direction: column; }
+        .news-list-item { grid-template-columns: 1fr; }
+        .news-list-item .img-hover-wrap { height: 250px; }
+        .lead-story .headline { font-size: 2rem; }
     }
 </style>
 
-<div class="container">
+<div class="breaking-banner">
+    <div class="pulse"></div>
+    <span>Latest Updates from South Sudan & The Union</span>
+</div>
+
+<div class="news-container">
 
     <?php if ($viewMode === 'index'): ?>
         
-        <header class="blog-header">
-            <span class="badge">Community Updates</span>
-            <h1>Fangak Stories</h1>
-            <p>News, events, and stories from the heart of our union.</p>
-        </header>
-
         <?php if ($featuredPost): ?>
-        <a href="?post=<?= $featuredPost['id'] ?>" class="featured-card">
-            <div class="featured-img-wrap">
-                <img src="<?= getImagePath($featuredPost['image']) ?>" 
-                     alt="<?= htmlspecialchars($featuredPost['title']) ?>" class="featured-img">
+        <section class="top-stories-grid">
+            <article class="news-card lead-story">
+                <a href="?post=<?= $featuredPost['id'] ?>">
+                    <div class="img-hover-wrap">
+                        <img src="<?= getImagePath($featuredPost['image']) ?>" alt="<?= htmlspecialchars($featuredPost['title']) ?>">
+                    </div>
+                    <span class="category-tag"><?= htmlspecialchars($featuredPost['category'] ?? 'Headlines') ?></span>
+                    <h2 class="headline"><?= htmlspecialchars($featuredPost['title']) ?></h2>
+                    <p><?= htmlspecialchars($featuredPost['subheading'] ?? strip_tags(substr($featuredPost['description'], 0, 150))) ?>...</p>
+                    <span class="news-date"><?= date('F d, Y', strtotime($featuredPost['created_at'])) ?></span>
+                </a>
+            </article>
+
+            <div class="secondary-stories">
+                <?php foreach ($secondaryPosts as $post): ?>
+                <article class="news-card secondary-story">
+                    <a href="?post=<?= $post['id'] ?>">
+                        <div class="img-hover-wrap">
+                            <img src="<?= getImagePath($post['image']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
+                        </div>
+                        <div style="padding-top: 1rem;">
+                            <span class="category-tag"><?= htmlspecialchars($post['category'] ?? 'Regional') ?></span>
+                            <h3 class="headline"><?= htmlspecialchars($post['title']) ?></h3>
+                            <span class="news-date"><?= date('M d, Y', strtotime($post['created_at'])) ?></span>
+                        </div>
+                    </a>
+                </article>
+                <?php endforeach; ?>
             </div>
-            <div class="featured-content">
-                <div style="color:var(--color-muted); margin-bottom:0.5rem;">
-                    <?= date('F d, Y', strtotime($featuredPost['created_at'])) ?>
-                </div>
-                <h2 style="font-size: 2rem; margin-bottom: 1rem;"><?= htmlspecialchars($featuredPost['title']) ?></h2>
-                <p style="color: var(--color-muted); font-size: 1.1rem; margin-bottom: 2rem;">
-                    <?= htmlspecialchars($featuredPost['subheading']) ?>
-                </p>
-                <span class="btn" style="width: fit-content;">Read Full Story</span>
-            </div>
-        </a>
+        </section>
         <?php endif; ?>
 
-        <div class="content-grid">
-            <main>
-                <div class="posts-grid">
-                    <?php if (empty($listPosts) && !$featuredPost): ?>
-                        <p>No stories found.</p>
-                    <?php else: ?>
-                        <?php foreach ($listPosts as $post): ?>
-                        <article class="post-card">
-                            <a href="?post=<?= $post['id'] ?>">
-                                <img src="<?= getImagePath($post['image']) ?>" 
-                                     alt="<?= htmlspecialchars($post['title']) ?>" class="card-img" loading="lazy">
-                            </a>
-                            <div class="card-body">
-                                <div style="color:var(--color-muted); font-size:0.875rem; margin-bottom:0.5rem;">
-                                    <?= date('M d, Y', strtotime($post['created_at'])) ?>
-                                </div>
-                                <h3 class="card-title">
-                                    <a href="?post=<?= $post['id'] ?>"><?= htmlspecialchars($post['title']) ?></a>
-                                </h3>
-                                <p style="color:#666; font-size:0.95rem; margin-bottom:1.5rem; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
-                                    <?= htmlspecialchars(strip_tags($post['description'])) ?>
-                                </p>
-                                <a href="?post=<?= $post['id'] ?>" class="read-more">Read Article &rarr;</a>
+        <section class="main-content-layout">
+            <div class="news-list">
+                <h3 class="widget-title">More Stories</h3>
+                <?php if (empty($listPosts) && !$featuredPost): ?>
+                    <p>No stories found.</p>
+                <?php else: ?>
+                    <?php foreach ($listPosts as $post): ?>
+                    <article class="news-card news-list-item">
+                        <a href="?post=<?= $post['id'] ?>">
+                            <div class="img-hover-wrap">
+                                <img src="<?= getImagePath($post['image']) ?>" alt="<?= htmlspecialchars($post['title']) ?>" loading="lazy">
                             </div>
-                        </article>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
-            </main>
+                        </a>
+                        <div>
+                            <span class="category-tag"><?= htmlspecialchars($post['category'] ?? 'Community') ?></span>
+                            <a href="?post=<?= $post['id'] ?>">
+                                <h3 class="headline"><?= htmlspecialchars($post['title']) ?></h3>
+                            </a>
+                            <p style="color: var(--color-text-muted); font-size: 1rem; margin-top: 0.5rem;">
+                                <?= htmlspecialchars(strip_tags(substr($post['description'], 0, 120))) ?>...
+                            </p>
+                            <span class="news-date"><?= date('M d, Y', strtotime($post['created_at'])) ?></span>
+                        </div>
+                    </article>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
 
-            <aside>
-                <div class="sidebar-widget">
-                    <h3 style="font-size:1.1rem; font-weight:700; color:var(--color-primary); margin-bottom:1rem;">Newsletter</h3>
+            <aside class="editorial-sidebar">
+                <div class="sidebar-box">
+                    <h3 class="widget-title" style="border-left-color: #d97706;">Regional Focus</h3>
+                    <p style="font-size: 0.95rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                        Deep dives into the socio-economic and cultural developments shaping South Sudan today.
+                    </p>
+                    <ul style="list-style: none; padding: 0; margin: 0; font-weight: 500; display:flex; flex-direction: column; gap: 0.75rem;">
+                        <li><a href="#">&rarr; Juba Tech Initiatives</a></li>
+                        <li><a href="#">&rarr; Fangak Community Reports</a></li>
+                        <li><a href="#">&rarr; Digital Transformation in SS</a></li>
+                        <li><a href="#">&rarr; National Health Reforms</a></li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-box">
+                    <h3 class="widget-title">The FYU Briefing</h3>
+                    <p style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--color-text-muted);">Get essential news and community updates delivered straight to your inbox.</p>
                     <form id="newsletterForm" onsubmit="submitNewsletter(event)">
-                        <input type="email" name="email" class="newsletter-input" placeholder="Your email address" required>
-                        <button type="submit" class="btn" style="width: 100%; justify-content: center;">Subscribe</button>
-                        <div id="newsletterMsg" style="margin-top: 0.5rem; font-size: 0.85rem;"></div>
+                        <input type="email" name="email" class="newsletter-input" placeholder="Email address" required>
+                        <button type="submit" class="btn-editorial">Sign Up</button>
+                        <div id="newsletterMsg" style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 500;"></div>
                     </form>
                 </div>
             </aside>
-        </div>
+        </section>
 
     <?php elseif ($viewMode === 'single' && $currentPost): ?>
         
-        <article style="padding: 4rem 0;">
-            <header style="text-align:center; margin-bottom:3rem;">
-                <span class="badge" style="margin-bottom: 1rem;"><?= htmlspecialchars($currentPost['category'] ?? 'Update') ?></span>
-                <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem);"><?= htmlspecialchars($currentPost['title']) ?></h1>
-                <div style="color:var(--color-muted); margin-top:1rem;">
-                    <?= date('F d, Y', strtotime($currentPost['created_at'])) ?> • By <?= htmlspecialchars($currentPost['author'] ?? 'Admin') ?>
+        <article>
+            <header class="article-header">
+                <span class="category-tag" style="font-size: 1rem;"><?= htmlspecialchars($currentPost['category'] ?? 'Focus') ?></span>
+                <h1 class="article-headline"><?= htmlspecialchars($currentPost['title']) ?></h1>
+                
+                <div class="article-meta">
+                    <span><strong>By <?= htmlspecialchars($currentPost['author'] ?? 'FYU Editorial Board') ?></strong></span>
+                    <span>•</span>
+                    <span><?= date('F d, Y', strtotime($currentPost['created_at'])) ?></span>
+                    <span>•</span>
+                    <span><i class="fa-solid fa-share-nodes" style="cursor:pointer;" title="Share"></i></span>
                 </div>
             </header>
 
-            <img src="<?= getImagePath($currentPost['image']) ?>" 
-                 alt="<?= htmlspecialchars($currentPost['title']) ?>" class="article-img">
+            <img src="<?= getImagePath($currentPost['image']) ?>" alt="<?= htmlspecialchars($currentPost['title']) ?>" class="article-hero">
 
-            <div style="max-width: 800px; margin: 0 auto; font-size: 1.125rem; line-height: 1.8; color: #374151;">
-                <?= $currentPost['description'] ?> </div>
-
-            <div class="comments-section">
-                <h3 style="margin-bottom: 2rem;">Discussion (<?= count($comments) ?>)</h3>
-                <ul id="commentList" style="list-style:none; padding:0; margin-bottom:3rem;">
-                    <?php if ($comments): foreach($comments as $cmt): ?>
-                        <li class="comment-item">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                                <span style="font-weight:700; color:var(--color-primary);"><?= htmlspecialchars($cmt['user_name']) ?></span>
-                                <span style="font-size:0.85rem; color:var(--color-muted);"><?= date('M d, Y', strtotime($cmt['created_at'])) ?></span>
-                            </div>
-                            <div style="color: #4b5563;"><?= nl2br(htmlspecialchars($cmt['comment_body'])) ?></div>
-                        </li>
-                    <?php endforeach; else: ?>
-                        <li style="text-align: center; color: #999;">No comments yet.</li>
-                    <?php endif; ?>
-                </ul>
-
-                <div class="sidebar-widget" style="background: #f8fafc;">
-                    <h4 style="margin-bottom: 1rem;">Leave a Reply</h4>
-                    <form id="commentForm" onsubmit="submitComment(event)">
-                        <input type="hidden" name="post_id" value="<?= $currentPost['id'] ?>">
-                        <div class="form-row">
-                            <input type="text" name="user_name" class="form-input" placeholder="Name" required>
-                            <input type="email" name="user_email" class="form-input" placeholder="Email" required>
-                        </div>
-                        <textarea name="comment_body" class="form-textarea" rows="4" placeholder="Comment" required></textarea>
-                        <button type="submit" class="btn" id="commentBtn">Post Comment</button>
-                        <div id="commentMsg" style="margin-top: 10px; font-weight: 600;"></div>
-                    </form>
-                </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 3rem;">
-                <a href="blog.php" style="color: var(--color-muted); font-weight: 500;">&larr; Back to all stories</a>
+            <div class="article-body">
+                <?= $currentPost['description'] // Assuming HTML content is safely stored ?>
             </div>
         </article>
+
+        <?php if (!empty($relatedPosts)): ?>
+        <section class="related-section">
+            <h2 class="widget-title" style="text-align: center; border-left: none; margin-bottom: 3rem;">Read Next</h2>
+            <div class="related-grid">
+                <?php foreach ($relatedPosts as $rPost): ?>
+                <article class="news-card related-card">
+                    <a href="?post=<?= $rPost['id'] ?>">
+                        <div class="img-hover-wrap">
+                            <img src="<?= getImagePath($rPost['image']) ?>" alt="<?= htmlspecialchars($rPost['title']) ?>" loading="lazy">
+                        </div>
+                        <span class="category-tag"><?= htmlspecialchars($rPost['category'] ?? 'Related') ?></span>
+                        <h3 class="headline"><?= htmlspecialchars($rPost['title']) ?></h3>
+                    </a>
+                </article>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
+
+        <div class="comments-wrapper">
+            <h3 class="widget-title" style="border-left-color: var(--color-text-main);">Join the Discussion (<?= count($comments) ?>)</h3>
+            
+            <div id="commentList">
+                <?php if ($comments): foreach($comments as $cmt): ?>
+                    <div class="comment-block">
+                        <div style="display:flex; justify-content:space-between; align-items: baseline;">
+                            <span class="comment-author"><?= htmlspecialchars($cmt['user_name']) ?></span>
+                            <span class="news-date" style="margin:0;"><?= date('M d, Y', strtotime($cmt['created_at'])) ?></span>
+                        </div>
+                        <div class="comment-text"><?= nl2br(htmlspecialchars($cmt['comment_body'])) ?></div>
+                    </div>
+                <?php endforeach; else: ?>
+                    <p style="color: var(--color-text-muted);">Be the first to share your perspective on this story.</p>
+                <?php endif; ?>
+            </div>
+
+            <div class="comment-form">
+                <h4 style="margin-bottom: 1.5rem; font-family: var(--font-body); text-transform: uppercase;">Post a Comment</h4>
+                <form id="commentForm" onsubmit="submitComment(event)">
+                    <input type="hidden" name="post_id" value="<?= $currentPost['id'] ?>">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <input type="text" name="user_name" class="form-control" placeholder="Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="user_email" class="form-control" placeholder="Email Address" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="comment_body" class="form-control" rows="5" placeholder="Your comment..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-editorial" id="commentBtn" style="width: auto; padding: 0.75rem 2rem;">Submit Comment</button>
+                    <div id="commentMsg" style="margin-top: 15px; font-weight: 500;"></div>
+                </form>
+            </div>
+        </div>
 
     <?php endif; ?>
 
@@ -390,8 +459,8 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
         .then(r => r.json())
         .then(d => {
             msg.textContent = d.message;
-            msg.style.color = d.status === 'success' ? 'green' : 'red';
-            btn.disabled = false; btn.textContent = 'Subscribe';
+            msg.style.color = d.status === 'success' ? '#0f5132' : '#dc2626';
+            btn.disabled = false; btn.textContent = 'SIGN UP';
             if(d.status === 'success') form.reset();
         });
     }
@@ -406,20 +475,27 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
         const data = new FormData(form);
         data.append('action', 'add_comment');
 
-        btn.disabled = true; btn.textContent = 'Posting...';
+        btn.disabled = true; btn.textContent = 'POSTING...';
 
         fetch('blog.php', { method: 'POST', body: data })
         .then(r => r.json())
         .then(d => {
             msg.textContent = d.message;
-            msg.style.color = d.status === 'success' ? '#0f5132' : 'red';
-            btn.disabled = false; btn.textContent = 'Post Comment';
+            msg.style.color = d.status === 'success' ? '#0f5132' : '#dc2626';
+            btn.disabled = false; btn.textContent = 'SUBMIT COMMENT';
             if(d.status === 'success') {
-                const li = document.createElement('li');
-                li.className = 'comment-item';
-                li.style.borderLeft = '4px solid #0f5132';
-                li.innerHTML = `<strong>${d.comment.user_name}</strong> <span style='font-size:0.8rem; float:right;'>Just Now</span><br>${d.comment.comment_body}`;
-                list.prepend(li);
+                const div = document.createElement('div');
+                div.className = 'comment-block';
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items: baseline;">
+                        <span class="comment-author">${d.comment.user_name}</span>
+                        <span class="news-date" style="margin:0;">Just Now</span>
+                    </div>
+                    <div class="comment-text">${d.comment.comment_body}</div>
+                `;
+                // Remove the "Be the first" text if it exists
+                if(list.querySelector('p')) list.innerHTML = '';
+                list.prepend(div);
                 form.reset();
             }
         });
