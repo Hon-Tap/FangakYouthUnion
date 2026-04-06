@@ -334,12 +334,12 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
 
                 <div class="input-group">
                     <label>Full Name</label>
-                    <input type="text" name="full_name" placeholder="John Doe" required>
+                    <input type="text" name="full_name" placeholder="Fangak son/daughter" required>
                 </div>
 
                 <div class="input-group">
                     <label>Email Address</label>
-                    <input type="email" name="email" placeholder="john@example.com" required>
+                    <input type="email" name="email" placeholder="email@example.com" required>
                 </div>
 
                 <div class="input-group">

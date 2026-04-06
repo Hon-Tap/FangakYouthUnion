@@ -8,19 +8,70 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
 if(!isset($baseUrl)) $baseUrl = '/public/';
 
 // --- DATA: CURRENT LEADERS ---
+// --- DATA: CURRENT LEADERS ---
 $current_leaders = [
-    ["name"=>"Mawich Duoth Gatluak","role"=>"Chairman","img"=>"images/mawich.jpg","desc"=>"Leads FYU’s strategic vision.","bio"=>"Mawich is a passionate leader with experience in community organizing and youth empowerment. He drives FYU’s strategic direction and partnerships."],
-    ["name"=>"Tap Kuol Khor","role"=>"Secretary","img"=>"images/tap.jpg","desc"=>"Oversees communication.","bio"=>"Tap ensures smooth communication across teams, coordinates events, and documents FYU’s work."],
-    ["name"=>"Mayiel Bol Deng","role"=>"Speaker","img"=>"images/farming.jpg","desc"=>"Facilitates dialogues.","bio"=>"Mayiel is an active youth advocate who facilitates dialogues and public engagements."],
-    ["name"=>"Nyaluit Jany","role"=>"Project Coordinator","img"=>"images/FYU-LOGO.jpg","desc"=>"Coordinates field programs.","bio"=>"Nyaluak leads initiatives in youth empowerment and coordinates field-level program delivery."],
-    ["name"=>"Lam Par Malual","role"=>"Treasurer","img"=>"images/FYU-LOGO.jpg","desc"=>"Manages finances.","bio"=>"Lam ensures fiscal responsibility and transparent reporting across FYU projects."],
-    ["name"=>"Gatjiok Puok","role"=>"Deputy Chairman","img"=>"images/FYU-LOGO.jpg","desc"=>"Oversees program design.","bio"=>"Gatjiok manages monitoring & evaluation for FYU programs and ensures impact-focused design."]
-];
 
+    [
+        "name" => "Mawich Duoth Gatluak",
+        "role" => "Chairman",
+        "img"  => "images/mawich.jpg",
+        "desc" => "Leads FYU’s strategic vision and direction.",
+        "bio"  => "Mawich is a passionate leader with strong experience in community organizing and youth empowerment. He drives FYU’s strategic direction, partnerships, and institutional growth."
+    ],
+
+    [
+        "name" => "Tap Kuol Khor",
+        "role" => "Secretary",
+        "img"  => "images/tap.jpg",
+        "desc" => "Oversees communication and documentation.",
+        "bio"  => "Tap ensures smooth communication across teams, coordinates meetings and events, and maintains accurate records of FYU’s activities and decisions."
+    ],
+
+    [
+        "name" => "Mayiel Bol Deng",
+        "role" => "Speaker",
+        "img"  => "images/mayiel.jpg",
+        "desc" => "Facilitates dialogues and public engagement.",
+        "bio"  => "Mayiel is an active youth advocate who leads discussions, moderates forums, and promotes constructive dialogue among youth and community stakeholders."
+    ],
+
+    [
+        "name" => "Nyaluit Jany",
+        "role" => "Project Coordinator & Advisor on Gender Affairs",
+        "img"  => "images/nyaluit.jpg",
+        "desc" => "Coordinates field programs and promotes gender inclusion.",
+        "bio"  => "Nyaluit leads youth empowerment initiatives, coordinates field-level program delivery, and serves as Advisor on Gender Affairs, ensuring gender equality and inclusive participation across FYU programs."
+    ],
+
+    [
+        "name" => "Lam Par Malual",
+        "role" => "Treasurer",
+        "img"  => "images/Lam.jpg",
+        "desc" => "Manages finances and financial accountability.",
+        "bio"  => "Lam ensures fiscal responsibility, transparent budgeting, and accurate financial reporting across all FYU projects and operations."
+    ],
+
+    [
+        "name" => "Gatjiok Puok",
+        "role" => "Deputy Chairman",
+        "img"  => "images/gatjok.jpg",
+        "desc" => "Supports leadership and oversees program implementation.",
+        "bio"  => "Gatjiok assists the Chairman in leadership responsibilities, oversees program design and monitoring, and ensures activities align with FYU’s mission and impact goals."
+    ],
+
+    [
+        "name" => "Akoch Guek",
+        "role" => "Advisor",
+        "img"  => "images/Akoch.jpg",
+        "desc" => "Provides strategic guidance and program support.",
+        "bio"  => "Akoch brings extensive experience in peacebuilding and youth development, offering strategic advice and technical support to strengthen FYU’s initiatives and partnerships."
+    ]
+
+];
 // --- DATA: PREVIOUS LEADERS ---
 $previous_leaders = [
-    ["name"=>"Deng Riek koryom","role"=>"Former Chairman (2011-2013)","img"=>"images/FYU-LOGO.jpg","desc"=>"Guided the union through post-conflict recovery.","bio"=>"Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."],
-    ["name"=>"Puok Bol Par","role"=>"Former Chariman (2013-2022)","img"=>"images/FYU-LOGO.jpg","desc"=>"Established the union's administrative framework.","bio"=>"As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."],
+    ["name"=>"Deng Riek koryom","role"=>"Former Chairman (2011-2013)","img"=>"images/Deng.jpeg","desc"=>"Guided the union through post-conflict recovery.","bio"=>"Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."],
+    ["name"=>"Puok Bol Par","role"=>"Former Chariman (2013-2022)","img"=>"images/Puok.jpeg","desc"=>"Established the union's administrative framework.","bio"=>"As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."],
     ["name"=>"Nin Deng Wang","role"=>"Former Chairman (2022-2025)","img"=>"images/NinDeng.jpg","desc"=>"Managed foundational grants and budgets.","bio"=>"Oversaw the union's finances during its critical growth phase, implementing a system of accountability."]
 ];
 ?>
