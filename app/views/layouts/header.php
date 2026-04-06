@@ -4,9 +4,6 @@
  * Fangak Youth Union
  */
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 $pageTitle = $pageTitle ?? "Fangak Youth Union";
 
