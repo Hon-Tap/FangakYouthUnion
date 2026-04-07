@@ -18,54 +18,161 @@ $debug_info = ""; // Secret debug info for you
 $pageTitle = "Admin Portal | Fangak Youth Union";
 
 // 2. Handle Login Logic
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST['email'] ?? '');
+
+    $email    = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
-    if (empty($email) || empty($password)) {
+    if ($email === '' || $password === '') {
         $error = "Please provide both email and password.";
-    } elseif (!$pdo) {
-        $error = "Critical: Database connection is offline.";
-    } else {
-        try {
-            // Check if user exists
-            $stmt = $pdo->prepare("SELECT * FROM admins WHERE email = :email LIMIT 1");
-            $stmt->execute(['email' => $email]);
-            $admin = $stmt->fetch();
-
-            if (!$admin) {
-                // DEBUG: User not found
-                $error = "Access denied. Please check your credentials.";
-                error_log("LOGIN FAIL: No user found with email: $email");
-            } else {
-                // Validate Password
-                if (password_verify($password, $admin['password'])) {
-                    // SUCCESS: Regenerate session ID for security
-                    session_regenerate_id(true);
-                    
-                    $_SESSION['admin_id']    = $admin['id'];
-                    $_SESSION['admin_name']  = $admin['name'];
-                    $_SESSION['admin_email'] = $admin['email'];
-                    $_SESSION['last_login']  = time();
-
-                    header("Location: dashboard.php");
-                    exit();
-                } else {
-                    // DEBUG: Password mismatch
-                    $error = "Access denied. Please check your credentials.";
-                    error_log("LOGIN FAIL: Password mismatch for user: $email");
-                    
-                    // To help you debug, we check if you accidentally used MD5 or plain text
-                    if ($admin['password'] === $password) {
-                        $debug_info = "Note: Your DB uses plain text. Use password_hash() instead.";
-                    }
-                }
-            }
-        } catch (Throwable $e) {
-            error_log("SYSTEM ERROR: " . $e->getMessage());
-            $error = "A temporary system error occurred.";
-        }
+        return;
     }
+
+    if (!$pdo) {
+        $error = "Critical: Database connection is offline.";
+        return;
+    }
+
+    try {
+
+        $stmt = $pdo->prepare("
+            SELECT id, name, email, password
+            FROM admins
+            WHERE email = :email
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'email' => $email
+        ]);
+
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$admin) {
+
+            error_log("LOGIN FAIL: No user found with email: $email");
+            $error = "Access denied. Please check your credentials.";
+            return;
+
+        }
+
+        $storedHash = $admin['password'];
+
+        $loginSuccess = false;
+
+        /*
+        =========================================
+        PRIMARY: password_hash() verification
+        =========================================
+        */
+
+        if (password_verify($password, $storedHash)) {
+
+            $loginSuccess = true;
+
+            /*
+            Upgrade hash if algorithm changed
+            */
+
+            if (password_needs_rehash(
+                $storedHash,
+                PASSWORD_DEFAULT
+            )) {
+
+                $newHash = password_hash(
+                    $password,
+                    PASSWORD_DEFAULT
+                );
+
+                $update = $pdo->prepare("
+                    UPDATE admins
+                    SET password = :password
+                    WHERE id = :id
+                ");
+
+                $update->execute([
+                    'password' => $newHash,
+                    'id'       => $admin['id']
+                ]);
+
+                error_log("Password rehashed for user: $email");
+
+            }
+
+        }
+
+        /*
+        =========================================
+        LEGACY SUPPORT (crypt-style hash)
+        =========================================
+        */
+
+        elseif (hash_equals(
+            crypt($password, $storedHash),
+            $storedHash
+        )) {
+
+            $loginSuccess = true;
+
+            /*
+            MIGRATE to modern hash
+            */
+
+            $newHash = password_hash(
+                $password,
+                PASSWORD_DEFAULT
+            );
+
+            $update = $pdo->prepare("
+                UPDATE admins
+                SET password = :password
+                WHERE id = :id
+            ");
+
+            $update->execute([
+                'password' => $newHash,
+                'id'       => $admin['id']
+            ]);
+
+            error_log("Legacy hash migrated for user: $email");
+
+        }
+
+        /*
+        =========================================
+        FINAL RESULT
+        =========================================
+        */
+
+        if ($loginSuccess) {
+
+            session_regenerate_id(true);
+
+            $_SESSION['admin_id']    = $admin['id'];
+            $_SESSION['admin_name']  = $admin['name'];
+            $_SESSION['admin_email'] = $admin['email'];
+            $_SESSION['last_login']  = time();
+
+            header("Location: dashboard.php");
+            exit();
+
+        }
+
+        error_log("LOGIN FAIL: Password mismatch for user: $email");
+
+        $error = "Access denied. Please check your credentials.";
+
+    }
+
+    catch (Throwable $e) {
+
+        error_log("SYSTEM ERROR: " . $e->getMessage());
+
+        $error = "A temporary system error occurred.";
+
+    }
+
 }
 ?>
 <!DOCTYPE html>
