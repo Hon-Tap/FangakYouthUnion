@@ -77,9 +77,27 @@ $current_leaders = [
 ];
 // --- DATA: PREVIOUS LEADERS ---
 $previous_leaders = [
-    ["name"=>"Deng Riek koryom","role"=>"Former Chairman (2011-2013)","img"=>"assets/images/Deng.jpeg","desc"=>"Guided the union through post-conflict recovery.","bio"=>"Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."],
-    ["name"=>"Puok Bol Par","role"=>"Former Chariman (2013-2022)","img"=>"assets/images/Puok.jpeg","desc"=>"Established the union's administrative framework.","bio"=>"As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."],
-    ["name"=>"Nin Deng Wang","role"=>"Former Chairman (2022-2025)","img"=>"assets/images/NinDeng.jpg","desc"=>"Managed foundational grants and budgets.","bio"=>"Oversaw the union's finances during its critical growth phase, implementing a system of accountability."]
+    [
+        "name" => "Deng Riek koryom",
+        "role" => "Former Chairman (2011-2013)",
+        "img" => "assets/images/Deng.jpeg",
+        "desc" => "Guided the union through post-conflict recovery.",
+        "bio" => "Led the FYU from 2020 to 2024, focusing on rebuilding community trust and establishing foundational programs in education and health."
+    ],
+    [
+        "name" => "Puok Bol Par",
+        "role" => "Former Chairman (2013-2022)",
+        "img" => "assets/images/Puok.jpeg",
+        "desc" => "Established the union's administrative framework.",
+        "bio" => "As the inaugural secretary, she developed the communication channels and administrative protocols that the union relies on today."
+    ],
+    [
+        "name" => "Nin Deng Wang",
+        "role" => "Former Chairman (2022-2025)",
+        "img" => "/images/NinDeng.jpg", // Fixed path (added assets/)
+        "desc" => "Managed foundational grants and budgets.",
+        "bio" => "Oversaw the union's finances during its critical growth phase, implementing a system of accountability."
+    ]
 ];
 ?>
 
@@ -431,12 +449,15 @@ $previous_leaders = [
 <section class="prev-leaders-section">
     <div class="container">
         <h3 class="section-title fade-up" style="font-size: 2.2rem;">Honorary Past Leaders</h3>
-        <p class="section-subtitle fade-up">Acknowledging the pioneers who laid our foundation (2012 - 2024).</p>
-
         <div class="prev-leaders-grid fade-up">
             <?php foreach($previous_leaders as $leader): ?>
-                <div class="prev-leader-card" onclick='openModal(<?= json_encode($leader) ?>)'>
-                    <img src="<?= $baseUrl . $leader['img'] ?>" alt="<?= htmlspecialchars($leader['name']) ?>" class="prev-thumb">
+                <div class="prev-leader-card" 
+                     onclick='openModal(<?= htmlspecialchars(json_encode($leader), ENT_QUOTES, "UTF-8") ?>)'>
+                    
+                    <img src="<?= $baseUrl . $leader['img'] ?>" 
+                         alt="<?= htmlspecialchars($leader['name']) ?>" 
+                         class="prev-thumb">
+                    
                     <div class="prev-info">
                         <h4><?= htmlspecialchars($leader['name']) ?></h4>
                         <span><?= htmlspecialchars($leader['role']) ?></span>
