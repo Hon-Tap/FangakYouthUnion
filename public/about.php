@@ -8,7 +8,7 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
 if(!isset($baseUrl)) $baseUrl = '/public/';
 
 // --- DATA: CURRENT LEADERS ---
-// --- DATA: CURRENT LEADERS ---
+
 $current_leaders = [
 
     [
