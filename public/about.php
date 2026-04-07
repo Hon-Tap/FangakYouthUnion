@@ -61,17 +61,17 @@ $current_leaders = [
 
     [
         "name" => "Akoch Guek",
-        "role" => "Advisor",
+        "role" => "Advisor for Social Welfare and Development",
         "img"  => "assets/images/Akoch.jpeg",
-        "desc" => "Advisor for Social Welfare and Development",
-        "bio"  => "Akoch brings extensive experience in peacebuilding and youth development, offering strategic advice and technical support to strengthen FYU’s initiatives and partnerships."
-    ]
+        "desc" => "Provides expertise on social welfare and youth development initiatives.",
+        "bio"  => "Akoch has a strong background in social work and youth development, advising FYU on program design and implementation to effectively address the needs of vulnerable youth in Fangak County."
+    ],
     [
         "name" => "Chris Bamoum Gai",
         "role" => "Secretary for Information and Public Relations",
         "img"  => "assets/images/Chris.jpg",
         "desc" => "Leads communication strategies and public relations efforts.",
-        "bio"  => "Chris is responsible for managing FYU’s public image, developing communication materials, and engaging with media and community stakeholders to promote FYU’s mission and activities."
+        "bio"  => "Chris is responsible for managing FYU’s public image, developing communication materials, and engaging with media and community stakeholders to promote FYU’s mission and activities."        
     ]
 
 ];
