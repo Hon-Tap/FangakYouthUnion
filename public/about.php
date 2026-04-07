@@ -52,17 +52,17 @@ $current_leaders = [
     ],
 
     [
-        "name" => "Gatjiok Puok",
+        "name" => "Gatjok Puok",
         "role" => "Deputy Chairman",
         "img"  => "assets/images/gatjok.jpg",
         "desc" => "Supports leadership and oversees program implementation.",
-        "bio"  => "Gatjiok assists the Chairman in leadership responsibilities, oversees program design and monitoring, and ensures activities align with FYU’s mission and impact goals."
+        "bio"  => "Gatjok assists the Chairman in leadership responsibilities, oversees program design and monitoring, and ensures activities align with FYU’s mission and impact goals."
     ],
 
     [
         "name" => "Akoch Guek",
         "role" => "Advisor",
-        "img"  => "assets/images/Akoch.jpg",
+        "img"  => "assets/images/Akoch.jpeg",
         "desc" => "Provides strategic guidance and program support.",
         "bio"  => "Akoch brings extensive experience in peacebuilding and youth development, offering strategic advice and technical support to strengthen FYU’s initiatives and partnerships."
     ]

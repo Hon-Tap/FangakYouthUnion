@@ -57,27 +57,23 @@ try {
 $engagements = [
     [
         'title' => 'Fangak chair person with the team distributing fishing nets to the elderly in the community',
-        'category' => 'Suppport & Relief',
-        'img' => '<assets>
-        <images>Fishing.jpg',
-        'span' => 'col-span-1 md:col-span-2 row-span-2' // For modern masonry feel
+        'category' => 'Support & Relief',
+        'img' => 'assets/images/Fishing.jpg',
+        'span' => 'col-span-1 md:col-span-2 row-span-2' 
     ],
     [
         'title' => 'Emergency Response for the Floods',
         'category' => 'Support & Relief',
-        'img' => '<assets>
-        <images>Emergency.jpg',
+        'img' => 'assets/images/Emergency.jpg',
         'span' => 'col-span-1 row-span-1'
     ],
     [
         'title' => 'Fangak youth holding a meeting with the community to discuss emergency response to the floods',
         'category' => 'Awareness & Advocacy',
-        'img' => '<assets>
-        <images>youthunion.jpg',
+        'img' => 'assets/images/youthunion.jpg', 
         'span' => 'col-span-1 row-span-1'
     ]
 ];
-
 // Helper Functions
 function formatDate($dateString) {
     return !empty($dateString) ? date('M d, Y', strtotime($dateString)) : '';
@@ -437,7 +433,7 @@ function safeHtmlPreview($value) {
                     <h4 class="text-2xl font-serif font-bold text-fyu-dark md:hidden mb-2">Unity</h4>
                     <p class="text-gray-500 md:hidden mb-4">Fostering strong youth leadership to build an empowered, indivisible generation.</p>
                     <div class="w-full h-40 bg-fyu-accent rounded-xl flex items-center justify-center">
-                         <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=400&q=80" alt="Unity" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
+                         <img src="assets/images/Emergency.jpg" alt="Unity" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
                     </div>
                 </div>
             </div>
@@ -447,7 +443,7 @@ function safeHtmlPreview($value) {
                     <h4 class="text-2xl font-serif font-bold text-fyu-dark md:hidden mb-2">Innovation</h4>
                     <p class="text-gray-500 md:hidden mb-4">Implementing creative, sustainable solutions driving real technological progress.</p>
                     <div class="w-full h-40 bg-blue-50 rounded-xl flex items-center justify-center">
-                         <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80" alt="Innovation" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
+                         <img src="assets/images/fangak.jpg" alt="Innovation" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
                     </div>
                 </div>
                 <div class="z-20 absolute left-0 md:left-1/2 transform -translate-x-1/2 w-10 h-10 flex items-center justify-center bg-white border-4 border-gray-50 rounded-full timeline-dot">
@@ -471,7 +467,7 @@ function safeHtmlPreview($value) {
                     <h4 class="text-2xl font-serif font-bold text-fyu-dark md:hidden mb-2">Service</h4>
                     <p class="text-gray-500 md:hidden mb-4">Driving tangible change through dedicated, hands-on grassroots development.</p>
                     <div class="w-full h-40 bg-rose-50 rounded-xl flex items-center justify-center">
-                        <img src="https://images.unsplash.com/photo-1593113563332-ce147ce811cd?auto=format&fit=crop&w=400&q=80" alt="Service" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
+                        <img src="assets/images/mawichinaction.jpg" alt="Service" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
                     </div>
                 </div>
             </div>
@@ -481,7 +477,7 @@ function safeHtmlPreview($value) {
                     <h4 class="text-2xl font-serif font-bold text-fyu-dark md:hidden mb-2">Education</h4>
                     <p class="text-gray-500 md:hidden mb-4">Breaking barriers through comprehensive education & mentorship programs.</p>
                     <div class="w-full h-40 bg-amber-50 rounded-xl flex items-center justify-center">
-                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=400&q=80" alt="Education" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
+                        <img src="assets/images/education.jpg" alt="Education" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
                     </div>
                 </div>
                 <div class="z-20 absolute left-0 md:left-1/2 transform -translate-x-1/2 w-10 h-10 flex items-center justify-center bg-white border-4 border-gray-50 rounded-full timeline-dot">
