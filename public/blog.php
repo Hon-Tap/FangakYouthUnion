@@ -10,13 +10,19 @@ require_once __DIR__ . "/../app/config/db.php";
 // IMAGE HELPER FUNCTION
 // ===================================================================
 function getImagePath($imageName): string {
-    // Adding a leading slash / makes it look from the root of the domain
-    $folder = '/uploads/news/'; 
-    
+    // Dynamically use the base URL (defaults to /public/ if not set)
+    $baseUrl = $GLOBALS['baseUrl'] ?? '/public/';
+    $folder = 'uploads/news/';
+    $defaultLogo = 'FYU-LOGO.jpg'; // Matches the filename in your assets
+
+    // 1. Check if a specific image name exists in the database
     if (!empty($imageName)) {
-        return $folder . htmlspecialchars((string)$imageName);
+        // Clean the string and return the full path
+        return $baseUrl . $folder . htmlspecialchars((string)$imageName);
     }
-    return '/uploads/news/FYO-LOGO.jpg';
+
+    // 2. Fallback to the default logo if no image is provided
+    return $baseUrl . $folder . $defaultLogo;
 }
 
 // ===================================================================
