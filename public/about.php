@@ -14,7 +14,7 @@ $current_leaders = [
     [
         "name" => "Mawich Duoth Gatluak",
         "role" => "Chairman",
-        "img"  => "images/Mawich.jpeg",
+        "img"  => "images/MawichD.jpg",
         "desc" => "Leads FYU’s strategic vision and direction.",
         "bio"  => "Mawich is a passionate leader with strong experience in community organizing and youth empowerment. He drives FYU’s strategic direction, partnerships, and institutional growth."
     ],

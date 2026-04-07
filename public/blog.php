@@ -10,11 +10,13 @@ require_once __DIR__ . "/../app/config/db.php";
 // IMAGE HELPER FUNCTION
 // ===================================================================
 function getImagePath($imageName): string {
-    $folder = 'uploads/news/';
+    // Adding a leading slash / makes it look from the root of the domain
+    $folder = '/uploads/news/'; 
+    
     if (!empty($imageName)) {
         return $folder . htmlspecialchars((string)$imageName);
     }
-    return 'uploads/news/default.jpg';
+    return '/uploads/news/FYO-LOGO.jpg';
 }
 
 // ===================================================================
