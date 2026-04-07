@@ -94,7 +94,7 @@ $previous_leaders = [
     [
         "name" => "Nin Deng Wang",
         "role" => "Former Chairman (2022-2025)",
-        "img" => "/images/NinDeng.jpg", // Fixed path (added assets/)
+        "img" => "assets/images/NinDeng.jpg", // Fixed path (added assets/)
         "desc" => "Managed foundational grants and budgets.",
         "bio" => "Oversaw the union's finances during its critical growth phase, implementing a system of accountability."
     ]
