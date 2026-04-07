@@ -58,19 +58,19 @@ $engagements = [
     [
         'title' => 'Fangak chair person with the team distributing fishing nets to the elderly in the community',
         'category' => 'Support & Relief',
-        'img' => 'assets/images/Fishing.jpg',
+        'img' => 'Fishing.jpg',
         'span' => 'col-span-1 md:col-span-2 row-span-2' 
     ],
     [
         'title' => 'Emergency Response for the Floods',
         'category' => 'Support & Relief',
-        'img' => 'assets/images/Emergency.jpg',
+        'img' => 'flood.jpg',
         'span' => 'col-span-1 row-span-1'
     ],
     [
         'title' => 'Fangak youth holding a meeting with the community to discuss emergency response to the floods',
         'category' => 'Awareness & Advocacy',
-        'img' => 'assets/images/youthunion.jpg', 
+        'img' => 'youthunion.jpg',
         'span' => 'col-span-1 row-span-1'
     ]
 ];
@@ -253,7 +253,9 @@ function safeHtmlPreview($value) {
                     <div class="h-[1px] w-12 bg-fyu-primary"></div>
                     <h2 class="text-sm font-bold text-fyu-primary tracking-widest uppercase">Active Involvement</h2>
                 </div>
-                <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 leading-tight">Actions Speaking <br><span class="italic text-gray-400">Louder Than Words</span></h3>
+                <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 leading-tight">
+                    Actions Speaking <br><span class="italic text-gray-400">Louder Than Words</span>
+                </h3>
             </div>
             <p class="text-gray-500 mt-6 md:mt-0 md:max-w-sm text-right hidden md:block">
                 Witness our community leaders stepping up to serve and connect across the region.
@@ -262,12 +264,15 @@ function safeHtmlPreview($value) {
 
         <div class="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 h-auto md:h-[600px]">
             <?php foreach ($engagements as $index => $eng): ?>
-                <div class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-soft <?= $eng['span'] ?> h-80 md:h-auto" data-aos="fade-up" data-aos-delay="<?= $index * 150 ?>">
+                <div class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-soft <?= $eng['span'] ?> h-80 md:h-auto" 
+                     data-aos="fade-up" 
+                     data-aos-delay="<?= $index * 150 ?>">
+                    
                     <img src="<?= $baseUrl ?>assets/images/<?= safeText($eng['img']) ?>" 
                          alt="<?= safeText($eng['title']) ?>" 
                          class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                         onerror="this.src='https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'">
-                    
+                         onerror="this.src='<?= $baseUrl ?>assets/images/suffer.jpg'">
+
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-500"></div>
                     
                     <div class="absolute bottom-0 left-0 w-full p-8 md:p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
@@ -276,14 +281,15 @@ function safeHtmlPreview($value) {
                                 <?= safeText($eng['category']) ?>
                             </span>
                         </div>
-                        <h4 class="text-3xl font-serif text-white mb-2"><?= safeText($eng['title']) ?></h4>
+                        <h4 class="text-2xl md:text-3xl font-serif text-white mb-2 leading-tight">
+                            <?= safeText($eng['title']) ?>
+                        </h4>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
-
 <section class="py-24 bg-white relative">
     <div class="absolute top-0 right-0 w-1/3 h-full bg-fyu-accent/30 rounded-bl-[150px] z-0"></div>
     
@@ -477,7 +483,7 @@ function safeHtmlPreview($value) {
                     <h4 class="text-2xl font-serif font-bold text-fyu-dark md:hidden mb-2">Education</h4>
                     <p class="text-gray-500 md:hidden mb-4">Breaking barriers through comprehensive education & mentorship programs.</p>
                     <div class="w-full h-40 bg-amber-50 rounded-xl flex items-center justify-center">
-                        <img src="assets/images/education.jpg" alt="Education" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
+                        <img src="assets/images/action.jpeg" alt="Education" class="w-full h-full object-cover rounded-xl opacity-80 mix-blend-multiply">
                     </div>
                 </div>
                 <div class="z-20 absolute left-0 md:left-1/2 transform -translate-x-1/2 w-10 h-10 flex items-center justify-center bg-white border-4 border-gray-50 rounded-full timeline-dot">

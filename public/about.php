@@ -14,7 +14,7 @@ $current_leaders = [
     [
         "name" => "Mawich Duoth Gatluak",
         "role" => "Chairman",
-        "img"  => "images/mawich.jpg",
+        "img"  => "images/Mawich.jpeg",
         "desc" => "Leads FYU’s strategic vision and direction.",
         "bio"  => "Mawich is a passionate leader with strong experience in community organizing and youth empowerment. He drives FYU’s strategic direction, partnerships, and institutional growth."
     ],
@@ -37,10 +37,10 @@ $current_leaders = [
 
     [
         "name" => "Nyaluit Jany",
-        "role" => "Project Coordinator & Advisor on Gender Affairs",
+        "role" => " Advisor for Peace and Reconciliation",
         "img"  => "assets/images/nyaluit.jpg",
-        "desc" => "Coordinates field programs and promotes gender inclusion.",
-        "bio"  => "Nyaluit leads youth empowerment initiatives, coordinates field-level program delivery, and serves as Advisor on Gender Affairs, ensuring gender equality and inclusive participation across FYU programs."
+        "desc" => "Guides peacebuilding and reconciliation efforts.",
+        "bio"  => "Nyaluit brings extensive experience in conflict resolution and community healing, advising FYU on strategies to foster peace and unity in Fangak County."
     ],
 
     [
@@ -63,8 +63,15 @@ $current_leaders = [
         "name" => "Akoch Guek",
         "role" => "Advisor",
         "img"  => "assets/images/Akoch.jpeg",
-        "desc" => "Provides strategic guidance and program support.",
+        "desc" => "Advisor for Social Welfare and Development",
         "bio"  => "Akoch brings extensive experience in peacebuilding and youth development, offering strategic advice and technical support to strengthen FYU’s initiatives and partnerships."
+    ]
+    [
+        "name" => "Chris Bamoum Gai",
+        "role" => "Secretary for Information and Public Relations",
+        "img"  => "assets/images/Chris.jpg",
+        "desc" => "Leads communication strategies and public relations efforts.",
+        "bio"  => "Chris is responsible for managing FYU’s public image, developing communication materials, and engaging with media and community stakeholders to promote FYU’s mission and activities."
     ]
 
 ];
