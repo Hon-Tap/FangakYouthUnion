@@ -514,19 +514,19 @@ function safeHtmlPreview($value) {
             $projects = [
 
                 [
-                    'img' => 'FangakChairwithOtherLeaders.jpg',
+                    'img' => 'FYU@Pulita.jpg',
                     'title' => 'Chairman\'s Initiative with community leaders in Pulita',
                     'desc' => 'Engaging local leaders to identify and address critical community needs through collaborative projects.'
                 ],
 
                 [
-                    'img' => 'flood.jpg',
+                    'img' => 'FYU-donates.jpg',
                     'title' => 'Flood Response',
                     'desc' => 'Supporting families displaced by floods with emergency relief and rehabilitation strategies.'
                 ],
 
                 [
-                    'img' => 'coding.jpg',
+                    'img' => 'YouthInAction.jpg',
                     'title' => 'Livelihood Programs',
                     'desc' => 'Youth empowerment through sustainable livelihood initiatives.'
                 ],
