@@ -2,29 +2,49 @@
 declare(strict_types=1);
 include_once __DIR__ . "/../app/config/db.php"; 
 
+// Get slug from URL
 $slug = $_GET['slug'] ?? null;
-if (!$slug || !isset($pdo)) { header("Location: blog.php"); exit; }
 
-// Fetch Main Post
-$postStmt = $pdo->prepare("SELECT p.*, c.name AS category_name, c.slug AS category_slug FROM blog_posts p JOIN categories c ON p.category_id = c.id WHERE p.slug = :slug LIMIT 1");
+if (!$slug || !isset($pdo)) {
+    header("Location: blog.php");
+    exit;
+}
+
+// 1. Fetch Main Post - Ensure the query explicitly selects the 'content' column
+$postStmt = $pdo->prepare("
+    SELECT p.*, c.name AS category_name, c.slug AS category_slug 
+    FROM blog_posts p 
+    JOIN categories c ON p.category_id = c.id 
+    WHERE p.slug = :slug 
+    LIMIT 1
+");
 $postStmt->execute(['slug' => $slug]);
 $post = $postStmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$post) {
     http_response_code(404);
     include_once __DIR__ . "/../app/views/layouts/header.php";
-    echo '<div class="error-container"><h1>404</h1><p>Article not found.</p></div>';
+    echo '<div class="main-wrapper" style="padding:100px 0; text-align:center;"><h1>404</h1><p>Article not found.</p></div>';
     include_once __DIR__ . "/../app/views/layouts/footer.php";
     exit;
 }
 
+// 2. Safely handle BLOB content
+// If the content is a stream resource, convert it to a string. Otherwise, use as is.
+$articleContent = is_resource($post['content']) ? stream_get_contents($post['content']) : ($post['content'] ?? '');
+
+// 3. Data Prep for View
 $pageTitle = htmlspecialchars($post['title']);
-$readingTime = max(1, (int)ceil(str_word_count(strip_tags($post['content'])) / 200));
+$wordCount = str_word_count(strip_tags($articleContent));
+$readingTime = max(1, (int)ceil($wordCount / 200));
 $baseUrl = "/images/";
 
+// 4. Sidebar Data
 $recentPosts = $pdo->prepare("SELECT title, slug, featured_image FROM blog_posts WHERE slug != ? ORDER BY created_at DESC LIMIT 3");
 $recentPosts->execute([$slug]);
+
 $categories = $pdo->query("SELECT name, slug FROM categories ORDER BY name ASC")->fetchAll();
+
 $commentStmt = $pdo->prepare("SELECT user_name, comment_body, created_at FROM blog_comments WHERE post_id = ? ORDER BY created_at DESC");
 $commentStmt->execute([$post['id']]);
 $comments = $commentStmt->fetchAll();
