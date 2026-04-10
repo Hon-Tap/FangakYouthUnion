@@ -194,54 +194,50 @@ function safeHtmlPreview($value) {
     }
 </style>
 
-<section class="relative h-[95vh] flex items-center justify-center overflow-hidden bg-fyu-dark">
+<section class="relative h-screen flex items-center justify-center overflow-hidden bg-[#0a261a]">
     <div class="absolute inset-0 z-0">
-        <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" alt="Background" class="w-full h-full object-cover transform scale-110 animate-[pulse_25s_ease-in-out_infinite_alternate] opacity-60 mix-blend-overlay">
-        <div class="hero-overlay absolute inset-0"></div>
-    </div>
+        <div class="absolute inset-0 bg-[#0a261a]/70 z-10"></div> <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" 
+             alt="Fangak Community Background" 
+             class="w-full h-full object-cover scale-105 transition-transform duration-[2s] hover:scale-100"
+             style="filter: brightness(0.6) saturate(1.2);"> </div>
 
-    <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-fyu-light rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob z-0"></div>
-    <div class="absolute top-1/3 right-1/4 w-72 h-72 bg-fyu-primary rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 z-0"></div>
-
-    <div class="absolute top-8 right-8 z-30" data-aos="fade-down" data-aos-delay="800">
-        <a href="<?= $baseUrl ?>admin/login.php" class="glass-card text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-white hover:text-fyu-dark transition-all duration-500 flex items-center gap-2">
-            <i class="fa-solid fa-user-shield text-fyu-light"></i> <span class="hidden sm:inline">Admin Portal</span>
+    <div class="absolute top-8 right-8 z-30">
+        <a href="<?= $baseUrl ?>admin/login.php" 
+           class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-[#0a261a] transition-all duration-300 flex items-center gap-2">
+            <i class="fa-solid fa-lock text-[10px]"></i> Admin
         </a>
     </div>
 
-    <div class="relative z-10 container mx-auto px-6 text-center text-white flex flex-col items-center">
-        <div data-aos="fade-up" data-aos-duration="1000">
-            <div class="inline-flex items-center gap-3 py-2 px-5 rounded-full glass-card text-xs md:text-sm font-semibold tracking-[0.2em] uppercase mb-8 border border-white/20">
-                <span class="w-2 h-2 rounded-full bg-fyu-light animate-ping"></span>
-                Unity • Innovation • Progress
-            </div>
+    <div class="relative z-20 container mx-auto px-6 text-center flex flex-col items-center">
+        <div class="inline-flex items-center gap-3 py-1.5 px-4 rounded-full bg-white/5 border border-white/10 text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase mb-8 text-white/80">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#c59d5f] animate-pulse"></span>
+            Unity • Innovation • Progress
         </div>
 
-        <h1 class="text-6xl md:text-8xl font-serif font-bold mb-6 leading-tight drop-shadow-2xl" data-aos="zoom-out" data-aos-delay="200" data-aos-duration="1200">
-            Fangak <span class="text-gradient italic">Youth Union</span>
+        <h1 class="text-5xl md:text-[90px] font-serif font-bold mb-6 leading-[0.9] text-white">
+            Fangak <br>
+            <span class="text-[#c59d5f] italic">Youth Union</span>
         </h1>
 
-        <p class="text-lg md:text-2xl text-gray-300 max-w-2xl mx-auto mb-12 font-light leading-relaxed" data-aos="fade-up" data-aos-delay="400">
-            Empowering youth, bridging gaps, and engineering a sustainable future through collective brilliance.
+        <p class="text-base md:text-xl text-gray-200 max-w-xl mx-auto mb-12 font-light leading-relaxed">
+            Engineered for impact. Empowering the next generation through sustainable 
+            community development and collective brilliance.
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center w-full" data-aos="fade-up" data-aos-delay="600">
-            <a href="<?= $baseUrl ?>register.php" class="group relative px-8 py-4 bg-white text-fyu-dark font-bold rounded-full overflow-hidden transition-all duration-300 shadow-glow hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:-translate-y-1 w-full sm:w-auto text-lg">
-                <span class="relative z-10 flex items-center justify-center gap-2">
-                    Start Your Impact <i class="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-2"></i>
-                </span>
-                <div class="absolute inset-0 bg-fyu-accent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500 z-0"></div>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full">
+            <a href="<?= $baseUrl ?>register.php" 
+               class="px-10 py-4 bg-[#c59d5f] text-white font-bold rounded-2xl hover:bg-[#b08a53] transition-all duration-300 shadow-xl w-full sm:w-auto text-sm uppercase tracking-widest hover:translate-y-[-2px]">
+                Join the Movement
             </a>
-            <a href="#engagement" class="group px-8 py-4 bg-transparent border border-white/30 text-white font-bold rounded-full hover:border-white transition-all duration-300 w-full sm:w-auto text-lg backdrop-blur-sm">
-                Explore More
+            <a href="#engagement" 
+               class="px-10 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-2xl hover:bg-white/20 transition-all duration-300 w-full sm:w-auto text-sm uppercase tracking-widest">
+                Explore Initiatives
             </a>
         </div>
     </div>
 
-    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
-        <div class="w-[30px] h-[50px] rounded-full border-2 border-white/50 flex justify-center p-1 mb-3">
-            <div class="w-1.5 h-3 bg-white rounded-full animate-bounce"></div>
-        </div>
+    <div class="absolute bottom-10 z-20">
+        <div class="text-[9px] font-black uppercase tracking-[0.3em] text-white/50 mb-3 rotate-180" style="writing-mode: vertical-rl;">Scroll</div>
     </div>
 </section>
 
@@ -500,55 +496,111 @@ function safeHtmlPreview($value) {
 </section>
 
 <section class="py-32 bg-white">
+
     <div class="container mx-auto px-6">
+
         <div class="text-center mb-20" data-aos="fade-up">
+
             <h2 class="text-sm font-bold text-fyu-primary tracking-widest uppercase mb-2">Driving Impact</h2>
+
             <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900">Current Initiatives</h3>
+
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
             <?php
+
             $projects = [
-                ['img' => 'FYU@Pulita.jpg', 'title' => 'Chairman\'s Initiative with community leaders in Pulita', 'desc' => 'Engaging local leaders to identify and address critical community needs through collaborative projects.'],
-                ['img' => 'FYU-flood-response.jpg', 'title' => 'Flood Response', 'desc' => 'Supporting families displaced by floods with emergency relief and rehabilitation strategies.'],
-                ['img' => 'FYU-education.jpg', 'title' => 'Livelihood Programs', 'desc' => 'Youth empowerment through sustainable livelihood initiatives.'],
+
+                [
+                    'img' => 'FangakChairwithOtherLeaders.jpg',
+                    'title' => 'Chairman\'s Initiative with community leaders in Pulita',
+                    'desc' => 'Engaging local leaders to identify and address critical community needs through collaborative projects.'
+                ],
+
+                [
+                    'img' => 'flood.jpg',
+                    'title' => 'Flood Response',
+                    'desc' => 'Supporting families displaced by floods with emergency relief and rehabilitation strategies.'
+                ],
+
+                [
+                    'img' => 'coding.jpg',
+                    'title' => 'Livelihood Programs',
+                    'desc' => 'Youth empowerment through sustainable livelihood initiatives.'
+                ],
+
             ];
 
             foreach ($projects as $idx => $proj) :
             ?>
-                <div class="group cursor-pointer block" onclick="openProjectModal('<?= safeText($proj['title']) ?>', '<?= safeText($proj['desc']) ?>', '<?= $baseUrl ?>images/<?= safeText($proj['img']) ?>.jpg')" data-aos="fade-up" data-aos-delay="<?= $idx * 150 ?>">
+
+                <div class="group cursor-pointer block"
+                     onclick="openProjectModal(
+                        '<?= safeText($proj['title']) ?>',
+                        '<?= safeText($proj['desc']) ?>',
+                        '<?= $baseUrl ?>images/<?= safeText($proj['img']) ?>'
+                     )"
+                     data-aos="fade-up"
+                     data-aos-delay="<?= $idx * 150 ?>">
+
                     <div class="relative overflow-hidden rounded-[2rem] aspect-[4/5] mb-6 shadow-soft group-hover:shadow-float transition-all duration-500">
-                        <img src="<?= $baseUrl ?>images/<?= safeText($proj['img']) ?>.jpg" alt="<?= safeText($proj['title']) ?>"
-                             class="w-full h-full object-cover transition duration-1000 group-hover:scale-105"
-                             onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
-                        
+
+                        <img
+                            src="<?= $baseUrl ?>images/<?= safeText($proj['img']) ?>"
+                            alt="<?= safeText($proj['title']) ?>"
+                            class="w-full h-full object-cover transition duration-1000 group-hover:scale-105"
+                            onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'"
+                        >
+
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        
+
                         <div class="absolute bottom-0 left-0 w-full p-8 text-white">
-                            <h4 class="text-2xl font-serif font-bold mb-2"><?= safeText($proj['title']) ?></h4>
+
+                            <h4 class="text-2xl font-serif font-bold mb-2">
+                                <?= safeText($proj['title']) ?>
+                            </h4>
+
                             <div class="h-0 overflow-hidden group-hover:h-20 transition-all duration-500 ease-in-out">
+
                                 <p class="text-sm text-white/80 leading-relaxed pt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                                     <?= safeText($proj['desc']) ?>
                                 </p>
+
                             </div>
+
                         </div>
 
                         <div class="absolute top-6 right-6 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-500">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <div class="mt-16 text-center" data-aos="fade-up">
-            <a href="<?= $baseUrl ?>projects.php" class="inline-flex items-center font-bold text-fyu-primary text-lg hover:text-fyu-dark transition-colors border-b-2 border-fyu-primary pb-1">
-                View Complete Portfolio <i class="fa-solid fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-    </div>
-</section>
 
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <?php endforeach; ?>
+
+        </div>
+
+        <div class="mt-16 text-center" data-aos="fade-up">
+
+            <a href="<?= $baseUrl ?>projects.php"
+               class="inline-flex items-center font-bold text-fyu-primary text-lg hover:text-fyu-dark transition-colors border-b-2 border-fyu-primary pb-1">
+
+                View Complete Portfolio
+                <i class="fa-solid fa-arrow-right ml-2"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
 <section class="py-32 bg-fyu-dark text-white text-center relative overflow-hidden">
     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-white/5 rounded-full animate-[spin_80s_linear_infinite] pointer-events-none"></div>
     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-fyu-light/10 rounded-full animate-[spin_60s_linear_infinite_reverse] pointer-events-none"></div>
