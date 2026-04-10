@@ -304,29 +304,13 @@ function safeHtmlPreview($value) {
         </div>
 
         <?php if (empty($events)): ?>
-            <div class="relative overflow-hidden rounded-[2.5rem] border border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-white p-16 text-center shadow-sm" data-aos="fade-up">
-                <div class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-fyu-accent/40 blur-3xl"></div>
-                <div class="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-fyu-light/10 blur-3xl"></div>
-                
-                <div class="relative z-10 flex flex-col items-center">
-                    <div class="mb-8 relative flex h-28 w-28 items-center justify-center rounded-3xl bg-white shadow-soft rotate-3 hover:rotate-0 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-fyu-primary/5 rounded-3xl transform -rotate-6 z-0"></div>
-                        <i class="fa-regular fa-calendar-xmark text-5xl text-fyu-primary/70 relative z-10"></i>
-                    </div>
-                    <h4 class="mb-3 text-3xl font-serif font-bold text-gray-800">No events on the horizon</h4>
-                    <p class="max-w-md text-gray-500 mb-8 leading-relaxed">We're busy planning our next big gathering. Check back soon for new workshops, community clean-ups, and summits.</p>
-                    <button class="px-8 py-3 bg-fyu-dark text-white rounded-full font-medium hover:bg-fyu-primary transition-colors shadow-lg shadow-fyu-primary/20">
-                        Notify Me
-                    </button>
-                </div>
-            </div>
-        <?php else: ?>
+            <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <?php foreach ($events as $index => $evt): ?>
                     <article class="group relative bg-white rounded-3xl p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-float transition-all duration-500 border border-gray-100" data-aos="fade-up" data-aos-delay="<?= $index * 150 ?>">
                         <div class="relative h-64 rounded-2xl overflow-hidden mb-6">
                             <?php if (!empty($evt['image'])): ?>
-                                <img src="<?= $baseUrl ?>images/events/<?= safeText($evt['image']) ?>" alt="<?= safeText($evt['title'] ?? '') ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <img src="<?= htmlspecialchars($evt['image']) ?>" alt="<?= safeText($evt['title'] ?? '') ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                             <?php else: ?>
                                 <div class="w-full h-full bg-gradient-to-br from-fyu-dark to-fyu-primary flex items-center justify-center">
                                     <i class="fa-solid fa-calendar-day text-5xl text-white/20"></i>
@@ -338,23 +322,7 @@ function safeHtmlPreview($value) {
                                 <span class="block text-xs uppercase font-bold text-fyu-primary mt-1"><?= getMonth($evt['event_date'] ?? '') ?></span>
                             </div>
                         </div>
-
-                        <div class="px-5 pb-5">
-                            <div class="flex items-center text-xs text-gray-400 font-bold mb-3 uppercase tracking-wider">
-                                <i class="fa-solid fa-location-dot text-fyu-light mr-2"></i>
-                                <?= safeText($evt['location'] ?? 'Fangak HQ') ?>
-                            </div>
-                            <h3 class="text-2xl font-serif font-bold text-gray-900 mb-4 group-hover:text-fyu-primary transition-colors line-clamp-2">
-                                <?= safeText($evt['title'] ?? '') ?>
-                            </h3>
-                            <a href="<?= $baseUrl ?>events.php?id=<?= (int)($evt['id'] ?? 0) ?>" class="inline-flex items-center text-sm font-bold text-gray-900 group-hover:text-fyu-primary transition-colors">
-                                View Details 
-                                <span class="ml-2 w-6 h-6 rounded-full bg-gray-100 group-hover:bg-fyu-accent flex items-center justify-center transition-colors">
-                                    <i class="fa-solid fa-arrow-right-long text-xs transform group-hover:translate-x-0.5 transition-transform"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </article>
+                        </article>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
