@@ -286,99 +286,67 @@ function safeHtmlPreview($value) {
         </div>
     </div>
 </section>
-<section class="py-24 bg-white relative">
-    <div class="absolute top-0 right-0 w-1/3 h-full bg-fyu-accent/30 rounded-bl-[150px] z-0"></div>
-    
-    <div class="container mx-auto px-6 relative z-10">
+<section class="py-24 bg-white relative overflow-hidden">
+    <div class="container mx-auto px-6 max-w-7xl relative z-10">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16" data-aos="fade-right">
             <div>
                 <h2 class="text-sm font-bold text-fyu-primary tracking-widest uppercase mb-2">Mark Your Calendar</h2>
                 <h3 class="text-4xl md:text-5xl font-serif font-bold text-gray-900">Upcoming Events</h3>
             </div>
-            <a href="<?= $baseUrl ?>events.php" class="group mt-6 md:mt-0 inline-flex items-center gap-3 text-fyu-dark font-bold hover:text-fyu-primary transition-colors bg-white px-6 py-3 rounded-full shadow-[0_5px_15px_rgba(0,0,0,0.05)] border border-gray-100">
-                Full Calendar 
-                <span class="w-8 h-8 rounded-full bg-fyu-accent flex items-center justify-center group-hover:bg-fyu-primary group-hover:text-white transition-colors">
-                    <i class="fa-solid fa-arrow-right text-sm transform -rotate-45 group-hover:rotate-0 transition-transform"></i>
-                </span>
+            <a href="<?= $baseUrl ?>events.php" class="mt-6 md:mt-0 px-8 py-3 rounded-full border border-gray-200 hover:border-fyu-primary hover:bg-fyu-primary hover:text-white transition-all font-bold text-sm">
+                View All Events
             </a>
         </div>
 
-        <?php if (empty($events)): ?>
-            <?php else: ?>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <?php if (!empty($events)): ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php foreach ($events as $index => $evt): ?>
-                    <article class="group relative bg-white rounded-3xl p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-float transition-all duration-500 border border-gray-100" data-aos="fade-up" data-aos-delay="<?= $index * 150 ?>">
-                        <div class="relative h-64 rounded-2xl overflow-hidden mb-6">
-                            <?php if (!empty($evt['image'])): ?>
-                                <img src="<?= htmlspecialchars($evt['image']) ?>" alt="<?= safeText($evt['title'] ?? '') ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <?php else: ?>
-                                <div class="w-full h-full bg-gradient-to-br from-fyu-dark to-fyu-primary flex items-center justify-center">
-                                    <i class="fa-solid fa-calendar-day text-5xl text-white/20"></i>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md rounded-2xl p-3 text-center shadow-lg min-w-[75px] border border-white/50 transform group-hover:-translate-y-1 transition-transform">
-                                <span class="block text-3xl font-black text-fyu-dark leading-none"><?= getDay($evt['event_date'] ?? '') ?></span>
-                                <span class="block text-xs uppercase font-bold text-fyu-primary mt-1"><?= getMonth($evt['event_date'] ?? '') ?></span>
+                    <article class="group bg-white rounded-[2rem] border border-gray-100 p-4 shadow-sm hover:shadow-xl transition-all duration-300" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
+                        <div class="relative h-64 w-full rounded-[1.5rem] overflow-hidden mb-5">
+                            <img src="<?= htmlspecialchars($evt['image'] ?? '') ?>" alt="<?= safeText($evt['title']) ?>" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl text-center shadow-sm">
+                                <span class="block text-2xl font-black text-fyu-dark leading-none"><?= getDay($evt['event_date']) ?></span>
+                                <span class="block text-[10px] uppercase font-bold text-fyu-primary tracking-widest"><?= getMonth($evt['event_date']) ?></span>
                             </div>
                         </div>
-                        </article>
+                        <div class="px-2 pb-2">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-fyu-primary transition-colors"><?= safeText($evt['title']) ?></h3>
+                            <div class="flex items-center text-xs text-gray-500 font-medium">
+                                <i class="fa-solid fa-location-dot mr-2 text-fyu-accent"></i> <?= safeText($evt['location'] ?? 'Fangak HQ') ?>
+                            </div>
+                        </div>
+                    </article>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
     </div>
 </section>
 
-<section id="announcements" class="py-32 bg-[#0a110d] text-white relative overflow-hidden border-t border-white/5">
-    <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-fyu-primary/10 rounded-full filter blur-[100px] transform translate-x-1/2 -translate-y-1/2"></div>
-    <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-fyu-light/5 rounded-full filter blur-[80px] transform -translate-x-1/2 translate-y-1/2"></div>
-    
-    <div class="container mx-auto px-6 relative z-10">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-16" data-aos="fade-up">
-            <div>
-                <h2 class="text-sm font-bold text-fyu-light tracking-widest uppercase mb-2 flex items-center gap-3">
-                    <span class="w-2 h-2 rounded-full bg-fyu-light animate-pulse"></span> Stay Informed
-                </h2>
-                <h3 class="text-4xl md:text-5xl font-serif font-bold text-white">Latest Transmissions</h3>
-            </div>
-            <a href="<?= $baseUrl ?>announcements.php" class="mt-6 md:mt-0 px-6 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-white hover:text-black transition-all duration-300 text-sm font-bold backdrop-blur-md">
-                View Archive
-            </a>
+<section class="py-32 bg-[#0a110d] text-white relative">
+    <div class="container mx-auto px-6 max-w-6xl relative z-10">
+        <div class="text-center mb-20" data-aos="fade-up">
+            <h2 class="text-fyu-light font-bold uppercase tracking-[0.2em] text-sm mb-4">Latest Transmissions</h2>
+            <h3 class="text-5xl font-serif font-bold">Community Updates</h3>
         </div>
 
-        <?php if (empty($announcements)): ?>
-            <div class="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-sm p-16 text-center" data-aos="zoom-in">
-                <i class="fa-solid fa-satellite-dish text-6xl text-white/10 mb-6 block"></i>
-                <h4 class="mb-2 text-2xl font-serif font-bold text-white">The line is quiet</h4>
-                <p class="text-white/40">No official announcements have been broadcasted yet. Stay tuned.</p>
-            </div>
-        <?php else: ?>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <?php foreach ($announcements as $index => $ann): ?>
-                    <article class="relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 backdrop-blur-md transition-all duration-500 group flex flex-col h-full overflow-hidden" data-aos="fade-up" data-aos-delay="<?= $index * 150 ?>">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-fyu-light/20 filter blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                        <div class="flex items-center text-xs text-fyu-light mb-6 font-mono tracking-wider">
-                            <i class="fa-regular fa-clock mr-2"></i>
-                            <?= formatDate($ann['created_at'] ?? '') ?>
-                        </div>
-
-                        <h3 class="text-2xl font-serif font-bold text-white mb-4 group-hover:text-fyu-light transition-colors line-clamp-2">
-                            <?= safeText($ann['title'] ?? '') ?>
-                        </h3>
-
-                        <div class="text-white/60 mb-8 line-clamp-3 text-sm leading-relaxed flex-grow font-light">
-                            <?= safeHtmlPreview($ann['body'] ?? '') ?>
-                        </div>
-
-                        <a href="<?= $baseUrl ?>announcements.php?id=<?= (int)($ann['id'] ?? 0) ?>" class="mt-auto group/btn inline-flex items-center text-white font-bold text-sm w-max">
-                            Read Article 
-                            <span class="ml-3 h-[1px] w-8 bg-fyu-light group-hover/btn:w-12 transition-all duration-300"></span>
-                        </a>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <?php foreach ($announcements as $index => $ann): ?>
+                <article class="relative bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all group" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
+                    <span class="text-[10px] font-mono text-fyu-light uppercase tracking-widest block mb-4">
+                        <?= formatDate($ann['created_at']) ?>
+                    </span>
+                    <h3 class="text-xl font-bold mb-4 group-hover:text-fyu-light transition-colors">
+                        <?= safeText($ann['title']) ?>
+                    </h3>
+                    <p class="text-white/50 text-sm leading-relaxed mb-6 line-clamp-2">
+                        <?= safeHtmlPreview($ann['body']) ?>
+                    </p>
+                    <a href="<?= $baseUrl ?>announcements.php?id=<?= (int)$ann['id'] ?>" class="text-sm font-bold flex items-center gap-2 text-fyu-light hover:gap-4 transition-all">
+                        Read more <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </article>
+            <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
