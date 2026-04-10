@@ -36,6 +36,13 @@ $current_leaders = [
     ],
 
     [
+        "name" => "Puok Dar Gai",
+        "role" => " Advisor for legal affairs ",
+        "img"  => "assets/images/PuokDar.jpeg",
+        "desc" => "Provides legal guidance and ensures compliance with regulations.",
+        "bio"  => "Puok Dar Gai brings extensive experience in legal matters and community law, advising FYU on strategies to ensure compliance and promote legal awareness in Fangak County."
+    ],
+    [
         "name" => "Nyaluit Jany",
         "role" => " Advisor for Peace and Reconciliation",
         "img"  => "assets/images/nyaluit.jpg",
