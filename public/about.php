@@ -152,7 +152,7 @@ $previous_leaders = [
         justify-content: center;
         text-align: center;
         background-color: var(--primary-dark);
-        background-image: url('<?= $baseUrl ?>images/Ludo.jpeg');
+        background-image: url('<?= $baseUrl ?>images/FishingNets.jpg');
         background-size: cover;
         background-position: center;
         background-attachment: fixed; 
@@ -192,6 +192,26 @@ $previous_leaders = [
         text-align: center; max-width: 650px; margin: 0 auto 60px;
         color: var(--text-muted); font-size: 1.1rem;
     }
+
+    /* --- CORE PILLARS SECTION (NEW UI ADDITION) --- */
+    .pillars-section { background: var(--bg-body); padding: 80px 0 20px; }
+    .pillars-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+    .pillar-card { 
+        background: var(--bg-soft); padding: 40px 30px; border-radius: var(--card-radius);
+        text-align: center; transition: var(--transition); border-bottom: 4px solid transparent;
+    }
+    .pillar-card:hover { 
+        transform: translateY(-10px); background: #fff; 
+        box-shadow: var(--shadow-lg); border-bottom-color: var(--accent); 
+    }
+    .pillar-icon { 
+        width: 70px; height: 70px; margin: 0 auto 20px; background: var(--primary-light); 
+        color: var(--primary); display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; font-size: 2rem; transition: var(--transition);
+    }
+    .pillar-card:hover .pillar-icon { background: var(--primary); color: #fff; transform: rotateY(180deg); }
+    .pillar-title { font-family: var(--font-serif); font-size: 1.5rem; color: var(--primary-dark); margin-bottom: 15px; }
+    .pillar-desc { color: var(--text-muted); font-size: 0.95rem; }
 
     /* --- STORY SECTION --- */
     .story-grid { display: grid; grid-template-columns: 1fr; gap: 60px; align-items: center; }
@@ -322,30 +342,6 @@ $previous_leaders = [
     }
     .modal-close:hover { background: var(--primary); color: #fff; transform: rotate(90deg); border-color: var(--primary); }
 
-    /* --- TESTIMONIALS --- */
-    .testimonials { background: var(--primary-dark); color: #fff; padding: 100px 0; }
-    .testimonials .section-title, .testimonials .section-title::after { color: #fff; background: var(--accent); }
-    .test-scroll {
-        display: flex; gap: 30px; overflow-x: auto; padding: 20px 0 40px;
-        scroll-snap-type: x mandatory; scrollbar-width: none;
-    }
-    .test-scroll::-webkit-scrollbar { display: none; }
-    .test-card {
-        flex: 0 0 380px; scroll-snap-align: start;
-        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-        padding: 40px; border-radius: 20px; transition: var(--transition);
-    }
-    .test-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-5px); }
-    .test-quote { font-family: var(--font-serif); font-size: 1.25rem; font-style: italic; margin-bottom: 24px; opacity: 0.9; line-height: 1.6; }
-    .test-author { font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: 10px; }
-    .test-author::before { content: ''; width: 30px; height: 2px; background: var(--accent); display: inline-block; }
-
-    /* --- PARTNERS --- */
-    .partners-section { background: var(--bg-soft); }
-    .partners-grid { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 60px; margin-top: 50px; }
-    .partner-logo { height: 60px; filter: grayscale(100%) opacity(0.6); transition: var(--transition); }
-    .partner-logo:hover { filter: grayscale(0%) opacity(1); transform: scale(1.05); }
-
 </style>
 
 <section class="hero fade-up">
@@ -355,6 +351,39 @@ $previous_leaders = [
         <div>
             <a href="#leadership" class="btn btn-primary">Meet the Team</a>
             <a href="<?= $baseUrl ?>register.php" class="btn btn-outline">Join the Union</a>
+        </div>
+    </div>
+</section>
+
+<section class="section pillars-section">
+    <div class="container fade-up">
+        <h2 class="section-title">Our Core Pillars</h2>
+        <p class="section-subtitle">The foundation of our initiatives and community empowerment programs in Fangak.</p>
+        
+        <div class="pillars-grid">
+            <div class="pillar-card">
+                <div class="pillar-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h3 class="pillar-title">Education & Skills</h3>
+                <p class="pillar-desc">Empowering the youth through academic support, vocational training, and capacity-building workshops.</p>
+            </div>
+            
+            <div class="pillar-card">
+                <div class="pillar-icon">
+                    <i class="fas fa-dove"></i>
+                </div>
+                <h3 class="pillar-title">Peace & Reconciliation</h3>
+                <p class="pillar-desc">Fostering unity and resolving conflicts through community dialogue, sports, and cultural integration.</p>
+            </div>
+            
+            <div class="pillar-card">
+                <div class="pillar-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3 class="pillar-title">Community Development</h3>
+                <p class="pillar-desc">Leading grassroots initiatives in health awareness, climate resilience, and emergency flood relief.</p>
+            </div>
         </div>
     </div>
 </section>
@@ -464,48 +493,6 @@ $previous_leaders = [
                     </div>
                 </div>
             <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
-<section class="testimonials">
-    <div class="container fade-up">
-        <h2 class="section-title">Voices of Impact</h2>
-        <p class="section-subtitle" style="color: rgba(255,255,255,0.7);">Real stories from the communities and youth we serve.</p>
-        
-        <div class="test-scroll">
-            <div class="test-card">
-                <p class="test-quote">"FYU has transformed my life by giving me the chance to participate in community projects and grow as a leader."</p>
-                <p class="test-author">Mawien G.</p>
-            </div>
-            <div class="test-card">
-                <p class="test-quote">"The programs organized by FYU are both inspiring and impactful for the youth. We finally have a voice."</p>
-                <p class="test-author">Nyachot T.</p>
-            </div>
-            <div class="test-card">
-                <p class="test-quote">"I learned practical business skills in the 2022 bootcamp that helped me start a small shop in my village."</p>
-                <p class="test-author">Rata P.</p>
-            </div>
-            <div class="test-card">
-                <p class="test-quote">"Transparency and unity are what define this union. It is a home for all of us."</p>
-                <p class="test-author">Deng N.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="section partners-section">
-    <div class="container text-center fade-up">
-        <h2 class="section-title">Our Partners</h2>
-        <p class="section-subtitle">Collaborating across borders for a sustainable future.</p>
-        
-        <div class="partners-grid">
-            <img src="<?= $baseUrl ?>images/partner1.png" class="partner-logo" alt="Partner">
-            <img src="<?= $baseUrl ?>images/partner2.png" class="partner-logo" alt="Partner">
-            <img src="<?= $baseUrl ?>images/partner3.png" class="partner-logo" alt="Partner">
-        </div>
-        <div style="margin-top: 60px;">
-            <a href="<?= $baseUrl ?>partner-register.php" class="btn btn-primary">Become a Partner</a>
         </div>
     </div>
 </section>

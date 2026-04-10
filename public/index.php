@@ -509,9 +509,9 @@ function safeHtmlPreview($value) {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
             <?php
             $projects = [
-                ['img' => 'project1', 'title' => 'Youth Skills Dev', 'desc' => 'Equipping young people with essential digital and vocational skills for the modern economy.'],
-                ['img' => 'FloTra', 'title' => 'Flood Response', 'desc' => 'Supporting families displaced by floods with emergency relief and rehabilitation strategies.'],
-                ['img' => 'SACOM', 'title' => 'Access to Education', 'desc' => 'Providing necessary resources, facilities, and mentorship for children in rural communities.'],
+                ['img' => 'FYU@Pulita.jpg', 'title' => 'Chairman\'s Initiative with community leaders in Pulita', 'desc' => 'Engaging local leaders to identify and address critical community needs through collaborative projects.'],
+                ['img' => 'FYU-flood-response.jpg', 'title' => 'Flood Response', 'desc' => 'Supporting families displaced by floods with emergency relief and rehabilitation strategies.'],
+                ['img' => 'FYU-education.jpg', 'title' => 'Livelihood Programs', 'desc' => 'Youth empowerment through sustainable livelihood initiatives.'],
             ];
 
             foreach ($projects as $idx => $proj) :

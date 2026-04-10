@@ -7,22 +7,27 @@ declare(strict_types=1);
 require_once __DIR__ . "/../app/config/db.php";
 
 // ===================================================================
+// ===================================================================
 // IMAGE HELPER FUNCTION
 // ===================================================================
 function getImagePath($imageName): string {
-    // Dynamically use the base URL (defaults to /public/ if not set)
     $baseUrl = $GLOBALS['baseUrl'] ?? '/public/';
     $folder = 'uploads/news/';
-    $defaultLogo = 'FYU-LOGO.jpg'; // Matches the filename in your assets
+    $defaultLogo = 'FYU-LOGO.jpg';
 
-    // 1. Check if a specific image name exists in the database
-    if (!empty($imageName)) {
-        // Clean the string and return the full path
-        return $baseUrl . $folder . htmlspecialchars((string)$imageName);
+    // 1. If empty, return default
+    if (empty($imageName)) {
+        return $baseUrl . $folder . $defaultLogo;
     }
 
-    // 2. Fallback to the default logo if no image is provided
-    return $baseUrl . $folder . $defaultLogo;
+    // 2. NEW: Check if the string is already a full URL (starts with http)
+    // This allows your Cloudinary links to work without modification
+    if (strpos((string)$imageName, 'http') === 0) {
+        return (string)$imageName;
+    }
+
+    // 3. Fallback: If it's a local filename, prepend the folder path
+    return $baseUrl . $folder . htmlspecialchars((string)$imageName);
 }
 
 // ===================================================================
