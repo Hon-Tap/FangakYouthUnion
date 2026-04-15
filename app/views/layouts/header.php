@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Global Header Layout - PRO VERSION
  * Fangak Youth Union
@@ -8,6 +9,8 @@ $pageTitle = $pageTitle ?? "Fangak Youth Union";
 
 /**
  * Base URL
+ * Change this only if your site runs in a subfolder
+ * Example: /fyu/
  */
 $baseUrl = "/";
 
@@ -17,34 +20,74 @@ $baseUrl = "/";
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 
 /**
- * Favicon Links
- * Assumes files are in /public/favicon_io/
+ * Render Favicon Links
+ * Assumes files are in:
+ * /public/favicon_io/
+ * OR
+ * /favicon_io/
  */
 function renderFavicons() {
-    $path = "/favicon_io/";
+
+    global $baseUrl;
+
+    $path = $baseUrl . "favicon_io/";
+
     return '
+    <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="'.$path.'apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="'.$path.'favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="'.$path.'favicon-16x16.png">
     <link rel="manifest" href="'.$path.'site.webmanifest">
-    <link rel="shortcut icon" href="'.$path.'favicon.ico">';
+    <link rel="shortcut icon" href="'.$path.'favicon.ico">
+    ';
 }
 
 /**
  * Active nav helpers with sleek animated underlines
  */
 function navActive($page, $current) {
+
     return $current === $page
         ? 'text-fyu-gold after:w-full'
         : 'text-gray-200 hover:text-white after:w-0 hover:after:w-full';
+
 }
 
 function navActiveMobile($page, $current) {
+
     return $current === $page
         ? 'bg-fyu-primary/20 text-fyu-gold border-l-4 border-fyu-gold font-semibold'
         : 'text-gray-300 hover:bg-white/5 border-l-4 border-transparent hover:text-white';
+
 }
+
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title><?= htmlspecialchars($pageTitle) ?></title>
+
+<meta name="description" content="Fangak Youth Union - Peace, Unity & Development">
+
+<meta name="author" content="Fangak Youth Union">
+
+<?= renderFavicons(); ?>
+
+<!-- Tailwind / CSS -->
+<link rel="stylesheet" href="<?= $baseUrl ?>css/styles.css">
+
+</head>
+
+<body>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
