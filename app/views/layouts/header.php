@@ -4,7 +4,6 @@
  * Fangak Youth Union
  */
 
-
 $pageTitle = $pageTitle ?? "Fangak Youth Union";
 
 /**
@@ -16,6 +15,20 @@ $baseUrl = "/";
  * Detect current page
  */
 $current_page = basename($_SERVER['SCRIPT_NAME']);
+
+/**
+ * Favicon Links
+ * Assumes files are in /public/favicon_io/
+ */
+function renderFavicons() {
+    $path = "/favicon_io/";
+    return '
+    <link rel="apple-touch-icon" sizes="180x180" href="'.$path.'apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="'.$path.'favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="'.$path.'favicon-16x16.png">
+    <link rel="manifest" href="'.$path.'site.webmanifest">
+    <link rel="shortcut icon" href="'.$path.'favicon.ico">';
+}
 
 /**
  * Active nav helpers with sleek animated underlines
