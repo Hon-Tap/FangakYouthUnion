@@ -364,7 +364,7 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
                         <option>Paguir</option>
                         <option>Manajang</option>
                         <option>Barbuoi</option>
-                        <option>Mareng</option>
+                        <option>Nyadin</option>
                         <option>Toch</option>
                         <option>New Fangak</option>
                         <option>Old Fangak</option>
