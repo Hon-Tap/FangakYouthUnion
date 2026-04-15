@@ -203,7 +203,7 @@ function safeHtmlPreview($value) {
 
     <div class="absolute top-8 right-8 z-30">
         <a href="<?= $baseUrl ?>admin/login.php" 
-           class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-[#0a261a] transition-all duration-300 flex items-center gap-2">
+           class="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-[#0a261a] transition-all duration-300 flex items-center gap-2">
             <i class="fa-solid fa-lock text-[10px]"></i> Admin
         </a>
     </div>
@@ -524,7 +524,7 @@ function safeHtmlPreview($value) {
 
         <div class="mt-16 text-center" data-aos="fade-up">
 
-            <a href="<?= $baseUrl ?>projects.php"
+            <a href="<?= $baseUrl ?>project.php"
                class="inline-flex items-center font-bold text-fyu-primary text-lg hover:text-fyu-dark transition-colors border-b-2 border-fyu-primary pb-1">
 
                 View Complete Portfolio

@@ -158,7 +158,7 @@ body { font-family: 'Poppins', sans-serif; }
                         </a>
                     <?php else: ?>
                         <a href="/register.php" class="px-6 py-2.5 bg-gradient-to-r from-fyu-gold to-yellow-500 text-fyu-darker rounded-full font-semibold hover:shadow-[0_0_15px_rgba(212,160,23,0.5)] hover:-translate-y-0.5 transition-all duration-300">
-                            Join Us
+                            Register
                         </a>
                     <?php endif; ?>
                 </div>
@@ -203,9 +203,6 @@ body { font-family: 'Poppins', sans-serif; }
         <?php else: ?>
             <a href="/register.php" class="block w-full text-center py-3 bg-fyu-gold text-fyu-darker font-bold rounded-lg mb-3 hover:bg-yellow-400 transition shadow-lg shadow-fyu-gold/20">
                 Register
-            </a>
-            <a href="/login.php" class="block w-full text-center py-3 text-white border border-white/20 rounded-lg hover:bg-white/5 transition">
-                Login
             </a>
         <?php endif; ?>
     </div>

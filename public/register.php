@@ -363,7 +363,7 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
                         <option>Pulita</option>
                         <option>Paguir</option>
                         <option>Manajang</option>
-                        <option>Barbouy</option>
+                        <option>Barbuoi</option>
                         <option>Mareng</option>
                         <option>Toch</option>
                         <option>New Fangak</option>

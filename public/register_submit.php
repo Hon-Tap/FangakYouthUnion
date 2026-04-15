@@ -74,7 +74,7 @@ if (!move_uploaded_file($_FILES['photo']['tmp_name'], $photo_path)) {
     respond(false, "Failed to save uploaded photo.");
 }
 
-$photo_rel_path = "public/uploads/members/" . $new_filename;
+$photo_rel_path = "members/" . $new_filename;
 
 try {
     // Start transaction
