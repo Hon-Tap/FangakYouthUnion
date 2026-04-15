@@ -359,7 +359,7 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
                 <div class="input-group">
                     <label>Payam</label>
                     <select name="payam" required>
-                        <option value="">Select Location</option>
+                        <option value="">Select Payam</option>
                         <option>Pulita</option>
                         <option>Paguir</option>
                         <option>Manajang</option>
