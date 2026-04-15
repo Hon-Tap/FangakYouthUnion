@@ -1,39 +1,40 @@
 <?php
-// admin/sections/news.php
 declare(strict_types=1);
 ?>
 
-<div class="flex items-center justify-between mb-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <h1 class="text-2xl font-bold text-green-800">News Management</h1>
-        <p class="text-slate-500 text-sm mt-1">Create, edit, and organize all posted news articles.</p>
+        <h1 class="text-2xl font-bold text-slate-800 tracking-tight">News Management</h1>
+        <p class="text-slate-500 text-sm mt-1">Create, edit, and organize all published articles.</p>
     </div>
 
     <button onclick="openModal('add')" 
-            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
-        <i class="fa-solid fa-plus"></i> Add News
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition-all active:scale-95">
+        <i data-lucide="plus-circle" class="w-5 h-5"></i>
+        <span>Add News Article</span>
     </button>
 </div>
 
-<div class="bg-white shadow-md rounded-xl overflow-hidden border border-slate-200">
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
-        <table id="newsTable" class="min-w-full text-sm text-green-700">
+        <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="bg-green-50 border-b text-green-800 uppercase text-xs font-semibold">
-                    <th class="py-3 px-4">ID</th>
-                    <th class="py-3 px-4">Title</th>
-                    <th class="py-3 px-4">Subheading</th>
-                    <th class="py-3 px-4">Author</th>
-                    <th class="py-3 px-4 w-[24rem]">Description</th>
-                    <th class="py-3 px-4">Image</th>
-                    <th class="py-3 px-4">Category</th>
-                    <th class="py-3 px-4">Created</th>
-                    <th class="py-3 px-4 text-center w-32">Actions</th>
+                <tr class="bg-slate-50/50 border-b border-slate-200">
+                    <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-slate-500">Article</th>
+                    <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-slate-500">Author</th>
+                    <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-slate-500">Category</th>
+                    <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-slate-500">Date Published</th>
+                    <th class="py-4 px-6 text-xs font-bold uppercase tracking-wider text-slate-500 text-center">Actions</th>
                 </tr>
             </thead>
-            <tbody id="newsTableBody">
+            <tbody id="newsTableBody" class="divide-y divide-slate-100 text-sm">
                 <tr>
-                    <td colspan="9" class="py-8 text-center text-slate-500">Loading...</td>
+                    <td colspan="5" class="py-12 text-center text-slate-400">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+                            <p>Loading news stream...</p>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -43,9 +44,6 @@ declare(strict_types=1);
 <?php include __DIR__ . "/news_modal.php"; ?>
 
 <script>
-// ----------------------------
-// Load news list via AJAX
-// ----------------------------
 async function loadNews() {
     const tbody = document.getElementById("newsTableBody");
     try {
@@ -53,88 +51,55 @@ async function loadNews() {
         const news = await res.json();
 
         if (!news.length) {
-            tbody.innerHTML = `<tr><td colspan="9" class="py-8 text-center text-slate-500">No news available yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-slate-400 font-medium">No news found. Start by creating one!</td></tr>`;
             return;
         }
 
         tbody.innerHTML = news.map(post => `
-            <tr class="border-b hover:bg-slate-50 transition-all">
-                <td class="py-3 px-4 font-bold text-green-800">${post.id}</td>
-                <td class="py-3 px-4 font-medium">${post.title || ''}</td>
-                <td class="py-3 px-4">${post.subheading || '—'}</td>
-                <td class="py-3 px-4 text-green-800">${post.author || 'Unknown'}</td>
-                <td class="py-3 px-4">
-                    <p class="line-clamp-3 text-green-600 leading-relaxed">${post.description || ''}</p>
+            <tr class="hover:bg-slate-50/80 transition-colors group">
+                <td class="py-4 px-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+                            ${post.image ? `<img src="/uploads/news/${post.image}" class="w-full h-full object-cover">` : `<div class="flex items-center justify-center h-full text-slate-400"><i data-lucide="image" class="w-5 h-5"></i></div>`}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-semibold text-slate-800 truncate max-w-[250px]">${post.title || 'Untitled Article'}</p>
+                            <p class="text-xs text-slate-500 line-clamp-1">${post.subheading || 'No subtitle'}</p>
+                        </div>
+                    </div>
                 </td>
-                <td class="py-3 px-4">
-                    ${post.image ? `<img src="/uploads/news/${post.image}" class="w-14 h-14 rounded-lg object-cover shadow border" alt="News image">`
-                                : `<span class="text-green-400 text-xs italic">No image</span>`}
+                <td class="py-4 px-6 font-medium text-slate-600">${post.author || 'Staff'}</td>
+                <td class="py-4 px-6">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100 capitalize">
+                        ${post.category || 'General'}
+                    </span>
                 </td>
-                <td class="py-3 px-4">
-                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700 font-semibold">${post.category || 'Uncategorized'}</span>
-                </td>
-                <td class="py-3 px-4 text-green-500 text-xs">${post.created_at}</td>
-                <td class="py-3 px-4">
-                    <div class="flex items-center justify-center gap-3">
-                        <button onclick="openModal('edit', ${post.id})"
-                                class="px-2 py-1 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition flex items-center gap-1" title="Edit">
-                            <i class="fa-solid fa-pen text-sm"></i>
-                            <span class="text-xs font-semibold">Edit</span>
+                <td class="py-4 px-6 text-slate-500 font-mono text-xs">${post.created_at}</td>
+                <td class="py-4 px-6">
+                    <div class="flex items-center justify-center gap-2">
+                        <button onclick="openModal('edit', ${post.id})" class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all" title="Edit">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
                         </button>
-                        <button onclick="deleteNews(${post.id})"
-                                class="px-2 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition flex items-center gap-1" title="Delete">
-                            <i class="fa-solid fa-trash text-sm"></i>
-                            <span class="text-xs font-semibold">Delete</span>
+                        <button onclick="deleteNews(${post.id})" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Delete">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </td>
             </tr>
         `).join('');
+        lucide.createIcons();
     } catch(err) {
-        tbody.innerHTML = `<tr><td colspan="9" class="py-8 text-center text-red-500">Error loading news</td></tr>`;
-        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-rose-500">System Error: Failed to fetch news.</td></tr>`;
     }
 }
 
-// ----------------------------
-// Delete news via AJAX
-// ----------------------------
 async function deleteNews(id) {
-    if(!confirm('Are you sure you want to delete this article?')) return;
+    if(!confirm('Permanently delete this article?')) return;
     try {
         const res = await fetch(`sections/news_delete.php?id=${id}`);
         if(res.ok) loadNews();
-        else alert('Failed to delete the news.');
-    } catch(err) {
-        alert('Error deleting news.');
-        console.error(err);
-    }
+    } catch(err) { console.error(err); }
 }
 
-// ----------------------------
-// Submit Add/Edit modal via AJAX
-// ----------------------------
-document.getElementById('newsForm').addEventListener('submit', async function(e){
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-
-    try {
-        const res = await fetch(form.action, {
-            method: 'POST',
-            body: formData
-        });
-
-        if(!res.ok) throw new Error('Failed to save news.');
-
-        closeModal();
-        loadNews();
-    } catch(err) {
-        alert(err.message);
-        console.error(err);
-    }
-});
-
-// Initial load
 loadNews();
 </script>

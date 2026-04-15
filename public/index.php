@@ -204,7 +204,7 @@ function safeHtmlPreview($value) {
     <div class="absolute top-8 right-8 z-30">
         <a href="<?= $baseUrl ?>admin/login.php" 
            class="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-[#0a261a] transition-all duration-300 flex items-center gap-2">
-            <i class="fa-solid fa-lock text-[10px]"></i> Admin
+            <i class="fa-solid fa-lock text-[10px]"></i>
         </a>
     </div>
 
@@ -545,7 +545,7 @@ function safeHtmlPreview($value) {
         <h2 class="text-5xl md:text-7xl font-serif font-bold mb-8 drop-shadow-2xl">Be the Catalyst</h2>
         <p class="text-xl text-white/70 max-w-2xl mx-auto mb-12 font-light">Join an elite network of change-makers. Empower youth, transform communities, and engineer the future.</p>
         <a href="<?= $baseUrl ?>register.php" class="inline-block px-12 py-5 bg-white text-fyu-dark font-bold rounded-full text-lg shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] hover:scale-105 transition-all duration-500">
-            Apply to Join
+            Register Now
         </a>
     </div>
 </section>

@@ -1,89 +1,73 @@
 <?php
-// admin/sections/announcements.php
 declare(strict_types=1);
 ?>
 
-<div class="flex items-center justify-between mb-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
-        <h1 class="text-2xl font-bold text-green-800">Announcements</h1>
-        <p class="text-slate-500 text-sm mt-1">Share important updates with the public.</p>
+        <h1 class="text-2xl font-bold text-slate-800">Announcements</h1>
+        <p class="text-slate-500 text-sm mt-1">Broadcast high-priority alerts to the platform.</p>
     </div>
 
     <button onclick="openAnnouncementModal('add')"
-            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold shadow flex items-center gap-2">
-        <i class="fa-solid fa-plus"></i> Add Announcement
+            class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-amber-500/20 flex items-center gap-2 transition-all">
+        <i data-lucide="megaphone" class="w-5 h-5 text-white"></i>
+        New Broadcast
     </button>
 </div>
 
-<div class="bg-white shadow-md rounded-xl overflow-hidden border">
-    <div class="overflow-x-auto">
-        <table id="announcementTable" class="min-w-full text-sm">
-            <thead>
-            <tr class="bg-green-50 text-green-800 uppercase text-xs font-semibold border-b">
-                <th class="py-3 px-4">ID</th>
-                <th class="py-3 px-4">Title</th>
-                <th class="py-3 px-4">Active Dates</th>
-                <th class="py-3 px-4">Published</th>
-                <th class="py-3 px-4 w-32 text-center">Actions</th>
-            </tr>
-            </thead>
-            <tbody id="announcementTableBody">
-                <tr>
-                    <td colspan="5" class="py-8 text-center text-slate-500">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
+<div class="grid grid-cols-1 gap-4" id="announcementGrid">
     </div>
-</div>
 
 <?php include __DIR__ . "/announcements_modal.php"; ?>
 
 <script>
 async function loadAnnouncements() {
-    const tbody = document.getElementById("announcementTableBody");
-
+    const grid = document.getElementById("announcementGrid");
     try {
         const res = await fetch("sections/announcements_list_ajax.php");
         const rows = await res.json();
 
         if (!rows.length) {
-            tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-500">No announcements yet.</td></tr>`;
+            grid.innerHTML = `<div class="bg-white rounded-2xl p-12 text-center border-2 border-dashed text-slate-400 font-medium">No active announcements.</div>`;
             return;
         }
 
-        tbody.innerHTML = rows.map(a => `
-            <tr class="border-b hover:bg-slate-50">
-                <td class="py-3 px-4 font-bold">${a.id}</td>
-                <td class="py-3 px-4">${a.title}</td>
-                <td class="py-3 px-4 text-sm">${a.starts_at} → ${a.ends_at}</td>
-                <td class="py-3 px-4">
-                    ${a.is_published == 1
-                        ? `<span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Published</span>`
-                        : `<span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">Hidden</span>`
-                    }
-                </td>
-                <td class="py-3 px-4">
-                    <div class="flex justify-center gap-2">
-                        <button onclick="openAnnouncementModal('edit', ${a.id})"
-                                class="px-2 py-1 bg-green-100 text-green-700 rounded-lg text-xs">Edit</button>
-                        <button onclick="deleteAnnouncement(${a.id})"
-                                class="px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs">Delete</button>
+        grid.innerHTML = rows.map(a => `
+            <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex items-start gap-4">
+                <div class="w-12 h-12 rounded-full ${a.is_published == 1 ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'} flex items-center justify-center shrink-0 border border-slate-100">
+                    <i data-lucide="bell" class="w-6 h-6"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="font-bold text-slate-800 truncate">${a.title}</h3>
+                        ${a.is_published == 1 
+                            ? `<span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500 text-white rounded-md uppercase tracking-widest">Live</span>` 
+                            : `<span class="px-2 py-0.5 text-[10px] font-bold bg-slate-200 text-slate-500 rounded-md uppercase tracking-widest">Draft</span>`
+                        }
                     </div>
-                </td>
-            </tr>
+                    <p class="text-xs text-slate-500 flex items-center gap-2">
+                        <i data-lucide="calendar" class="w-3 h-3"></i>
+                        Active: <span class="text-slate-700 font-semibold">${a.starts_at}</span> to <span class="text-slate-700 font-semibold">${a.ends_at}</span>
+                    </p>
+                </div>
+                <div class="flex gap-2 shrink-0">
+                     <button onclick="openAnnouncementModal('edit', ${a.id})" class="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-emerald-600 transition-colors">
+                        <i data-lucide="edit" class="w-5 h-5"></i>
+                     </button>
+                     <button onclick="deleteAnnouncement(${a.id})" class="p-2 hover:bg-slate-50 rounded-lg text-slate-400 hover:text-rose-600 transition-colors">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                     </button>
+                </div>
+            </div>
         `).join('');
-
-    } catch(err) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-red-500">Error loading data.</td></tr>`;
-    }
+        lucide.createIcons();
+    } catch(err) { console.error(err); }
 }
 
 async function deleteAnnouncement(id) {
-    if (!confirm("Delete this announcement?")) return;
-
+    if (!confirm("Delete this?")) return;
     await fetch("sections/announcements_delete.php?id=" + id);
     loadAnnouncements();
 }
-
 loadAnnouncements();
 </script>
