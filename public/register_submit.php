@@ -96,7 +96,15 @@ if (!in_array($photo_ext, $allowed_exts)) {
  * Define upload directory
  * -------------------------------------------------------
  */
-$upload_dir = __DIR__ . "/../public/uploads/members/";
+// 1. Where PHP saves the file (Must be an absolute path on your server)
+$upload_dir = __DIR__ . "/../public/uploads/members/"; 
+
+// 2. What you save to the DATABASE (Must be a relative URL path)
+// If your images are in /public/uploads/members, your browser 
+// usually expects the URL to start from the public root.
+$photo_rel_path = "uploads/members/" . $new_filename;
+
+error_log("DEBUG: Saving to path: " . $photo_path);
 
 if (!is_dir($upload_dir)) {
 
