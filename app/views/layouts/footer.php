@@ -71,7 +71,7 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
                             <i class="fa-solid fa-envelope"></i>
                         </div>
                         <div class="pt-1.5">
-                            <a href="mailto:info@fangakyouth.org" class="hover:text-fyu-gold transition-colors">info@fangakyouth.org</a>
+                            <a href="mailto:info@fangakyouthunion.org" class="hover:text-fyu-gold transition-colors">info@fangakyouthunion.org</a>
                         </div>
                     </div>
                     
@@ -86,13 +86,26 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
                 </div>
 
                 <div class="flex gap-3 mt-8">
-                    <?php 
-                    $socials = ['fa-facebook-f', 'fa-x-twitter', 'fa-linkedin-in', 'fa-instagram'];
-                    foreach($socials as $icon): ?>
-                        <a href="#" class="w-10 h-10 rounded-lg bg-fyu-primary/20 text-white flex items-center justify-center hover:bg-fyu-gold hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(212,160,23,0.4)] transition-all duration-300">
-                            <i class="fa-brands <?= $icon ?>"></i>
-                        </a>
-                    <?php endforeach; ?>
+                    <?php
+                        $socials = [
+                            'fa-facebook-f'  => 'https://www.facebook.com/profile.php?id=61576158274794',
+                            'fa-x-twitter'   => '#',
+                            'fa-linkedin-in' => '#',
+                            'fa-instagram'   => '#'
+                        ];
+
+                        foreach ($socials as $icon => $link): ?>
+
+                            <a href="<?= $link ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="w-10 h-10 rounded-lg bg-fyu-primary/20 text-white flex items-center justify-center hover:bg-fyu-gold hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(212,160,23,0.4)] transition-all duration-300">
+
+                                <i class="fa-brands <?= $icon ?>"></i>
+
+                            </a>
+
+                        <?php endforeach; ?>
                 </div>
             </div>
 
