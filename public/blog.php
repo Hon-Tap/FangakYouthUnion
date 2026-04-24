@@ -102,6 +102,9 @@ $relatedPosts = [];
 $comments = [];
 $pageTitle = "News Hub - Fangak Youth Union";
 
+// Get current URL for sharing capabilities
+$currentUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
 if ($pdo) {
     try {
         if ($viewMode === 'single') {
@@ -138,95 +141,142 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
 ?>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
 <style>
     :root {
         --fyu-green: #064e3b;
+        --fyu-green-hover: #04382a;
         --fyu-gold: #d97706;
         --text-dark: #111827;
         --text-light: #6b7280;
-        --bg-soft: #fbfbfb;
+        --bg-soft: #f9fafb;
+        --border-color: #e5e7eb;
         --font-heading: 'Playfair Display', serif;
         --font-sans: 'Inter', sans-serif;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    body { background-color: #fff; color: var(--text-dark); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    body { background-color: #fff; color: var(--text-dark); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
+    a { text-decoration: none; color: inherit; transition: var(--transition); }
+
+    /* --- READING PROGRESS BAR --- */
+    .reading-progress { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background: var(--fyu-gold); z-index: 9999; transition: width 0.1s ease; }
 
     /* --- BEAUTIFIED COMPONENTS --- */
-    .section-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fyu-gold); display: block; margin-bottom: 0.5rem; }
+    .section-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fyu-gold); display: block; margin-bottom: 0.75rem; }
     
-    .img-container { position: relative; overflow: hidden; border-radius: 8px; background: #eee; }
-    .img-container img { transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); width: 100%; height: 100%; object-fit: cover; }
-    .news-card:hover .img-container img { transform: scale(1.04); }
+    .news-card { display: flex; flex-direction: column; height: 100%; cursor: pointer; group; }
+    
+    /* Improved Image Handling */
+    .img-container { position: relative; overflow: hidden; border-radius: 12px; background: var(--bg-soft); width: 100%; isolation: isolate; }
+    .img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1); }
+    .news-card:hover .img-container img { transform: scale(1.05); }
 
     /* --- INDEX: HERO BENTO GRID --- */
-    .bento-container { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; }
+    .bento-container { max-width: 1300px; margin: 3rem auto; padding: 0 1.5rem; display: grid; grid-template-columns: 1.6fr 1fr; gap: 3rem; }
     
-    .hero-main .img-container { height: 500px; margin-bottom: 1.5rem; border-radius: 12px; }
-    .hero-main h1 { font-family: var(--font-heading); font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
-    .hero-main p { font-size: 1.1rem; color: var(--text-light); line-height: 1.6; max-width: 90%; }
+    .hero-main .img-container { aspect-ratio: 16/9; margin-bottom: 1.5rem; box-shadow: var(--shadow-md); }
+    .hero-main h1 { font-family: var(--font-heading); font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.15; margin-bottom: 1rem; color: var(--text-dark); transition: var(--transition); }
+    .hero-main:hover h1 { color: var(--fyu-green); }
+    .hero-main p { font-size: 1.125rem; color: var(--text-light); line-height: 1.7; max-width: 95%; }
 
-    .hero-side { display: flex; flex-direction: column; gap: 1.5rem; }
-    .side-item { display: grid; grid-template-columns: 120px 1fr; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f0f0f0; }
-    .side-item .img-container { height: 100px; border-radius: 6px; }
-    .side-item h3 { font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
+    .hero-side { display: flex; flex-direction: column; gap: 0; }
+    .hero-side-header { font-size: 1.25rem; font-family: var(--font-heading); color: var(--text-dark); border-bottom: 2px solid var(--text-dark); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+    
+    .side-item { display: grid; grid-template-columns: 100px 1fr; gap: 1.25rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border-color); align-items: center; }
+    .side-item:last-child { border-bottom: none; }
+    .side-item .img-container { aspect-ratio: 1/1; border-radius: 8px; }
+    .side-item h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.4; transition: var(--transition); }
+    .side-item:hover h3 { color: var(--fyu-green); }
 
-    /* --- LATEST POSTS GRID (Replaces "More Stories") --- */
-    .latest-grid-section { background: var(--bg-soft); padding: 5rem 0; margin-top: 4rem; }
+    /* --- LATEST POSTS GRID --- */
+    .latest-grid-section { background: var(--bg-soft); padding: 5rem 0; margin-top: 4rem; border-top: 1px solid var(--border-color); }
     .grid-wrapper { max-width: 1300px; margin: 0 auto; padding: 0 1.5rem; }
-    .fyu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2.5rem; }
-    .grid-card .img-container { height: 220px; margin-bottom: 1.25rem; }
-    .grid-card h3 { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .fyu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2.5rem; }
+    
+    .grid-card .img-container { aspect-ratio: 4/3; margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); }
+    .grid-card h3 { font-family: var(--font-heading); font-size: 1.5rem; line-height: 1.3; margin-bottom: 0.75rem; }
+    .grid-card:hover h3 { color: var(--fyu-green); }
 
     /* --- SINGLE POST --- */
     .article-container { max-width: 800px; margin: 4rem auto; padding: 0 1.5rem; }
     .article-header { text-align: center; margin-bottom: 3rem; }
-    .article-header h1 { font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4rem); margin: 1rem 0; line-height: 1; }
-    .article-meta { font-weight: 600; color: var(--text-light); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+    .article-header h1 { font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4rem); margin: 1rem 0; line-height: 1.1; color: var(--text-dark); }
+    .article-meta { font-weight: 500; color: var(--text-light); font-size: 0.95rem; margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .article-meta img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
     
-    .hero-img-full { width: 100%; max-height: 600px; border-radius: 16px; object-fit: cover; margin-bottom: 4rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-    .article-content { font-size: 1.25rem; line-height: 1.8; color: #333; }
+    .hero-img-full { width: 100%; aspect-ratio: 21/9; object-fit: cover; border-radius: 16px; margin-bottom: 4rem; box-shadow: var(--shadow-lg); }
+    
+    .article-content { font-size: 1.2rem; line-height: 1.8; color: #374151; }
     .article-content p { margin-bottom: 2rem; }
-    .article-content p:first-of-type::first-letter { font-size: 5rem; float: left; line-height: 0.7; padding: 0.5rem 0.75rem 0 0; font-family: var(--font-heading); color: var(--fyu-green); }
+    .article-content p:first-of-type::first-letter { font-size: 5.5rem; float: left; line-height: 0.8; padding: 0.5rem 0.75rem 0 0; font-family: var(--font-heading); color: var(--fyu-green); font-weight: 900;}
+    .article-content img { max-width: 100%; height: auto; border-radius: 12px; margin: 2rem 0; }
 
-    /* Sidebar Refinement */
-    .sidebar-widget { background: white; border: 1px solid #eee; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
-    .btn-fyu { background: var(--fyu-green); color: white; border: none; padding: 1rem; width: 100%; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-    .btn-fyu:hover { background: var(--text-dark); transform: translateY(-2px); }
+    /* --- SHARE BAR --- */
+    .share-bar { margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+    .share-buttons { display: flex; gap: 1rem; align-items: center; }
+    .share-btn { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-soft); color: var(--text-dark); font-size: 1.2rem; border: 1px solid var(--border-color); transition: var(--transition); cursor: pointer; }
+    .share-btn:hover { background: var(--fyu-green); color: white; border-color: var(--fyu-green); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .copy-btn { padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.875rem; font-weight: 600; width: auto; }
+
+    /* --- SIDEBAR & FORMS --- */
+    .sidebar-widget { background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm); }
+    .btn-fyu { background: var(--fyu-green); color: white; border: none; padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem; }
+    .btn-fyu:hover { background: var(--fyu-green-hover); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-fyu:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    
+    .form-input { width: 100%; padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-soft); font-family: var(--font-sans); transition: var(--transition); }
+    .form-input:focus { outline: none; border-color: var(--fyu-green); background: white; box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.1); }
+
+    /* --- TOAST NOTIFICATIONS --- */
+    .toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 50; display: flex; flex-direction: column; gap: 1rem; }
+    .toast { padding: 1rem 1.5rem; border-radius: 8px; background: white; box-shadow: var(--shadow-lg); border-left: 4px solid var(--fyu-green); font-weight: 500; display: flex; align-items: center; gap: 0.75rem; transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .toast.show { transform: translateX(0); }
+    .toast.error { border-left-color: #ef4444; }
 
     @media (max-width: 1024px) {
         .bento-container { grid-template-columns: 1fr; }
-        .hero-main h1 { font-size: 2.2rem; }
+        .hero-main h1 { font-size: 2.5rem; }
+        .hero-main .img-container { aspect-ratio: 4/3; }
+    }
+    @media (max-width: 768px) {
+        .hero-img-full { aspect-ratio: 16/9; }
+        .article-content p:first-of-type::first-letter { font-size: 4rem; }
     }
 </style>
 
 <div class="main-wrapper">
+    <div class="toast-container" id="toastContainer"></div>
+
     <?php if ($viewMode === 'index'): ?>
         <section class="bento-container">
             <?php if ($featuredPost): ?>
-            <div class="hero-main news-card">
-                <a href="?post=<?= $featuredPost['id'] ?>">
+            <div class="hero-main">
+                <a href="?post=<?= $featuredPost['id'] ?>" class="news-card">
                     <div class="img-container">
                         <img src="<?= getImagePath($featuredPost['image']) ?>" alt="Featured">
                     </div>
                     <span class="section-label"><?= htmlspecialchars($featuredPost['category'] ?? 'Major Update') ?></span>
                     <h1><?= htmlspecialchars($featuredPost['title']) ?></h1>
-                    <p><?= htmlspecialchars(strip_tags(substr($featuredPost['description'], 0, 180))) ?>...</p>
+                    <p><?= htmlspecialchars(strip_tags(substr($featuredPost['description'], 0, 200))) ?>...</p>
                 </a>
             </div>
             <?php endif; ?>
 
             <div class="hero-side">
-                <h2 class="section-label" style="color: var(--text-dark); border-bottom: 2px solid var(--fyu-green); padding-bottom: 5px; align-self: flex-start;">Trending Now</h2>
+                <div class="hero-side-header">Trending Now</div>
                 <?php foreach (array_slice($latestGrid, 0, 4) as $post): ?>
-                <a href="?post=<?= $post['id'] ?>" class="side-item news-card">
+                <a href="?post=<?= $post['id'] ?>" class="side-item">
                     <div class="img-container">
                         <img src="<?= getImagePath($post['image']) ?>" alt="Thumbnail">
                     </div>
                     <div>
-                        <span class="section-label" style="font-size: 0.65rem;"><?= date('M d', strtotime($post['created_at'])) ?></span>
+                        <span class="section-label" style="font-size: 0.65rem; margin-bottom:0.25rem;"><i class="fa-regular fa-clock"></i> <?= date('M d', strtotime($post['created_at'])) ?></span>
                         <h3><?= htmlspecialchars($post['title']) ?></h3>
                     </div>
                 </a>
@@ -236,32 +286,31 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
 
         <section class="latest-grid-section">
             <div class="grid-wrapper">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 2rem;">
                     <div>
                         <span class="section-label">Latest from FYU</span>
-                        <h2 style="font-family: var(--font-heading); font-size: 2.5rem;">Recent Dispatches</h2>
+                        <h2 style="font-family: var(--font-heading); font-size: 2.5rem; margin:0;">Recent Dispatches</h2>
                     </div>
-                    <div class="sidebar-widget" style="margin:0; padding: 1.5rem; width: 350px;">
-                        <h4 style="margin-bottom:10px">The FYU Briefing</h4>
-                        <form id="newsletterForm" onsubmit="submitNewsletter(event)" style="display:flex; gap:5px;">
-                            <input type="email" name="email" placeholder="Email" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:4px;" required>
-                            <button type="submit" class="btn-fyu" style="width:auto; padding:10px 20px;">Join</button>
+                    <div class="sidebar-widget" style="margin:0; padding: 1.5rem; width: 100%; max-width: 400px;">
+                        <h4 style="margin-top:0; margin-bottom:15px; font-family: var(--font-heading); font-size: 1.2rem;">Get The FYU Briefing</h4>
+                        <form id="newsletterForm" onsubmit="submitNewsletter(event)" style="display:flex; gap:10px;">
+                            <input type="email" name="email" class="form-input" placeholder="Your email address" required style="padding: 0.75rem;">
+                            <button type="submit" class="btn-fyu" style="padding: 0.75rem 1.5rem;"><i class="fa-solid fa-paper-plane"></i></button>
                         </form>
-                        <div id="newsletterMsg" style="font-size: 0.8rem; margin-top:5px;"></div>
                     </div>
                 </div>
 
                 <div class="fyu-grid">
                     <?php foreach (array_slice($latestGrid, 4) as $post): ?>
-                    <article class="grid-card news-card">
-                        <a href="?post=<?= $post['id'] ?>">
+                    <article>
+                        <a href="?post=<?= $post['id'] ?>" class="grid-card news-card">
                             <div class="img-container">
-                                <img src="<?= getImagePath($post['image']) ?>" alt="Post Image">
+                                <img src="<?= getImagePath($post['image']) ?>" loading="lazy" alt="Post Image">
                             </div>
                             <span class="section-label"><?= htmlspecialchars($post['category'] ?? 'Community') ?></span>
                             <h3><?= htmlspecialchars($post['title']) ?></h3>
-                            <p style="color: var(--text-light); font-size: 0.95rem;">
-                                <?= htmlspecialchars(strip_tags(substr($post['description'], 0, 100))) ?>...
+                            <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.6;">
+                                <?= htmlspecialchars(strip_tags(substr($post['description'], 0, 110))) ?>...
                             </p>
                         </a>
                     </article>
@@ -270,54 +319,96 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
             </div>
         </section>
 
-    <?php elseif ($viewMode === 'single' && $currentPost): ?>
+    <?php elseif ($viewMode === 'single' && $currentPost): 
+        $encodedUrl = urlencode($currentUrl);
+        $encodedTitle = urlencode($currentPost['title']);
+    ?>
+        <div class="reading-progress" id="progressBar"></div>
+        
         <article class="article-container">
             <header class="article-header">
                 <span class="section-label"><?= htmlspecialchars($currentPost['category'] ?? 'Insight') ?></span>
                 <h1><?= htmlspecialchars($currentPost['title']) ?></h1>
                 <div class="article-meta">
-                    By <?= htmlspecialchars($currentPost['author'] ?? 'FYU Media') ?> &bull; 
-                    <?= date('F d, Y', strtotime($currentPost['created_at'])) ?>
+                    <img src="<?= getImagePath('default-avatar.png') ?>" alt="Author" onerror="this.style.display='none'">
+                    <div>
+                        <span style="color: var(--text-dark);">By <?= htmlspecialchars($currentPost['author'] ?? 'FYU Media') ?></span> &bull; 
+                        <?= date('F d, Y', strtotime($currentPost['created_at'])) ?>
+                    </div>
                 </div>
             </header>
 
             <img src="<?= getImagePath($currentPost['image']) ?>" class="hero-img-full" alt="Hero">
 
-            <div class="article-content">
+            <div class="article-content" id="articleBody">
                 <?= $currentPost['description'] ?>
             </div>
 
-            <div style="margin-top: 5rem; padding-top: 2rem; border-top: 1px solid #eee; display: flex; justify-content: space-between;">
-                <button class="btn-fyu" style="width: auto;" onclick="window.history.back()">Back to Hub</button>
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                    <span style="font-weight: 800; font-size: 0.7rem; color: var(--text-light);">SHARE THIS STORY</span>
-                    <a href="#" style="font-size: 1.2rem;"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="#" style="font-size: 1.2rem;"><i class="fa-brands fa-facebook"></i></a>
+            <div class="share-bar">
+                <button class="btn-fyu" style="background: var(--bg-soft); color: var(--text-dark); border: 1px solid var(--border-color);" onclick="window.history.back()">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Hub
+                </button>
+                
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <span style="font-weight: 800; font-size: 0.75rem; color: var(--text-light); letter-spacing: 0.1em;">SHARE STORY:</span>
+                    <div class="share-buttons">
+                        <a href="https://twitter.com/intent/tweet?url=<?= $encodedUrl ?>&text=<?= $encodedTitle ?>" target="_blank" class="share-btn" title="Share on X">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= $encodedUrl ?>" target="_blank" class="share-btn" title="Share on Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?= $encodedUrl ?>&title=<?= $encodedTitle ?>" target="_blank" class="share-btn" title="Share on LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://api.whatsapp.com/send?text=<?= $encodedTitle ?>%20<?= $encodedUrl ?>" target="_blank" class="share-btn" title="Share on WhatsApp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                        
+                        <button class="share-btn" id="nativeShareBtn" style="display:none;" title="Share via Device">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </button>
+                        
+                        <button class="share-btn copy-btn" onclick="copyUrl()" title="Copy URL">
+                            <i class="fa-regular fa-copy" style="margin-right: 5px;"></i> Link
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <section style="margin-top: 5rem;">
-                <h3 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 2rem;">Conversation (<?= count($comments) ?>)</h3>
-                <div id="commentList">
+            <section style="margin-top: 4rem;">
+                <h3 style="font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 2rem; border-bottom: 2px solid var(--fyu-green); padding-bottom: 1rem; display: inline-block;">
+                    Conversation (<?= count($comments) ?>)
+                </h3>
+                
+                <div id="commentList" style="margin-bottom: 3rem;">
+                    <?php if(empty($comments)): ?>
+                        <p style="color: var(--text-light); font-style: italic;" id="noCommentsMsg">Be the first to share your thoughts.</p>
+                    <?php endif; ?>
+                    
                     <?php foreach($comments as $cmt): ?>
-                    <div style="padding: 1.5rem 0; border-bottom: 1px solid #f0f0f0;">
-                        <div style="font-weight: 800; margin-bottom: 5px;"><?= htmlspecialchars($cmt['user_name']) ?></div>
-                        <div style="color: var(--text-light); line-height: 1.6;"><?= nl2br(htmlspecialchars($cmt['comment_body'])) ?></div>
+                    <div style="padding: 1.5rem; background: var(--bg-soft); border-radius: 12px; margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <strong style="font-size: 1.1rem;"><?= htmlspecialchars($cmt['user_name']) ?></strong>
+                            <span style="font-size: 0.8rem; color: var(--text-light);"><i class="fa-regular fa-calendar"></i> <?= date('M d, Y', strtotime($cmt['created_at'])) ?></span>
+                        </div>
+                        <div style="color: #4b5563; line-height: 1.7;"><?= nl2br(htmlspecialchars($cmt['comment_body'])) ?></div>
                     </div>
                     <?php endforeach; ?>
                 </div>
 
-                <div class="sidebar-widget" style="background: var(--bg-soft); margin-top: 3rem;">
-                    <h4 style="margin-bottom: 1.5rem;">Leave a thought</h4>
+                <div class="sidebar-widget">
+                    <h4 style="margin-top: 0; font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1.5rem;">Leave a thought</h4>
                     <form id="commentForm" onsubmit="submitComment(event)">
                         <input type="hidden" name="post_id" value="<?= $currentPost['id'] ?>">
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom:10px;">
-                            <input type="text" name="user_name" placeholder="Your Name" style="padding:12px; border:1px solid #ddd; border-radius:4px;" required>
-                            <input type="email" name="user_email" placeholder="Email (Private)" style="padding:12px; border:1px solid #ddd; border-radius:4px;">
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom:1rem;">
+                            <input type="text" name="user_name" class="form-input" placeholder="Your Name" required>
+                            <input type="email" name="user_email" class="form-input" placeholder="Email (Kept Private)">
                         </div>
-                        <textarea name="comment_body" rows="4" placeholder="Join the discussion..." style="width:100%; padding:12px; border:1px solid #ddd; border-radius:4px; margin-bottom:10px;" required></textarea>
-                        <button type="submit" class="btn-fyu" id="commentBtn">Post Comment</button>
-                        <div id="commentMsg" style="margin-top:10px; font-weight:600;"></div>
+                        <textarea name="comment_body" class="form-input" rows="5" placeholder="Join the discussion..." style="margin-bottom:1rem; resize: vertical;" required></textarea>
+                        <button type="submit" class="btn-fyu" id="commentBtn">
+                            Post Comment <i class="fa-solid fa-paper-plane"></i>
+                        </button>
                     </form>
                 </div>
             </section>
@@ -328,16 +419,87 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
 <?php include_once __DIR__ . "/../app/views/layouts/footer.php"; ?>
 
 <script>
+    // --- UI/UX Enhancements --- //
+
+    // 1. Toast Notification System
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icon = type === 'success' ? '<i class="fa-solid fa-circle-check" style="color:var(--fyu-green);"></i>' : '<i class="fa-solid fa-circle-exclamation" style="color:#ef4444;"></i>';
+        toast.innerHTML = `${icon} <span>${message}</span>`;
+        
+        container.appendChild(toast);
+        
+        // Trigger reflow to ensure animation runs
+        toast.offsetHeight; 
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // 2. Reading Progress Bar
+    if (document.getElementById('progressBar')) {
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + "%";
+        });
+    }
+
+    // 3. Share Functionality
+    function copyUrl() {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+            showToast('Failed to copy link', 'error');
+        });
+    }
+
+    // Enable Native Share if supported (Mobile devices usually)
+    const nativeBtn = document.getElementById('nativeShareBtn');
+    if (nativeBtn && navigator.share) {
+        nativeBtn.style.display = 'inline-flex';
+        nativeBtn.addEventListener('click', async () => {
+            try {
+                await navigator.share({
+                    title: document.title,
+                    url: window.location.href
+                });
+            } catch (err) {
+                console.log('User cancelled share or error:', err);
+            }
+        });
+    }
+
+    // --- Form Submissions --- //
+
     function submitNewsletter(e) {
         e.preventDefault();
-        const msg = document.getElementById('newsletterMsg');
         const data = new FormData(e.target);
         data.append('action', 'subscribe');
+        
+        const btn = e.target.querySelector('button');
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
         fetch('blog.php', { method: 'POST', body: data })
         .then(r => r.json()).then(d => {
-            msg.textContent = d.message;
-            msg.style.color = d.status === 'success' ? '#064e3b' : '#dc2626';
+            showToast(d.message, d.status);
             if(d.status === 'success') e.target.reset();
+        }).catch(() => {
+            showToast('Network error occurred.', 'error');
+        }).finally(() => {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
         });
     }
 
@@ -345,23 +507,43 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
         e.preventDefault();
         const btn = document.getElementById('commentBtn');
         const list = document.getElementById('commentList');
+        const noMsg = document.getElementById('noCommentsMsg');
+        
         const data = new FormData(e.target);
         data.append('action', 'add_comment');
-        btn.disabled = true; btn.textContent = 'Posting...';
+        
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true; 
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Posting...';
 
         fetch('blog.php', { method: 'POST', body: data })
         .then(r => r.json()).then(d => {
             if(d.status === 'success') {
-                const html = `<div style="padding: 1.5rem 0; border-bottom: 1px solid #f0f0f0; opacity:0; transform:translateY(10px); transition: 0.5s all ease;">
-                    <div style="font-weight: 800; margin-bottom: 5px;">${d.comment.user_name}</div>
-                    <div style="color: var(--text-light); line-height: 1.6;">${d.comment.comment_body}</div>
+                showToast(d.message, 'success');
+                if(noMsg) noMsg.remove();
+                
+                const html = `<div style="padding: 1.5rem; background: var(--bg-soft); border-radius: 12px; margin-bottom: 1rem; box-shadow: var(--shadow-sm); opacity:0; transform:translateY(20px); transition: all 0.5s ease;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <strong style="font-size: 1.1rem;">${d.comment.user_name}</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-light);"><i class="fa-regular fa-clock"></i> ${d.comment.created_at}</span>
+                    </div>
+                    <div style="color: #4b5563; line-height: 1.7;">${d.comment.comment_body}</div>
                 </div>`;
-                list.insertAdjacentHTML('afterbegin', html);
-                setTimeout(() => { list.firstChild.style.opacity = "1"; list.firstChild.style.transform = "translateY(0)"; }, 10);
+                
+                list.insertAdjacentHTML('beforeend', html);
+                setTimeout(() => { 
+                    list.lastElementChild.style.opacity = "1"; 
+                    list.lastElementChild.style.transform = "translateY(0)"; 
+                }, 50);
                 e.target.reset();
+            } else {
+                showToast(d.message, 'error');
             }
-            document.getElementById('commentMsg').textContent = d.message;
-            btn.disabled = false; btn.textContent = 'Post Comment';
+        }).catch(() => {
+            showToast('Network error occurred.', 'error');
+        }).finally(() => {
+            btn.disabled = false; 
+            btn.innerHTML = originalHtml;
         });
     }
 </script>
