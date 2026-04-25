@@ -1,5 +1,5 @@
 <?php
-// sections/members.php (Refactored with Pagination, Smart Images, and Responsive UI)
+// sections/members.php (Refactored with Pagination, Smart Images, Responsive UI & Optimized Logic)
 // ======================================================================
 
 include_once __DIR__ . "/../../../app/config/db.php";
@@ -91,13 +91,23 @@ $stmt->execute($params);
 $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ======================================================================
-// 4. STATS (Overall Database)
+// 4. STATS (Overall Database) - OPTIMIZED INTO A SINGLE QUERY
 // ======================================================================
-$total_members = $pdo->query("SELECT COUNT(id) FROM members")->fetchColumn();
-$active_members = $pdo->query("SELECT COUNT(id) FROM members WHERE status = 'active'")->fetchColumn();
-$pending_members = $pdo->query("SELECT COUNT(id) FROM members WHERE status = 'pending'")->fetchColumn();
-$male_members = $pdo->query("SELECT COUNT(id) FROM members WHERE gender = 'Male'")->fetchColumn();
-$female_members = $pdo->query("SELECT COUNT(id) FROM members WHERE gender = 'Female'")->fetchColumn();
+$stats_sql = "SELECT 
+    COUNT(id) as total,
+    SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active,
+    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
+    SUM(CASE WHEN gender = 'Male' THEN 1 ELSE 0 END) as male,
+    SUM(CASE WHEN gender = 'Female' THEN 1 ELSE 0 END) as female
+FROM members";
+
+$stats = $pdo->query($stats_sql)->fetch(PDO::FETCH_ASSOC);
+
+$total_members = $stats['total'] ?? 0;
+$active_members = $stats['active'] ?? 0;
+$pending_members = $stats['pending'] ?? 0;
+$male_members = $stats['male'] ?? 0;
+$female_members = $stats['female'] ?? 0;
 
 // Helpers for Links
 function build_sort_link($column, $current_sort, $current_dir) {
@@ -115,6 +125,13 @@ function build_page_link($page_num) {
     return '?' . http_build_query($params);
 }
 ?>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+</style>
 
 <div class="p-4 md:p-6 lg:p-8 max-w-full">
     
@@ -161,8 +178,8 @@ function build_page_link($page_num) {
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between transition-transform hover:-translate-y-1">
             <div>
                 <p class="text-sm font-medium text-slate-500">Demographics</p>
-                <p class="text-sm mt-1 text-slate-600">Male: <span class="font-bold text-blue-600"><?= $male_members ?></span></p>
-                <p class="text-sm text-slate-600">Female: <span class="font-bold text-pink-600"><?= $female_members ?></span></p>
+                <p class="text-sm mt-1 text-slate-600">Male: <span class="font-bold text-blue-600"><?= number_format((float)$male_members) ?></span></p>
+                <p class="text-sm text-slate-600">Female: <span class="font-bold text-pink-600"><?= number_format((float)$female_members) ?></span></p>
             </div>
             <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center"><i data-lucide="pie-chart" class="w-6 h-6"></i></div>
         </div>
@@ -202,26 +219,26 @@ function build_page_link($page_num) {
             
             <div class="flex gap-2">
                 <button type="submit" class="bg-green-600 text-white font-medium rounded-xl px-6 py-2.5 hover:bg-green-700 transition shadow-sm w-full md:w-auto">Filter</button>
-                <a href="<?= htmlspecialchars($base_url) ?>" class="bg-white border border-slate-200 text-slate-600 font-medium rounded-xl px-6 py-2.5 hover:bg-slate-50 transition w-full md:w-auto text-center">Reset</a>
+                <a href="<?= htmlspecialchars($base_url) ?>" class="bg-white border border-slate-200 text-slate-600 font-medium rounded-xl px-6 py-2.5 hover:bg-slate-50 transition w-full md:w-auto text-center flex items-center justify-center">Reset</a>
             </div>
         </form>
     </div>
 
-    <div class="bg-white shadow-sm border border-slate-100 rounded-2xl overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50 border-b border-slate-100 text-slate-500 text-sm uppercase tracking-wider">
+    <div class="bg-white shadow-sm border border-slate-100 rounded-2xl overflow-hidden flex flex-col">
+        <div class="overflow-x-auto overflow-y-auto max-h-[65vh] custom-scrollbar">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider sticky top-0 z-10 shadow-sm">
                     <tr>
-                        <th class="p-4 font-semibold whitespace-nowrap">
+                        <th class="p-4 font-semibold whitespace-nowrap bg-slate-50">
                             <a href="<?= build_sort_link('id', $sort, $dir) ?>" class="hover:text-green-600 flex items-center gap-1">
                                 ID <?= $sort === 'id' ? ($dir === 'ASC' ? '↑' : '↓') : '' ?>
                             </a>
                         </th>
-                        <th class="p-4 font-semibold whitespace-nowrap">User</th>
-                        <th class="p-4 font-semibold whitespace-nowrap hidden sm:table-cell">Contact Info</th>
-                        <th class="p-4 font-semibold whitespace-nowrap hidden md:table-cell">Location</th>
-                        <th class="p-4 font-semibold whitespace-nowrap text-center">Status</th>
-                        <th class="p-4 font-semibold whitespace-nowrap text-right">Actions</th>
+                        <th class="p-4 font-semibold whitespace-nowrap bg-slate-50">User</th>
+                        <th class="p-4 font-semibold whitespace-nowrap hidden sm:table-cell bg-slate-50">Contact Info</th>
+                        <th class="p-4 font-semibold whitespace-nowrap hidden md:table-cell bg-slate-50">Location</th>
+                        <th class="p-4 font-semibold whitespace-nowrap text-center bg-slate-50">Status</th>
+                        <th class="p-4 font-semibold whitespace-nowrap text-right bg-slate-50">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-sm">
@@ -239,14 +256,12 @@ function build_page_link($page_num) {
 
                     <?php foreach ($members as $m): ?>
                         <tr class="hover:bg-slate-50/80 transition-colors group">
-                            <td class="p-4 text-slate-500 font-medium whitespace-nowrap">#<?= $m['id'] ?></td>
+                            <td class="p-4 text-slate-500 font-medium whitespace-nowrap">#<?= htmlspecialchars($m['id']) ?></td>
                             
                             <td class="p-4 whitespace-nowrap">
                                 <div class="flex items-center gap-4">
                                     <?php 
                                     // SMART IMAGE FALLBACK:
-                                    // 1. Primary SRC: Assumes the root of your domain is where the `public/` folder is (e.g. /public/uploads/...)
-                                    // 2. Fallback (onerror): Assumes the `public/` folder IS your document root (e.g. /uploads/...)
                                     $primary_img = '/' . ltrim($m['photo'], '/');
                                     $fallback_img = '/' . ltrim(str_replace('public/', '', $m['photo']), '/');
                                     ?>
@@ -257,13 +272,13 @@ function build_page_link($page_num) {
                                              class="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0 bg-slate-100">
                                     <?php else: ?>
                                         <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-bold border-2 border-white shadow-sm shrink-0">
-                                            <?= strtoupper(substr($m['full_name'], 0, 1)) ?>
+                                            <?= htmlspecialchars(strtoupper(substr($m['full_name'], 0, 1))) ?>
                                         </div>
                                     <?php endif; ?>
                                     
                                     <div>
                                         <p class="font-bold text-slate-800"><?= htmlspecialchars($m['full_name']) ?></p>
-                                        <p class="text-xs text-slate-500 mt-0.5"><?= htmlspecialchars($m['gender']) ?> • <?= $m['age'] ?> yrs</p>
+                                        <p class="text-xs text-slate-500 mt-0.5"><?= htmlspecialchars($m['gender']) ?> • <?= htmlspecialchars($m['age']) ?> yrs</p>
                                         <p class="text-xs text-slate-500 sm:hidden mt-1"><?= htmlspecialchars($m['phone']) ?></p>
                                     </div>
                                 </div>
@@ -295,18 +310,18 @@ function build_page_link($page_num) {
                             <td class="p-4 text-right whitespace-nowrap">
                                 <?php if ($m['status'] === 'pending'): ?>
                                     <div class="flex items-center justify-end gap-2">
-                                        <a href="<?= $base_url ?>&p=<?= $page ?>&action=approve&member_id=<?= $m['id'] ?>" class="p-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg transition-colors" title="Approve">
+                                        <a href="<?= htmlspecialchars($base_url) ?>&p=<?= $page ?>&action=approve&member_id=<?= $m['id'] ?>" class="p-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg transition-colors" title="Approve">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                                         </a>
-                                        <a href="<?= $base_url ?>&p=<?= $page ?>&action=reject&member_id=<?= $m['id'] ?>" class="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-colors" title="Reject">
+                                        <a href="<?= htmlspecialchars($base_url) ?>&p=<?= $page ?>&action=reject&member_id=<?= $m['id'] ?>" class="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-colors" title="Reject">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                         </a>
                                     </div>
                                 <?php else: ?>
                                     <div class="flex items-center justify-end gap-3 text-sm">
-                                        <button class="text-blue-600 font-semibold hover:text-blue-800 transition-colors" onclick="openMemberModal('edit', <?= $m['id'] ?>)">Edit</button>
+                                        <button class="text-blue-600 font-semibold hover:text-blue-800 transition-colors" onclick="openMemberModal('edit', <?= htmlspecialchars($m['id']) ?>)">Edit</button>
                                         <span class="text-slate-300">|</span>
-                                        <a href="admin/members_delete.php?id=<?= $m['id'] ?>" class="text-rose-500 font-semibold hover:text-rose-700 transition-colors" onclick="return confirm('Delete this member completely?')">Delete</a>
+                                        <a href="admin/members_delete.php?id=<?= htmlspecialchars($m['id']) ?>" class="text-rose-500 font-semibold hover:text-rose-700 transition-colors" onclick="return confirm('Delete this member completely?')">Delete</a>
                                     </div>
                                 <?php endif; ?>
                             </td>
@@ -317,7 +332,7 @@ function build_page_link($page_num) {
         </div>
 
         <?php if ($total_pages > 1): ?>
-        <div class="border-t border-slate-100 p-4 bg-slate-50 flex items-center justify-between">
+        <div class="border-t border-slate-200 p-4 bg-slate-50 flex items-center justify-between z-10 relative">
             <p class="text-sm text-slate-500 hidden sm:block">
                 Showing <span class="font-medium text-slate-800"><?= $offset + 1 ?></span> to 
                 <span class="font-medium text-slate-800"><?= min($offset + $limit, $total_filtered_members) ?></span> of 
