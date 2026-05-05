@@ -133,35 +133,36 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
         <div class="register-info">
             <div class="register-info-content">
                 <h2>Join Fangak Youth Union</h2>
-                <p>Empowering the youth of Fangak for a brighter, more connected future.</p>
+                <p>Become part of a growing network of young leaders dedicated to building a stronger Fangak community through innovation, collaboration, and service.</p>
                 <ul class="feature-list">
-                    <li><i class="fa-solid fa-id-card"></i> Official Digital Membership</li>
-                    <li><i class="fa-solid fa-network-wired"></i> Professional Networking</li>
-                    <li><i class="fa-solid fa-handshake-angle"></i> Community Leadership</li>
+                    <li><i class="fa-solid fa-graduation-cap"></i> Leadership training & youth development</li>
+                    <li><i class="fa-solid fa-seedling"></i> Community development projects</li>
+                    <li><i class="fa-solid fa-users-gear"></i> Networking with global youth leaders</li>
+                    <li><i class="fa-solid fa-calendar-check"></i> Exclusive events and initiatives</li>
                 </ul>
             </div>
         </div>
 
         <div class="register-card">
             <div class="register-card-header">
-                <h2>Create Account</h2>
+                <h2>Membership Registration</h2>
                 <p>Please provide accurate information for verification.</p>
             </div>
 
             <form id="registerForm" class="register-form" method="POST" enctype="multipart/form-data">
                 <div class="input-group">
                     <label>Full Name</label>
-                    <input type="text" name="full_name" placeholder="John Doe" required>
+                    <input type="text" name="full_name" placeholder="fangak son/daughter" required>
                 </div>
 
                 <div class="input-group">
                     <label>Email Address</label>
-                    <input type="email" name="email" placeholder="name@email.com" required>
+                    <input type="email" name="email" placeholder="email@example.com" required>
                 </div>
 
                 <div class="input-group">
                     <label>Phone Number</label>
-                    <input type="text" name="phone" placeholder="+211 ..." required>
+                    <input type="text" name="phone" placeholder="number ..." required>
                 </div>
 
                 <div class="input-group">
