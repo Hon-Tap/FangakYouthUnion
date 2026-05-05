@@ -7,10 +7,6 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . "/../app/config/db.php";
 
-if (!isset($pdo)) {
-    respond(false, "Server error: Database unavailable.");
-}
-
 /**
  * -------------------------------------------------------
  * Helper: JSON response
@@ -22,6 +18,11 @@ function respond(bool $success, string $message, array $extra = []): void {
         "message" => $message
     ], $extra));
     exit;
+}
+
+// Ensure PDO is available
+if (!isset($pdo)) {
+    respond(false, "Server error: Database unavailable.");
 }
 
 /**
@@ -70,22 +71,14 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
  * Validate photo upload
  * -------------------------------------------------------
  */
-if (!isset($_FILES['photo'])) {
-    respond(false, "Photo upload missing.");
-}
-
-if ($_FILES['photo']['error'] !== UPLOAD_ERR_OK) {
-
-    error_log("UPLOAD ERROR CODE: " . $_FILES['photo']['error']);
-
+if (!isset($_FILES['photo']) || $_FILES['photo']['error'] !== UPLOAD_ERR_OK) {
+    $err_msg = isset($_FILES['photo']) ? "Error code: " . $_FILES['photo']['error'] : "No file uploaded";
+    error_log("UPLOAD ERROR: " . $err_msg);
     respond(false, "Photo upload failed.");
 }
 
-$allowed_exts = ['jpg','jpeg','png','webp'];
-
-$photo_ext = strtolower(
-    pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION)
-);
+$allowed_exts = ['jpg', 'jpeg', 'png', 'webp'];
+$photo_ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
 
 if (!in_array($photo_ext, $allowed_exts)) {
     respond(false, "Invalid photo format. Only JPG, PNG, WEBP allowed.");
@@ -93,173 +86,83 @@ if (!in_array($photo_ext, $allowed_exts)) {
 
 /**
  * -------------------------------------------------------
- * Define upload directory
+ * File System Logic
  * -------------------------------------------------------
  */
-// 1. Where PHP saves the file (Must be an absolute path on your server)
-$upload_dir = __DIR__ . "/../public/uploads/members/"; 
+$upload_dir = __DIR__ . "/../public/uploads/members/";
 
-// 2. What you save to the DATABASE (Must be a relative URL path)
-// If your images are in /public/uploads/members, your browser 
-// usually expects the URL to start from the public root.
-$photo_rel_path = "uploads/members/" . $new_filename;
-
-error_log("DEBUG: Saving to path: " . $photo_path);
-
+// Ensure directory exists
 if (!is_dir($upload_dir)) {
-
     if (!mkdir($upload_dir, 0755, true)) {
-
         error_log("FAILED TO CREATE DIRECTORY: " . $upload_dir);
-
-        respond(false, "Upload directory creation failed.");
+        respond(false, "Server configuration error (Upload Dir).");
     }
 }
 
-/**
- * -------------------------------------------------------
- * Ensure directory writable
- * -------------------------------------------------------
- */
 if (!is_writable($upload_dir)) {
-
     error_log("DIRECTORY NOT WRITABLE: " . $upload_dir);
-
-    respond(false, "Upload directory not writable.");
+    respond(false, "Server configuration error (Permissions).");
 }
 
-/**
- * -------------------------------------------------------
- * Generate safe filename
- * -------------------------------------------------------
- */
-$new_filename =
-    "member_" .
-    time() .
-    "_" .
-    bin2hex(random_bytes(4)) .
-    "." .
-    $photo_ext;
-
-$photo_path = $upload_dir . $new_filename;
+// Generate unique filename
+$new_filename = "member_" . time() . "_" . bin2hex(random_bytes(4)) . "." . $photo_ext;
+$photo_path   = $upload_dir . $new_filename;
+$photo_rel_path = "uploads/members/" . $new_filename; // Path for DB/Frontend
 
 /**
  * -------------------------------------------------------
- * Move uploaded file
+ * Save File & Database Transaction
  * -------------------------------------------------------
  */
-if (!move_uploaded_file(
-    $_FILES['photo']['tmp_name'],
-    $photo_path
-)) {
-
-    error_log("MOVE FAILED:");
-    error_log("TMP: " . $_FILES['photo']['tmp_name']);
-    error_log("DEST: " . $photo_path);
-
+if (!move_uploaded_file($_FILES['photo']['tmp_name'], $photo_path)) {
+    error_log("MOVE FAILED: TO " . $photo_path);
     respond(false, "Failed to save uploaded photo.");
 }
 
-/**
- * -------------------------------------------------------
- * Store relative path
- * -------------------------------------------------------
- */
-$photo_rel_path = "members/" . $new_filename;
-
-/**
- * -------------------------------------------------------
- * Database transaction
- * -------------------------------------------------------
- */
 try {
-
     $pdo->beginTransaction();
 
-    /**
-     * Check duplicate email
-     */
-    $stmt = $pdo->prepare(
-        "SELECT id FROM members WHERE email = ? LIMIT 1"
-    );
-
+    // Check for duplicate email
+    $stmt = $pdo->prepare("SELECT id FROM members WHERE email = ? LIMIT 1");
     $stmt->execute([$email]);
 
     if ($stmt->fetch()) {
-
-        if (file_exists($photo_path)) {
-            unlink($photo_path);
-        }
-
+        if (file_exists($photo_path)) unlink($photo_path);
         respond(false, "Email is already registered.");
     }
 
-    /**
-     * Insert member
-     */
+    // Insert new member
     $insert = $pdo->prepare("
         INSERT INTO members (
-            full_name,
-            email,
-            phone,
-            gender,
-            age,
-            payam,
-            education_level,
-            course,
-            year_or_done,
-            photo,
-            status,
-            created_at,
-            updated_at
-        )
-        VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-            'pending',
-            NOW(),
-            NOW()
+            full_name, email, phone, gender, age, payam, 
+            education_level, course, year_or_done, photo, 
+            status, created_at, updated_at
+        ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW(), NOW()
         )
     ");
 
-    $success = $insert->execute([
-        $full_name,
-        $email,
-        $phone,
-        $gender,
-        $age,
-        $payam,
-        $education_level,
-        $course ?: null,
-        $year_or_done ?: null,
+    $insert->execute([
+        $full_name, $email, $phone, $gender, $age, $payam,
+        $education_level, 
+        $course ?: null, 
+        $year_or_done ?: null, 
         $photo_rel_path
     ]);
 
-    if (!$success) {
-
-        $pdo->rollBack();
-
-        if (file_exists($photo_path)) {
-            unlink($photo_path);
-        }
-
-        respond(false, "Unable to register member.");
-    }
-
     $pdo->commit();
-
     respond(true, "Registration successful! Your application is pending review.");
 
 } catch (Throwable $e) {
-
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
 
-    if (isset($photo_path) && file_exists($photo_path)) {
+    // Cleanup file if DB fails
+    if (file_exists($photo_path)) {
         unlink($photo_path);
     }
 
     error_log("REGISTER ERROR: " . $e->getMessage());
-
-    respond(false, "Server error occurred.");
+    respond(false, "A server error occurred. Please try again later.");
 }
