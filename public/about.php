@@ -578,7 +578,11 @@ function openModal(data) {
     mImg.src = "<?= $baseUrl ?>" + data.img;
     mName.textContent = data.name;
     mRole.textContent = data.role;
-    mBio.textContent = data.bio;
+    
+    /** * Use innerHTML here so the <h3>, <ul>, and <p> tags 
+     * in your $current_leaders array are rendered correctly.
+     */
+    mBio.innerHTML = data.bio; 
     
     // Show Modal
     modal.classList.add('active');
