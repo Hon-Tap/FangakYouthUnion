@@ -18,13 +18,12 @@ $current_leaders = [
         "desc" => "Leads FYU’s strategic vision and direction.",
         "bio"  => "Mawich is a passionate leader with strong experience in community organizing and youth empowerment. He drives FYU’s strategic direction, partnerships, and institutional growth."
     ],
-
     [
         "name" => "Tap Kuol Khor",
         "role" => "Secretary General",
         "img"  => "images/tap.jpg",
-        "desc" => "Chief administrative officer and custodian of organizational integrity.",
-        "bio"  => "Tap serves as the chief administrative officer of the Fangak Youth Union, steering day-to-day operations and ensuring the effective implementation of executive decisions. He manages official records, policy guidance, and institutional transparency. <br><br><span style='color: green;'>\"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with the highest level of professionalism, ensuring that the Fangak Youth Union remains a transparent, accountable, and member-focused engine for positive change.\"</span>"
+        "desc" => "Chief administrative officer and custodian of integrity.",
+        "bio"  => "Tap serves as the chief administrative officer of the Fangak Youth Union, steering day-to-day operations and ensuring the effective implementation of executive decisions. He manages official records, policy guidance, and institutional transparency.<br><br><span style='color: green; font-style: italic;'>\"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with the highest level of professionalism, ensuring that the Fangak Youth Union remains a transparent, accountable, and member-focused engine for positive change.\"</span>"
     ],
 
     [
