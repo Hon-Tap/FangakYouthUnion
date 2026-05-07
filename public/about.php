@@ -21,19 +21,7 @@ $current_leaders = [
         "role" => "Secretary General",
         "img"  => "images/tap.jpg",
         "desc" => "Oversees communication and documentation.",
-        "bio"  => <<<HTML
-            <h3>Role Overview</h3>
-            <p>The Secretary General serves as the chief administrative officer of the Fangak Youth Union. In this senior leadership position, Tap Kuol Khor is responsible for steering the day-to-day operations of the Union, ensuring that the decisions of the Executive Committee are effectively implemented.</p>
-            
-            <h3>Key Responsibilities</h3>
-            <ul>
-                <li><strong>Executive Management:</strong> Oversee the execution of all programs and resolutions adopted by the Union’s leadership.</li>
-                <li><strong>Record-Keeping:</strong> Serve as the custodian of the Union’s official records and membership registry.</li>
-            </ul>
-
-            <h3>A Message from the Secretary General</h3>
-            <p><em>"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with the highest level of professionalism."</em></p>
-HTML
+        "bio"  => "<h3>Role Overview</h3><p>The Secretary General serves as the chief administrative officer of the Fangak Youth Union. In this senior leadership position, Tap Kuol Khor is responsible for steering the day-to-day operations of the Union, ensuring that the decisions of the Executive Committee are effectively implemented.</p><h3>Key Responsibilities</h3><ul><li><strong>Executive Management:</strong> Oversee the execution of all programs and resolutions adopted by the Union’s leadership.</li><li><strong>Record-Keeping:</strong> Serve as the custodian of the Union’s official records and membership registry.</li></ul><h3>A Message from the Secretary General</h3><p><em>\"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with the highest level of professionalism.\"</em></p>"
     ],
     [
         "name" => "Mayiel Bol Deng",
@@ -42,22 +30,20 @@ HTML
         "desc" => "Facilitates dialogues and public engagement.",
         "bio"  => "Mayiel is an active youth advocate who leads discussions, moderates forums, and promotes constructive dialogue among youth and community stakeholders."
     ],
-
     [
         "name" => "Puok Dar Gai",
-        "role" => " Advisor for legal affairs ",
+        "role" => "Advisor for legal affairs",
         "img"  => "assets/images/PuokDar.jpeg",
         "desc" => "Provides legal guidance and ensures compliance with regulations.",
         "bio"  => "Puok Dar Gai brings extensive experience in legal matters and community law, advising FYU on strategies to ensure compliance and promote legal awareness in Fangak County."
     ],
     [
         "name" => "Nyaluit Jany",
-        "role" => " Advisor for Peace and Reconciliation",
+        "role" => "Advisor for Peace and Reconciliation",
         "img"  => "assets/images/nyaluit.jpg",
         "desc" => "Guides peacebuilding and reconciliation efforts.",
         "bio"  => "Nyaluit brings extensive experience in conflict resolution and community healing, advising FYU on strategies to foster peace and unity in Fangak County."
     ],
-
     [
         "name" => "Lam Par Malual",
         "role" => "Treasurer",
@@ -65,7 +51,6 @@ HTML
         "desc" => "Manages finances and financial accountability.",
         "bio"  => "Lam ensures fiscal responsibility, transparent budgeting, and accurate financial reporting across all FYU projects and operations."
     ],
-
     [
         "name" => "Gatjok Puok",
         "role" => "Deputy Chairman",
@@ -73,7 +58,6 @@ HTML
         "desc" => "Supports leadership and oversees program implementation.",
         "bio"  => "Gatjok assists the Chairman in leadership responsibilities, oversees program design and monitoring, and ensures activities align with FYU’s mission and impact goals."
     ],
-
     [
         "name" => "Akoch Guek",
         "role" => "Advisor for Social Welfare and Development",
@@ -88,8 +72,8 @@ HTML
         "desc" => "Leads communication strategies and public relations efforts.",
         "bio"  => "Chris is responsible for managing FYU’s public image, developing communication materials, and engaging with media and community stakeholders to promote FYU’s mission and activities."        
     ]
-
 ];
+
 // --- DATA: PREVIOUS LEADERS ---
 $previous_leaders = [
     [
@@ -109,11 +93,19 @@ $previous_leaders = [
     [
         "name" => "Nin Deng Wang",
         "role" => "Former Chairman (2022-2025)",
-        "img" => "assets/images/NinDeng.jpg", // Fixed path (added assets/)
+        "img" => "assets/images/NinDeng.jpg",
         "desc" => "Managed foundational grants and budgets.",
         "bio" => "Oversaw the union's finances during its critical growth phase, implementing a system of accountability."
     ]
 ];
+
+/**
+ * IMPORTANT: To fix the "weird look" in your display file:
+ * * When you loop through and show the bio, use:
+ * echo $leader['bio']; 
+ * * DO NOT use:
+ * echo htmlspecialchars($leader['bio']);
+ */
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
