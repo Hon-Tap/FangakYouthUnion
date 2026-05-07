@@ -8,9 +8,7 @@ include_once __DIR__ . "/../app/views/layouts/header.php";
 if(!isset($baseUrl)) $baseUrl = '/public/';
 
 // --- DATA: CURRENT LEADERS ---
-
 $current_leaders = [
-
     [
         "name" => "Mawich Duoth Gatluak",
         "role" => "Chairman",
@@ -22,10 +20,21 @@ $current_leaders = [
         "name" => "Tap Kuol Khor",
         "role" => "Secretary General",
         "img"  => "images/tap.jpg",
-        "desc" => "Chief administrative officer and custodian of integrity.",
-        "bio"  => "Tap serves as the chief administrative officer of the Fangak Youth Union, steering day-to-day operations and ensuring the effective implementation of executive decisions. He manages official records, policy guidance, and institutional transparency.<br><br><span style='color: green; font-style: italic;'>\"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with the highest level of professionalism, ensuring that the Fangak Youth Union remains a transparent, accountable, and member-focused engine for positive change.\"</span>"
-    ],
+        "desc" => "Oversees communication and documentation.",
+        "bio"  => <<<HTML
+            <h3>Role Overview</h3>
+            <p>The Secretary General serves as the chief administrative officer of the Fangak Youth Union. In this senior leadership position, Tap Kuol Khor is responsible for steering the day-to-day operations of the Union, ensuring that the decisions of the Executive Committee are effectively implemented.</p>
+            
+            <h3>Key Responsibilities</h3>
+            <ul>
+                <li><strong>Executive Management:</strong> Oversee the execution of all programs and resolutions adopted by the Union’s leadership.</li>
+                <li><strong>Record-Keeping:</strong> Serve as the custodian of the Union’s official records and membership registry.</li>
+            </ul>
 
+            <h3>A Message from the Secretary General</h3>
+            <p><em>"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with the highest level of professionalism."</em></p>
+HTML
+    ],
     [
         "name" => "Mayiel Bol Deng",
         "role" => "Speaker",
