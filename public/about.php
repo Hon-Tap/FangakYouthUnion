@@ -21,10 +21,10 @@ $current_leaders = [
 
     [
         "name" => "Tap Kuol Khor",
-        "role" => "Secretary",
+        "role" => "Secretary General",
         "img"  => "images/tap.jpg",
-        "desc" => "Oversees communication and documentation.",
-        "bio"  => "Tap ensures smooth communication across teams, coordinates meetings and events, and maintains accurate records of FYU’s activities and decisions."
+        "desc" => "Chief administrative officer and custodian of organizational integrity.",
+        "bio"  => "Tap serves as the chief administrative officer of the Fangak Youth Union, steering day-to-day operations and ensuring the effective implementation of executive decisions. He manages official records, policy guidance, and institutional transparency. <br><br><span style='color: green;'>\"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with the highest level of professionalism, ensuring that the Fangak Youth Union remains a transparent, accountable, and member-focused engine for positive change.\"</span>"
     ],
 
     [

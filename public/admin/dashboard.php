@@ -1,46 +1,63 @@
 <?php
 declare(strict_types=1);
+ob_start(); // Start output buffering to prevent header errors
 session_start();
+
+// 1. Authentication & Configuration
+// Ensure auth.php is included BEFORE any HTML is sent
+require_once __DIR__ . '/includes/auth.php'; 
 require_once __DIR__ . '/../../app/config/db.php';
 
-// Fetch Global Notifications (e.g., Pending Members)
+// 2. Data Fetching Logic
 try {
+    // Fetch Pending Members count for notifications
     $pendingMembers = (int)$pdo->query("SELECT COUNT(*) FROM members WHERE status = 'pending'")->fetchColumn();
-    $totalNotifications = $pendingMembers; // Add other counts here as needed
+    $totalNotifications = $pendingMembers; 
 } catch (Exception $e) {
     $totalNotifications = 0;
 }
 
+// 3. Navigation Configuration
 $active = $_GET['tab'] ?? 'dashboard';
 $tabs = [
-    "dashboard" => ["label" => "Dashboard", "icon" => "layout-dashboard"],
-    "news"      => ["label" => "News", "icon" => "newspaper"],
-    "projects"  => ["label" => "Projects", "icon" => "briefcase"],
-    "events"    => ["label" => "Events", "icon" => "calendar-days"],
-    "members"   => ["label" => "Members", "icon" => "users"],
+    "dashboard"     => ["label" => "Dashboard", "icon" => "layout-dashboard"],
+    "news"          => ["label" => "News", "icon" => "newspaper"],
+    "projects"      => ["label" => "Projects", "icon" => "briefcase"],
+    "events"        => ["label" => "Events", "icon" => "calendar-days"],
+    "members"       => ["label" => "Members", "icon" => "users"],
     "announcements" => ["label" => "Announcements", "icon" => "megaphone"],
-    "settings"  => ["label" => "Settings", "icon" => "settings"]
+    "settings"      => ["label" => "Settings", "icon" => "settings"]
 ];
 
+// 4. Determine content path
 $sectionPath = ($active === 'settings') ? __DIR__ . '/settings.php' : __DIR__ . "/sections/{$active}.php";
+
+// 5. Begin UI Output
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FYU Admin Portal</title>
+    <title>FYU Admin Portal | <?= $tabs[$active]['label'] ?? 'Admin' ?></title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; }
         .sidebar-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
         /* Mini Sidebar Styles */
         .sidebar-mini { width: 80px !important; }
-        .sidebar-mini .nav-text, .sidebar-mini .logo-text, .sidebar-mini .user-details { display: none; }
+        .sidebar-mini .nav-text, 
+        .sidebar-mini .logo-text, 
+        .sidebar-mini .user-details { display: none; }
         .sidebar-mini .nav-item { justify-content: center; padding: 0.75rem; }
         .sidebar-mini .nav-header { text-align: center; font-size: 0.6rem; }
+        
+        /* Tooltip-like effect for mini-sidebar could be added here */
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden">
