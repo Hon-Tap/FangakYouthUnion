@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 /**
  * Database Connection
- * Supports:
- * - Railway MySQL
- * - Local Development
+ * Railway + Local Support
  */
 
 $pdo = null;
 
 /**
- * Safe environment variable reader
+ * Safe ENV reader
  */
 function env(string $key, $default = null)
 {
@@ -28,20 +26,34 @@ function env(string $key, $default = null)
 try {
 
     /**
-     * Railway Variables
+     * PRIORITY:
+     * Use DB_* variables from Railway PHP service
      */
-    $host = env('MYSQLHOST');
-    $port = env('MYSQLPORT', 3306);
-    $database = env('MYSQLDATABASE');
-    $username = env('MYSQLUSER');
-    $password = env('MYSQLPASSWORD');
+    $host = env('DB_HOST');
+    $port = env('DB_PORT', 3306);
+    $database = env('DB_DATABASE');
+    $username = env('DB_USERNAME');
+    $password = env('DB_PASSWORD');
 
     /**
-     * Local fallback (XAMPP/WAMP)
+     * Fallback to MYSQL* variables
+     * if DB_* are unavailable
+     */
+    if (!$host) {
+
+        $host = env('MYSQLHOST');
+        $port = env('MYSQLPORT', 3306);
+        $database = env('MYSQLDATABASE');
+        $username = env('MYSQLUSER');
+        $password = env('MYSQLPASSWORD');
+    }
+
+    /**
+     * Local Development Fallback
      */
     if (!$host || !$database || !$username) {
 
-        error_log('DB: Falling back to local database configuration');
+        error_log('DB: Using local database fallback');
 
         $host = '127.0.0.1';
         $port = 3306;
@@ -51,7 +63,7 @@ try {
     }
 
     /**
-     * Validate required credentials
+     * Validate configuration
      */
     if (
         empty($host) ||
@@ -62,7 +74,7 @@ try {
     }
 
     /**
-     * PDO DSN
+     * Build DSN
      */
     $dsn = sprintf(
         'mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4',
@@ -72,7 +84,7 @@ try {
     );
 
     /**
-     * Create PDO Connection
+     * Create PDO connection
      */
     $pdo = new PDO($dsn, $username, $password, [
 
@@ -88,7 +100,7 @@ try {
     ]);
 
     /**
-     * Health Check
+     * Connection Health Check
      */
     $pdo->query("SELECT 1");
 
@@ -96,23 +108,13 @@ try {
 
 } catch (Throwable $e) {
 
-    /**
-     * Log Detailed Error
-     */
     error_log('================ DATABASE ERROR ================');
     error_log('Message: ' . $e->getMessage());
     error_log('File: ' . $e->getFile());
     error_log('Line: ' . $e->getLine());
     error_log('================================================');
 
-    /**
-     * Prevent fatal crash
-     */
     $pdo = null;
 
-    /**
-     * Optional user-friendly message
-     * Remove in production if desired
-     */
     die('Database connection failed. Please try again later.');
 }
