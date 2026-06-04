@@ -79,7 +79,7 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
                             <i class="fa-solid fa-phone"></i>
                         </div>
                         <div class="pt-1">
-                            <a href="tel:+211912345678" class="hover:text-fyu-gold transition-colors">+211 912345678</a>
+                            <a href="tel:+211 920 494 545" class="hover:text-fyu-gold transition-colors">+211 920 494 545</a>
                         </div>
                     </div>
                 </div>
