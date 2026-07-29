@@ -11,15 +11,15 @@ $current_leaders = [
         "name" => "Mawich Duoth Gatluak",
         "role" => "Chairman",
         "img"  => "images/MawichD.jpg",
-        "desc" => "Leads FYU’s strategic vision and overall organizational direction.",
-        "bio"  => "Mawich is a passionate leader with extensive experience in community organizing and youth empowerment. He drives FYU’s strategic vision, key partnerships, and long-term institutional growth across South Sudan."
+        "desc" => "Leads FYA’s strategic vision and overall organizational direction.",
+        "bio"  => "Mawich is a passionate leader with extensive experience in community organizing and youth empowerment. He drives FYA’s strategic vision, key partnerships, and long-term institutional growth across South Sudan."
     ],
     [
         "name" => "Tap Kuol Khor",
         "role" => "Secretary General",
         "img"  => "images/tap.jpg",
         "desc" => "Oversees administrative operations, communication, and union records.",
-        "bio"  => "<h3>Role Overview</h3><p>The Secretary General serves as the chief administrative officer of the Fangak Youth Union. In this senior leadership position, Tap Kuol Khor is responsible for steering day-to-day operations and ensuring Executive Committee resolutions are effectively executed.</p><h3>Key Responsibilities</h3><ul><li><strong>Executive Management:</strong> Oversee all active programs and resolutions adopted by leadership.</li><li><strong>Record-Keeping:</strong> Serve as custodian of the official records and membership registry.</li></ul><h3>A Message from the Secretary General</h3><p><em>\"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with high transparency and professionalism.\"</em></p>"
+        "bio"  => "<h3>Role Overview</h3><p>The Secretary General serves as the chief administrative officer of the Fangak Youth Association. In this senior leadership position, Tap Kuol Khor is responsible for steering day-to-day operations and ensuring Executive Committee resolutions are effectively executed.</p><h3>Key Responsibilities</h3><ul><li><strong>Executive Management:</strong> Oversee all active programs and resolutions adopted by leadership.</li><li><strong>Record-Keeping:</strong> Serve as custodian of the official records and membership registry.</li></ul><h3>A Message from the Secretary General</h3><p><em>\"My role is fundamentally about service and institutional memory. I am dedicated to maintaining a secretariat that operates with high transparency and professionalism.\"</em></p>"
     ],
     [
         "name" => "Mayiel Bol Deng",
@@ -33,28 +33,28 @@ $current_leaders = [
         "role" => "Advisor for Legal Affairs",
         "img"  => "assets/images/PuokDar.jpeg",
         "desc" => "Provides statutory guidance and ensures full legal compliance.",
-        "bio"  => "Puok Dar Gai brings extensive experience in legal matters and community law, advising FYU on compliance strategies and legal awareness initiatives across Fangak County."
+        "bio"  => "Puok Dar Gai brings extensive experience in legal matters and community law, advising FYA on compliance strategies and legal awareness initiatives across Fangak County."
     ],
     [
         "name" => "Nyaluit Jany",
         "role" => "Advisor for Peace & Reconciliation",
         "img"  => "assets/images/nyaluit.jpg",
         "desc" => "Guides grassroots peacebuilding and inter-communal reconciliation.",
-        "bio"  => "Nyaluit brings years of experience in conflict resolution and social healing, advising FYU on strategic frameworks that foster long-term peace and unity."
+        "bio"  => "Nyaluit brings years of experience in conflict resolution and social healing, advising FYA on strategic frameworks that foster long-term peace and unity."
     ],
     [
         "name" => "Lam Par Malual",
         "role" => "Treasurer",
         "img"  => "assets/images/Lam.jpg",
         "desc" => "Manages financial accountability, budgets, and reporting.",
-        "bio"  => "Lam ensures fiscal integrity, transparent budgeting, and rigorous financial audit systems across all FYU operations and project funds."
+        "bio"  => "Lam ensures fiscal integrity, transparent budgeting, and rigorous financial audit systems across all FYA operations and project funds."
     ],
     [
         "name" => "Gatjok Puok",
         "role" => "Deputy Chairman",
         "img"  => "assets/images/gatjok.jpg",
         "desc" => "Supports executive leadership and program execution.",
-        "bio"  => "Gatjok assists the Chairman in executive governance, supervises project implementation, and ensures all operations strictly align with the Union’s core mission."
+        "bio"  => "Gatjok assists the Chairman in executive governance, supervises project implementation, and ensures all operations strictly align with the Association’s core mission."
     ],
     [
         "name" => "Akoch Guek",
@@ -68,7 +68,7 @@ $current_leaders = [
         "role" => "Secretary for PR & Information",
         "img"  => "assets/images/Chris.jpg",
         "desc" => "Directs public relations, media engagement, and communications.",
-        "bio"  => "Chris leads external messaging, media relations, and public campaigns to raise awareness for FYU’s ongoing missions and strategic goals."
+        "bio"  => "Chris leads external messaging, media relations, and public campaigns to raise awareness for FYA’s ongoing missions and strategic goals."
     ]
 ];
 
@@ -78,7 +78,7 @@ $previous_leaders = [
         "name" => "Deng Riek Koryom",
         "role" => "Former Chairman (2011 - 2013)",
         "img" => "assets/images/Deng.jpeg",
-        "desc" => "Guided the union through early post-conflict recovery.",
+        "desc" => "Guided the association through early post-conflict recovery.",
         "bio" => "Pioneered foundational youth engagement programs and established community trust during crucial recovery years."
     ],
     [
@@ -690,11 +690,11 @@ $previous_leaders = [
                     <div class="story-highlight">
                         "From a localized youth collective to a pillar of peace and developmental advocacy in Fangak County."
                     </div>
-                    <p>The Fangak Youth Union (FYU) is a non-political, voluntary institution established to represent the aspirations of young people across Fangak. Recognizing that youth are essential stewards of peace, we organize structured civic interventions, flood relief efforts, and cultural exchanges.</p>
+                    <p>The Fangak Youth Association (FYA) is a non-political, voluntary institution established to represent the aspirations of young people across Fangak. Recognizing that youth are essential stewards of peace, we organize structured civic interventions, flood relief efforts, and cultural exchanges.</p>
                     <p>Despite persistent environmental challenges, our leadership team continues to forge key partnerships to deliver vital local assistance and uphold communal unity.</p>
                 </div>
                 <div class="story-img-container">
-                    <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" alt="Fangak Youth Union" class="story-img">
+                    <img src="<?= $baseUrl ?>images/FYA-LOGO.png" alt="Fangak Youth Association" class="story-img">
                 </div>
             </div>
         </div>
