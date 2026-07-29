@@ -13,8 +13,8 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
             
             <div class="lg:col-span-4">
                 <a href="<?= $baseUrl ?>index.php" class="flex items-center gap-3 mb-6 group inline-flex">
-                    <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" alt="FYU Logo" class="w-14 h-14 rounded-full border-2 border-fyu-gold shadow-lg group-hover:scale-105 transition-transform duration-300">
-                    <span class="font-serif font-bold text-2xl text-white tracking-wide group-hover:text-fyu-gold transition-colors">Fangak Youth Union</span>
+                    <img src="<?= $baseUrl ?>images/FYA-LOGO.png" alt="FYA Logo" class="w-14 h-14 rounded-full border-2 border-fyu-gold shadow-lg group-hover:scale-105 transition-transform duration-300 bg-white">
+                    <span class="font-serif font-bold text-2xl text-white tracking-wide group-hover:text-fyu-gold transition-colors">Fangak Youth Association</span>
                 </a>
                 <p class="text-sm leading-relaxed text-gray-400 mb-6">
                     <strong class="text-white font-medium">Empowering youth</strong>, fostering innovation, and building a stronger, resilient community across Fangak County through targeted development projects and collective leadership.
@@ -70,7 +70,7 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
                             <i class="fa-solid fa-envelope"></i>
                         </div>
                         <div class="pt-1">
-                            <a href="mailto:info@fangakyouthunion.org" class="hover:text-fyu-gold transition-colors">info@fangakyouthunion.org</a>
+                            <a href="mailto:info@fangakyouthassociation.org" class="hover:text-fyu-gold transition-colors">info@fangakyouthassociation.org</a>
                         </div>
                     </div>
                     
@@ -103,7 +103,7 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
         </div>
 
         <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-            <p>&copy; <?= date("Y"); ?> Fangak Youth Union. All Rights Reserved.</p>
+            <p>&copy; <?= date("Y"); ?> Fangak Youth Association. All Rights Reserved.</p>
             <div class="flex gap-6">
                 <button onclick="toggleModal('privacyModal', true)" class="hover:text-fyu-gold transition-colors">Privacy Policy</button>
                 <button onclick="toggleModal('termsModal', true)" class="hover:text-fyu-gold transition-colors">Terms of Service</button>
@@ -118,7 +118,7 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
         <button onclick="toggleModal('privacyModal', false)" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-red-500/20 hover:text-red-400 transition-all">&times;</button>
         <h2 class="text-2xl font-serif font-bold mb-4 text-white border-b border-fyu-gold/30 pb-2">Privacy Policy</h2>
         <div class="max-h-[60vh] overflow-y-auto pr-2 space-y-4 text-sm leading-relaxed custom-scrollbar">
-            <p>Fangak Youth Union respects your privacy and is committed to protecting any information you share with us. We collect only the data necessary to provide services and improve our programs.</p>
+            <p>Fangak Youth Association respects your privacy and is committed to protecting any information you share with us. We collect only the data necessary to provide services and improve our programs.</p>
             <p>Your personal information will never be sold or shared with third parties without consent unless required by law. We implement high-standard security measures to safeguard your information.</p>
         </div>
     </div>
@@ -156,11 +156,13 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
                 }
             });
         }, { threshold: 0.1 });
-        observer.observe(footer);
+        if (footer) observer.observe(footer);
     });
 
     function toggleModal(id, show) {
         const modal = document.getElementById(id);
+        if (!modal) return;
+        
         if (show) {
             modal.classList.remove('hidden');
             modal.classList.add('flex');

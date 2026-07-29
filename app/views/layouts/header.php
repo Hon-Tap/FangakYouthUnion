@@ -1,7 +1,7 @@
 <?php
 /**
  * Global Header Layout - Enterprise Edition
- * Fangak Youth Union (FYU)
+ * Fangak Youth Association (FYA)
  */
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -9,7 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Config & Active State Helpers
-$pageTitle   = $pageTitle ?? "Fangak Youth Union | Peace, Unity & Development";
+$pageTitle   = $pageTitle ?? "Fangak Youth Association | Peace, Unity & Development";
 $baseUrl     = $baseUrl ?? "/";
 $currentPage = basename($_SERVER['SCRIPT_NAME']);
 
@@ -42,13 +42,13 @@ $navItems = [
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <title><?= htmlspecialchars($pageTitle) ?></title>
-    <meta name="description" content="Fangak Youth Union - Empowering the next generation through peace, unity, and sustainable community development.">
-    <meta name="author" content="Fangak Youth Union">
+    <meta name="description" content="Fangak Youth Association - Empowering the next generation through peace, unity, and sustainable community development.">
+    <meta name="author" content="Fangak Youth Association">
     
     <!-- Open Graph / Social Media -->
     <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
     <meta property="og:description" content="Empowering the next generation through sustainable community development.">
-    <meta property="og:image" content="<?= $baseUrl ?>images/FYU-LOGO.jpg">
+    <meta property="og:image" content="<?= $baseUrl ?>images/FYA-LOGO.png">
     <meta property="og:type" content="website">
 
     <!-- Favicon Suite -->
@@ -140,7 +140,7 @@ $navItems = [
             <!-- Brand Logo & Title -->
             <a href="<?= $baseUrl ?>" class="flex items-center gap-3.5 group focus:outline-none focus:ring-2 focus:ring-fyu-gold/50 rounded-lg p-1">
                 <div class="relative w-12 h-12 rounded-full border-2 border-fyu-gold/80 overflow-hidden shadow-[0_0_12px_rgba(212,160,23,0.35)] transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(212,160,23,0.6)]">
-                    <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" alt="Fangak Youth Union Logo" class="w-full h-full object-cover">
+                    <img src="<?= $baseUrl ?>images/FYA-LOGO.png" alt="Fangak Youth Association Logo" class="w-full h-full object-cover bg-white">
                 </div>
                 <div class="leading-tight">
                     <div class="font-serif font-bold text-lg md:text-xl text-white tracking-wide group-hover:text-fyu-gold transition-colors duration-300">
@@ -206,7 +206,7 @@ $navItems = [
     <!-- Drawer Header -->
     <div class="flex items-center justify-between p-6 border-b border-white/10 bg-fyu-darker/50">
         <div class="flex items-center gap-3">
-            <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" alt="FYU Logo" class="w-8 h-8 rounded-full border border-fyu-gold">
+            <img src="<?= $baseUrl ?>images/FYA-LOGO.png" alt="FYA Logo" class="w-8 h-8 rounded-full border border-fyu-gold bg-white">
             <span class="font-serif font-bold text-lg text-white">Navigation</span>
         </div>
         <button id="closeDrawerBtn" class="text-gray-400 hover:text-white p-1 text-lg">
