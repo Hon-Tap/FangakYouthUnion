@@ -1,13 +1,13 @@
 <?php
 /**
  * Main Homepage View - Enterprise Edition
- * Fangak Youth Union (FYU)
+ * Fangak Youth Association (FYA)
  */
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$pageTitle = "Home - Fangak Youth Union";
+$pageTitle = "Home - Fangak Youth Association";
 
 // 1. INCLUDE GLOBAL HEADER Layout
 include_once __DIR__ . "/../app/views/layouts/header.php";
@@ -53,12 +53,12 @@ try {
     error_log("Homepage Database Error: " . $e->getMessage());
 }
 
-// Community Engagement Data Grid
+// Community Engagement Data Grid (Using authentic community images from repository)
 $engagements = [
     [
         'title'    => 'Fangak Chairperson & team distributing fishing nets to community elders',
         'category' => 'Support & Relief',
-        'img'      => 'Fishing.jpg',
+        'img'      => 'FishingNets.jpg',
         'span'     => 'col-span-1 md:col-span-2 md:row-span-2'
     ],
     [
@@ -68,9 +68,9 @@ $engagements = [
         'span'     => 'col-span-1 row-span-1'
     ],
     [
-        'title'    => 'Youth Assembly: Strategic Planning for Flood Interventions',
+        'title'    => 'Youth Assembly: Strategic Planning for Community Interventions',
         'category' => 'Awareness & Advocacy',
-        'img'      => 'youthunion.jpg',
+        'img'      => 'FangakChairwithOtherLeaders.jpg',
         'span'     => 'col-span-1 row-span-1'
     ]
 ];
@@ -104,9 +104,10 @@ function safeHtmlPreview($value) {
     <!-- Hero Background Image & Gradient Layering -->
     <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-gradient-to-t from-fyu-darker via-fyu-darker/70 to-fyu-darker/40 z-10"></div>
-        <img src="<?= $baseUrl ?>images/FYU-LOGO.jpg" 
-             alt="Fangak Community Background" 
-             class="w-full h-full object-cover scale-105 transition-transform duration-[3000ms] hover:scale-100 filter brightness-[0.45] contrast-110">
+        <img src="<?= $baseUrl ?>images/fya.jpg" 
+             alt="Fangak Youth Association Background" 
+             class="w-full h-full object-cover scale-105 transition-transform duration-[3000ms] hover:scale-100 filter brightness-[0.45] contrast-110"
+             onerror="this.src='<?= $baseUrl ?>images/FYU-LOGO.jpg'">
     </div>
 
     <!-- Admin Quick Lock Indicator -->
@@ -130,7 +131,7 @@ function safeHtmlPreview($value) {
         <!-- Headline -->
         <h1 class="text-5xl sm:text-6xl md:text-8xl font-serif font-bold mb-6 leading-[0.95] text-white tracking-tight" data-aos="zoom-in" data-aos-delay="100">
             Fangak <br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-fyu-gold via-amber-300 to-amber-500 italic">Youth Union</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-fyu-gold via-amber-300 to-amber-500 italic">Youth Association</span>
         </h1>
 
         <!-- Subtitle -->
@@ -191,7 +192,7 @@ function safeHtmlPreview($value) {
                          alt="<?= safeText($eng['title']) ?>" 
                          loading="lazy"
                          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                         onerror="this.src='https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80'">
+                         onerror="this.src='<?= $baseUrl ?>images/FYU-LOGO.jpg'">
 
                     <!-- Subtle Dark Overlay Gradient -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500"></div>
@@ -240,7 +241,7 @@ function safeHtmlPreview($value) {
                                      alt="<?= safeText($evt['title']) ?>" 
                                      loading="lazy"
                                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                     onerror="this.src='https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80'">
+                                     onerror="this.src='<?= $baseUrl ?>images/FYU-LOGO.jpg'">
                                 <div class="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3.5 py-1.5 rounded-xl text-center shadow-md">
                                     <span class="block text-xl font-black text-fyu-darker leading-none"><?= getDay($evt['event_date']) ?></span>
                                     <span class="block text-[10px] uppercase font-bold text-fyu-gold tracking-widest"><?= getMonth($evt['event_date']) ?></span>
@@ -339,14 +340,14 @@ function safeHtmlPreview($value) {
                     <p class="text-gray-600 text-sm leading-relaxed">Fostering inclusive youth leadership, strengthening community bonds, and building a peaceful, collaborative generation across Fangak.</p>
                 </div>
                 <div class="order-1 md:order-2 h-64 rounded-3xl overflow-hidden shadow-sm">
-                    <img src="<?= $baseUrl ?>images/Emergency.jpg" alt="Unity Pillar" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80'">
+                    <img src="<?= $baseUrl ?>images/Displaced.jpg" alt="Unity Pillar" class="w-full h-full object-cover" onerror="this.src='<?= $baseUrl ?>images/FYU-LOGO.jpg'">
                 </div>
             </div>
 
             <!-- Pillar 2 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center" data-aos="fade-up">
                 <div class="h-64 rounded-3xl overflow-hidden shadow-sm">
-                    <img src="<?= $baseUrl ?>images/fangak.jpg" alt="Innovation Pillar" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80'">
+                    <img src="<?= $baseUrl ?>images/cleanup.jpg" alt="Innovation Pillar" class="w-full h-full object-cover" onerror="this.src='<?= $baseUrl ?>images/FYU-LOGO.jpg'">
                 </div>
                 <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
                     <div class="w-12 h-12 rounded-2xl bg-fyu-gold/15 text-fyu-gold flex items-center justify-center text-xl font-bold mb-4">
@@ -382,13 +383,13 @@ function safeHtmlPreview($value) {
                 ],
                 [
                     'img'   => 'FYU-donates.jpg',
-                    'title' => 'Emergency Flood Relief',
-                    'desc'  => 'Distributing food items, shelter kits, and clean water supplies to vulnerable families affected by seasonal flooding.'
+                    'title' => 'Emergency Relief & Aid',
+                    'desc'  => 'Distributing essential items, aid packages, and supporting vulnerable families affected by regional challenges.'
                 ],
                 [
                     'img'   => 'YouthInAction.jpg',
                     'title' => 'Sustainable Livelihoods',
-                    'desc'  => 'Empowering youth through vocational training, agricultural equipment distribution, and micro-entrepreneurship.'
+                    'desc'  => 'Empowering youth through vocational skill building, community action, and local entrepreneurship.'
                 ]
             ];
 
@@ -404,7 +405,7 @@ function safeHtmlPreview($value) {
                              alt="<?= safeText($proj['title']) ?>"
                              loading="lazy"
                              class="w-full h-full object-cover transition duration-700 group-hover:scale-105"
-                             onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80'">
+                             onerror="this.src='<?= $baseUrl ?>images/FYU-LOGO.jpg'">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
                         <div class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>

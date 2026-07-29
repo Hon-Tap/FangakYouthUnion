@@ -131,7 +131,7 @@ $baseUrl = $baseUrl ?? "/FangakYouthUnion/public/";
         <h2 class="text-2xl font-serif font-bold mb-4 text-white border-b border-fyu-gold/30 pb-2">Terms of Service</h2>
         <div class="max-h-[60vh] overflow-y-auto pr-2 space-y-4 text-sm leading-relaxed custom-scrollbar">
             <p>By accessing this website, you agree to comply with all applicable laws and regulations. You are responsible for ensuring that your use of the site is lawful and respectful.</p>
-            <p>Fangak Youth Union reserves the right to update these terms at any time. Continued use of the website constitutes acceptance of the revised terms.</p>
+            <p>Fangak Youth Association reserves the right to update these terms at any time. Continued use of the website constitutes acceptance of the revised terms.</p>
         </div>
     </div>
 </div>

@@ -144,7 +144,7 @@ $navItems = [
                 </div>
                 <div class="leading-tight">
                     <div class="font-serif font-bold text-lg md:text-xl text-white tracking-wide group-hover:text-fyu-gold transition-colors duration-300">
-                        Fangak Youth Union
+                        Fangak Youth Association
                     </div>
                     <div class="text-[10px] tracking-[0.22em] text-fyu-gold/90 uppercase font-medium">
                         Unity & Progress
@@ -173,9 +173,6 @@ $navItems = [
                             <i class="fa-solid fa-right-from-bracket"></i>
                         </a>
                     <?php else: ?>
-                        <a href="<?= $baseUrl ?>login.php" class="text-gray-300 hover:text-white text-sm font-medium px-3 py-2 transition-colors">
-                            Log In
-                        </a>
                         <a href="<?= $baseUrl ?>register.php" 
                            class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-fyu-gold to-amber-500 hover:from-amber-400 hover:to-fyu-gold text-fyu-darker rounded-full font-bold text-sm shadow-md shadow-fyu-gold/20 hover:shadow-fyu-gold/40 hover:-translate-y-0.5 transition-all duration-300">
                             <span>Register</span>
@@ -238,12 +235,9 @@ $navItems = [
                 Logout
             </a>
         <?php else: ?>
-            <a href="<?= $baseUrl ?>register.php" class="flex items-center justify-center gap-2 w-full py-3 bg-fyu-gold text-fyu-darker font-bold rounded-xl mb-3 hover:bg-amber-400 transition shadow-lg shadow-fyu-gold/20">
+            <a href="<?= $baseUrl ?>register.php" class="flex items-center justify-center gap-2 w-full py-3 bg-fyu-gold text-fyu-darker font-bold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-fyu-gold/20">
                 <span>Register Account</span>
                 <i class="fa-solid fa-user-plus text-xs"></i>
-            </a>
-            <a href="<?= $baseUrl ?>login.php" class="block w-full text-center py-2.5 text-gray-300 hover:text-white font-medium text-sm transition">
-                Already a member? Log In
             </a>
         <?php endif; ?>
     </div>
